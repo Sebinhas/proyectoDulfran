@@ -1,0 +1,100 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  updateUser: (user: Partial<User>) => void;
+}
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      token: null,
+      isAuthenticated: false,
+
+      login: async (email: string, password: string) => {
+        try {
+          // Aquí iría tu lógica de autenticación con el backend
+          const mockUsers = [
+            {
+              id: '1',
+              name: 'Santiago Marin',
+              email: 'admin@lab.com',
+              password: 'admin',
+              role: 'admin'
+            },
+            {
+              id: '2',
+              name: 'Sebastian Guerra',
+              email: 'sebastian@lab.com',
+              password: 'sebastian',
+              role: 'admin'
+            },
+            {
+              id: '3',
+              name: 'Juanes Espinoza',
+              email: 'juanes@lab.com',
+              password: 'juanes',
+              role: 'admin'
+            },
+            {
+              id: '4',
+              name: 'Usuario',
+              email: 'user@lab.com',
+              password: 'user',
+              role: 'user'
+            }
+          ];
+
+          const user = mockUsers.find(
+            (u) => u.email === email && u.password === password
+          );
+
+          if (!user) {
+            throw new Error('Credenciales inválidas');
+          }
+
+          const { password: _, ...userWithoutPassword } = user;
+          
+          set({
+            user: userWithoutPassword,
+            token: 'mock-jwt-token',
+            isAuthenticated: true
+          });
+
+        } catch (error) {
+          throw error;
+        }
+      },
+
+      logout: () => {
+        set({
+          user: null,
+          token: null,
+          isAuthenticated: false
+        });
+      },
+
+      updateUser: (userData) => {
+        set((state) => ({
+          user: state.user ? { ...state.user, ...userData } : null
+        }));
+      }
+    }),
+    {
+      name: 'auth-storage'
+    }
+  )
+);

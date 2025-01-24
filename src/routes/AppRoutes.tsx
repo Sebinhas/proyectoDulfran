@@ -1,13 +1,11 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, redirect } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 // import { toast } from 'react-toastify'
 import { getTokenFromLocalStorage } from '../helpers/localstorage.helper.ts';
 // landing
 const Home = lazy(() => import('../pages/Home/Home'));
 const NotFound = lazy(() => import('../components/NotFound/NotFound.tsx'));
-const SkeletonDashboard = lazy(
-  () => import('../pages/Admin/Dashboard/Components/Skeleton/DashboardSkeleton.tsx')
-);
+
 const SkeletonPrivateLayout = lazy(
   () => import('../layouts/Components/Skeleton/SkeletonPrivateLayout.tsx')
 );
@@ -18,11 +16,31 @@ const PrivateLayout = lazy(() => import('../layouts/PrivateLayout'));
 // pages auth
 const Login = lazy(() => import('../pages/Auth/Login/Login'));
 // pages dashboard
-const Dashboard = lazy(() => import('../pages/Admin/Dashboard/Dashboard.tsx'));
-const Invoices = lazy(() => import('../pages/Admin/Invoices/Invoices.tsx'));
+// const Patients = lazy(() => import('../pages/Admin/Patients/Patients.tsx'));
 const Settings = lazy(() => import('../pages/Admin/Settings/Settings.tsx'));
 const Loading = lazy(() => import('../components/LoadingSpinner/Loading.tsx'));
+const Dashboard = lazy(() => import('../pages/Client/Dashboard/Dashboard.tsx'));
+const Users = lazy(() => import('../pages/Admin/Users/Users.tsx'));
 
+import { useAuthStore } from '../hooks/authStore.ts';
+
+const authLoader = async () => {
+  const isAuth = getTokenFromLocalStorage();
+  if (!isAuth) {
+    // toast.error('Debes estar autenticado para acceder')
+    console.error('Debes estar autenticado para acceder');
+  }
+  return null;
+};
+
+// Agregamos un nuevo loader para verificar el rol de admin
+const adminLoader = () => {
+  const user = useAuthStore.getState().user;
+  if (user?.role !== 'admin') {
+    return redirect('/404');
+  }
+  return null;
+};
 
 const AppRoutes = createBrowserRouter([
   {
@@ -60,7 +78,7 @@ const AppRoutes = createBrowserRouter([
       {
         path: '/auth/login',
         element: <Login />
-      }
+      },
     ]
   },
   {
@@ -74,21 +92,33 @@ const AppRoutes = createBrowserRouter([
       {
         index: true,
         element: (
-          <Suspense fallback={<SkeletonDashboard />}>
+          <Suspense>
             <Dashboard />
           </Suspense>
         )
       },
+      // {
+      //   path: '/dashboard/pacientes',
+      //   element: <Patients />
+      // },
+
       {
-        path: '/dashboard/facturas',
-        element: <Invoices />
-      },
-      {
-        path: '/dashboard/ajustes',
+        path: '/dashboard/settings',
         element: <Settings />
-      }
+      },
+      // Rutas protegidas solo para admin
+      
+      {
+        path: '/dashboard/users',
+        element: <Users />,
+        loader: adminLoader
+      },
     ]
-  }
+  },
+  {
+    path: '/404',
+    element: <NotFound />,
+  },
 ]);
 
 export default AppRoutes;

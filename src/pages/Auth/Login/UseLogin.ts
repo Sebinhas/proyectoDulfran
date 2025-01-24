@@ -1,35 +1,42 @@
-import { useForm } from "react-hook-form"
-import useLocalStorage  from "../../../hooks/useLocalStorage.ts"
-import { useNavigate } from "react-router-dom"
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { useAuthStore } from '../../../hooks/authStore';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+
+interface LoginFormInputs {
+  email: string;
+  password: string;
+}
 
 export const useLogin = () => {
-    const navigate = useNavigate();
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const { setItem } = useLocalStorage();
-    const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<LoginFormInputs>();
 
-    const onSubmit = (data: any) => {
-        // Guardar la información del usuario
-        setItem('userData', data);
-        // También puedes guardar elementos individuales
-        setItem('userEmail', data.email);
-
-        toast.success('Bienvenido, '+ data.email)
-        
-
-        console.log('Usuario registrado:', data);
-        navigate('/dashboard');
+  const onSubmit = async (data: LoginFormInputs) => {
+    try {
+      await login(data.email, data.password);
+      toast.success('¡Bienvenido!');
+      navigate('/dashboard');
+    } catch (error) {
+      toast.error('Credenciales inválidas');
     }
+  };
 
-    return { 
-        register, 
-        handleSubmit, 
-        errors, 
-        onSubmit, 
-        showPassword,
-        setShowPassword, 
-        navigate 
-    }
-}
+  return {
+    register,
+    handleSubmit,
+    formState: { errors },
+    onSubmit,
+    navigate,
+    showPassword,
+    setShowPassword
+  };
+};
