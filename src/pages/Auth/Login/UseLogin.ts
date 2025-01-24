@@ -26,7 +26,7 @@ export const useLogin = () => {
       if (user.role === "admin") {
         navigate("/dashboard");
       } else if (user.role === "user") {
-        navigate("/user-dashboard");
+        navigate("/dashboard/invoices");
       }
     } else {
       navigate("/auth/login");
@@ -41,11 +41,11 @@ export const useLogin = () => {
       const currentUser = useAuthStore.getState().user;
 
       if (currentUser?.role === "admin") {
-        navigate("/dashboard");
+        navigate("/dashboard/users");
 
         toast.success(`¡Bienvenido ${currentUser?.role}!`);
       } else if (currentUser?.role === "user") {
-        navigate("/user-dashboard");
+        navigate("/dashboard/invoices");
         toast.success(`¡Bienvenido ${currentUser?.role}!`);
       }
     } catch (error) {

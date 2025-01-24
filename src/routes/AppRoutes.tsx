@@ -17,22 +17,17 @@ const PrivateLayout = lazy(() => import('../layouts/PrivateLayout'));
 const Login = lazy(() => import('../pages/Auth/Login/Login'));
 // pages dashboard
 // const Patients = lazy(() => import('../pages/Admin/Patients/Patients.tsx'));
-const Settings = lazy(() => import('../pages/Admin/Settings/Settings.tsx'));
+const Profile = lazy(() => import('../pages/Client/Profile/Profile.tsx'));
 const Loading = lazy(() => import('../components/LoadingSpinner/Loading.tsx'));
 const Invoices = lazy(() => import('../pages/Client/Invoices/Invoices.tsx'));
-const Dashboard = lazy(() => import('../pages/Client/Dashboard/Dashboard.tsx'));
 const Users = lazy(() => import('../pages/Admin/Users/Users.tsx'));
+const Notifications = lazy(() => import('../pages/Client/Notifications/Notifications.tsx'));
+const Pqr = lazy(() => import('../pages/Client/Pqr/Pqr.tsx'));
+
 
 import { useAuthStore } from '../hooks/authStore.ts';
+import Reports from '../pages/Admin/Reports/Reports.tsx';
 
-const authLoader = async () => {
-  const isAuth = getTokenFromLocalStorage();
-  if (!isAuth) {
-    // toast.error('Debes estar autenticado para acceder')
-    console.error('Debes estar autenticado para acceder');
-  }
-  return null;
-};
 
 // Agregamos un nuevo loader para verificar el rol de admin
 const adminLoader = () => {
@@ -90,27 +85,33 @@ const AppRoutes = createBrowserRouter([
       </Suspense>
     ),
     children: [
-      {
-        index: true,
-        element: (
-          <Suspense>
-            <Dashboard />
-          </Suspense>
-        )
-      },
+      
       // {
       //   path: '/dashboard/pacientes',
       //   element: <Patients />
       // },
 
       {
-        path: '/dashboard/settings',
-        element: <Settings />
+        path: '/dashboard/profile',
+        element: <Profile />
       },
+      {
+        path: '/dashboard/notifications',
+        element: <Notifications />
+      },
+      {
+        path: '/dashboard/pqr',
+        element: <Pqr />
+      },              
       // Rutas protegidas solo para admin
       {
         path: '/dashboard/invoices',
         element: <Invoices />
+      },
+      {
+        path: '/dashboard/reports',
+        element: <Reports />,
+        loader: adminLoader
       },
       {
         path: '/dashboard/users',
