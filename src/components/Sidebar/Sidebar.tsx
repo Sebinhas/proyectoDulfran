@@ -1,14 +1,15 @@
 import { Badge } from './components/Badge/Badge.tsx';
 import { useAuthStore } from '../../hooks/authStore';
+import { useNavigate } from 'react-router-dom';
 
 export const Sidebar = () => {
-  const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
+  const { logout } = useAuthStore();
 
-  console.log(user);
-
-  const handleLogout = async () => {
-    await logout();
-  }
+  const handleLogout = () => {
+    logout();
+    navigate("/auth/login");
+  };
 
 
   return (
@@ -33,8 +34,8 @@ export const Sidebar = () => {
             <Badge icon="ajustes" title="Ajustes" route="/dashboard/settings" />
           </div>
         </div>
-        <div onClick={handleLogout} className="cursor-pointer">
-          <Badge  icon="salir" title="Salir" route="/auth/login" />
+        <div id="logout-badge" className="cursor-pointer" onClick={handleLogout}>
+          <Badge icon="salir" title="Salir" route="/auth/login" />
         </div>
       </div>
     </div>

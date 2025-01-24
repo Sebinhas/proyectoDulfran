@@ -82,11 +82,15 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        set({
+        localStorage.removeItem('auth-storage');
+        set(() => ({
           user: null,
           token: null,
-          isAuthenticated: false
-        });
+          isAuthenticated: false,
+          login: useAuthStore.getState().login,
+          logout: useAuthStore.getState().logout,
+          updateUser: useAuthStore.getState().updateUser
+        }));
       },
 
 
@@ -97,7 +101,23 @@ export const useAuthStore = create<AuthState>()(
       }
     }),
     {
-      name: 'auth-storage'
+      name: 'auth-storage',
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name);
+          if (!str) return null;
+          try {
+            return JSON.parse(str);
+          } catch {
+            localStorage.removeItem(name);
+            return null;
+          }
+        },
+        setItem: (name, value) => {
+          localStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name) => localStorage.removeItem(name)
+      }
     }
   )
 );
