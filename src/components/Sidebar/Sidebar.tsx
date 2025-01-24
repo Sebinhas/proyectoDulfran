@@ -13,7 +13,7 @@ export const Sidebar = () => {
 
 
   return (
-    <div className="w-full left-0 top-0 fixed max-w-[250px] h-full px-4 pt-3 flex flex-col gap-5 bg-white">
+    <div className="w-full left-0 top-0 fixed max-w-[250px] h-full px-4 pt-3 flex flex-col gap-5 bg-[#101C42]">
       <div className="w-full h-[60px] flex flex-row justify-center items-center bg-slate-400">
         Logo
       </div>
