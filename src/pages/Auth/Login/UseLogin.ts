@@ -21,7 +21,6 @@ export const useLogin = () => {
     reset,
   } = useForm<LoginFormInputs>();
 
- 
   useEffect(() => {
     if (isAuthenticated && user) {
       if (user.role === "admin") {
@@ -29,6 +28,8 @@ export const useLogin = () => {
       } else if (user.role === "user") {
         navigate("/user-dashboard");
       }
+    } else {
+      navigate("/auth/login");
     }
   }, [isAuthenticated, user, navigate]);
 
@@ -60,6 +61,5 @@ export const useLogin = () => {
     navigate,
     showPassword,
     setShowPassword,
-    userRole: user?.role, // Exponemos el rol para usarlo en el componente si es necesario
   };
 };
