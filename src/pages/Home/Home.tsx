@@ -46,7 +46,7 @@ const Home = () => {
       <div className="w-full h-[500px] sm:h-[600px] lg:h-[700px] flex flex-row  ">
         <div className="w-1/2 h-full hidden lg:block">
           <div className="w-full h-full flex justify-center items-center">
-            <img src={imgPagos} alt="" className="w-[600px] h-[600px]"/>
+            <img src={imgPagos} alt="" className="w-[600px] h-[600px] select-none"/>
           </div>
         </div>
         <div className="w-full lg:w-1/2 h-full flex flex-col items-center shadow-lg">
