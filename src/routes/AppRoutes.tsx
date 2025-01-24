@@ -19,6 +19,7 @@ const Login = lazy(() => import('../pages/Auth/Login/Login'));
 // const Patients = lazy(() => import('../pages/Admin/Patients/Patients.tsx'));
 const Settings = lazy(() => import('../pages/Admin/Settings/Settings.tsx'));
 const Loading = lazy(() => import('../components/LoadingSpinner/Loading.tsx'));
+const Invoices = lazy(() => import('../pages/Client/Invoices/Invoices.tsx'));
 const Dashboard = lazy(() => import('../pages/Client/Dashboard/Dashboard.tsx'));
 const Users = lazy(() => import('../pages/Admin/Users/Users.tsx'));
 
@@ -107,12 +108,16 @@ const AppRoutes = createBrowserRouter([
         element: <Settings />
       },
       // Rutas protegidas solo para admin
-      
+      {
+        path: '/dashboard/invoices',
+        element: <Invoices />
+      },
       {
         path: '/dashboard/users',
         element: <Users />,
         loader: adminLoader
       },
+
     ]
   },
   {
