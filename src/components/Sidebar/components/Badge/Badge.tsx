@@ -166,10 +166,10 @@ export const Badge = ({ icon, title, route }: BadgeProps) => {
       onClick={() => navigate(route)}
       className={`${
         isActive
-          ? 'bg-gray-600 font-semibold text-white'
+          ? 'bg-gray-100 font-semibold text-[#101C42]'
           : isSalir
-          ? 'font-bold text-red-600 hover:bg-red-100 transition-all duration-300'
-          : 'text-gray-600 font-light hover:font-semibold hover:bg-gray-500 hover:text-white'
+          ? 'font-bold text-slate-200 hover:bg-red-100 hover:text-red-600 transition-all duration-300'
+          : 'text-gray-300 font-light hover:font-semibold hover:bg-gray-200 hover:text-[#101C42]'
       } w-full h-[44px] pl-2 rounded-[4px] cursor-pointer flex flex-row gap-2 items-center transition-all duration-200`}>
       <div>{renderIcon()}</div>
       <div className="text-lg font-normal select-none">{title}</div>
