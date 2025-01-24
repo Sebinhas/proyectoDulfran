@@ -18,6 +18,7 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
+
   persist(
     (set) => ({
       user: null,
@@ -65,7 +66,8 @@ export const useAuthStore = create<AuthState>()(
           if (!user) {
             throw new Error('Credenciales inválidas');
           }
-
+        
+          console.log(user);
           const { password: _, ...userWithoutPassword } = user;
           
           set({
@@ -80,12 +82,17 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
-        set({
+        localStorage.removeItem('auth-storage');
+        set(() => ({
           user: null,
           token: null,
-          isAuthenticated: false
-        });
+          isAuthenticated: false,
+          login: useAuthStore.getState().login,
+          logout: useAuthStore.getState().logout,
+          updateUser: useAuthStore.getState().updateUser
+        }));
       },
+
 
       updateUser: (userData) => {
         set((state) => ({
@@ -94,7 +101,23 @@ export const useAuthStore = create<AuthState>()(
       }
     }),
     {
-      name: 'auth-storage'
+      name: 'auth-storage',
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name);
+          if (!str) return null;
+          try {
+            return JSON.parse(str);
+          } catch {
+            localStorage.removeItem(name);
+            return null;
+          }
+        },
+        setItem: (name, value) => {
+          localStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name) => localStorage.removeItem(name)
+      }
     }
   )
 );

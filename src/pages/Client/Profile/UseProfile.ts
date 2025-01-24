@@ -7,7 +7,7 @@ interface Reviews {
   }
 
 
-const useSettings = () => {
+const useProfile = () => {
     const [trustValue, setTrustValue] = useState(95);
     const [currentOption, setCurrentOption] = useState(4);    
     const reviews = {
@@ -27,4 +27,4 @@ const useSettings = () => {
     };
 };
 
-export default useSettings;
+export default useProfile;

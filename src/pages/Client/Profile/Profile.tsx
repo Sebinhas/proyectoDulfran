@@ -1,12 +1,12 @@
 import { GoPencil } from "react-icons/go";
 import { IoStar } from "react-icons/io5";
-import useSettings from "./UseSettings";    
+import useSettings from "./UseProfile";    
 import MiPerfil from "./Options/MiPerfil/MiPerfil";
 import CambioContraseña from "./Options/CambioContrasena/CambioContrasena";
 import Notificaciones from "./Options/Notificaciones/Notificaciones";
 import Opiniones from "./Options/Opiniones/Opiniones";
 
-const Settings = () => {
+const Profile = () => {
     const {
         reviews,
         trustValue,
@@ -81,4 +81,4 @@ const Settings = () => {
     )
 }
 
-export default Settings;
+export default Profile;
