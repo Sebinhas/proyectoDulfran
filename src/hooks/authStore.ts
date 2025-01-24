@@ -18,6 +18,7 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()(
+
   persist(
     (set) => ({
       user: null,
@@ -65,7 +66,8 @@ export const useAuthStore = create<AuthState>()(
           if (!user) {
             throw new Error('Credenciales inválidas');
           }
-
+        
+          console.log(user);
           const { password: _, ...userWithoutPassword } = user;
           
           set({
@@ -90,6 +92,7 @@ export const useAuthStore = create<AuthState>()(
           updateUser: useAuthStore.getState().updateUser
         }));
       },
+
 
       updateUser: (userData) => {
         set((state) => ({

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const Sidebar = () => {
   const navigate = useNavigate();
-  const { logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
   const handleLogout = () => {
     logout();
@@ -19,14 +19,27 @@ export const Sidebar = () => {
       </div>
       <div className="flex flex-col justify-between pb-1 h-full">
         <div className="flex flex-col gap-2">
-          <div id="dashboard-badge">
-            <Badge icon="dashboard" title="Panel principal" route="/dashboard" />
-          </div>
           <div id="invoices-badge">
-            <Badge icon="facturas" title="Facturas" route="/dashboard/facturas" />
+            <Badge icon="facturas" title="Facturas" route="/dashboard/invoices" />
           </div>
-          <div id="settings-badge">
-            <Badge icon="ajustes" title="Ajustes" route="/dashboard/ajustes" />
+          {user?.role === 'admin' && (
+            <div id="settings-badge">
+              <Badge icon="usuarios" title="Usuarios" route="/dashboard/users" />
+            </div>
+          )}
+          {user?.role === 'admin' && (
+            <div id="reports-badge">
+              <Badge icon="reportes" title="Reportes" route="/dashboard/reports" />
+            </div>
+          )}
+          <div id="pqr-badge">
+            <Badge icon="pqr" title="PQR" route="/dashboard/pqr" />
+          </div>
+          <div id="notifications-badge">
+            <Badge icon="notificaciones" title="Notificaciones" route="/dashboard/notifications" />
+          </div>
+          <div id="profile-badge">
+            <Badge icon="perfil" title="Perfil" route="/dashboard/profile" />
           </div>
         </div>
         <div id="logout-badge" className="cursor-pointer" onClick={handleLogout}>
