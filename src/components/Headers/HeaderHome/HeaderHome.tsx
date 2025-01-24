@@ -8,7 +8,7 @@ const HeaderHome = () => {
     useHeaderHome();
 
   return (
-    <div id="top" className="w-full mx-auto h-[80px] items-center flex px-5 md:px-20 ">
+    <div id="top" className="w-full h-[80px] items-center flex px-5 md:px-20 sticky top-0 z-50 bg-white">
       <div className="w-full h-full flex justify-between items-center border-b-[1px] border-gray-300 ">
         <div className="text-2xl font-bold cursor-pointer">Logo</div>
         <div className="flex flex-row items-center gap-10 ">
@@ -24,11 +24,7 @@ const HeaderHome = () => {
           </div>
 
           <div className="items-center gap-4 hidden lg:flex">
-            <div
-              onClick={() => navigate('/auth/login')}
-              className="w-[140px] h-[40px] bg-gray-600 text-white rounded-md cursor-pointer flex  justify-center items-center gap-2 hover:bg-gray-700">
-              <div className="text-md">Iniciar sesión</div>
-            </div>
+            
           </div>
           <IoIosMenu className="lg:hidden text-[40px]" onClick={handleOpenMenu} />
 
@@ -57,12 +53,6 @@ const HeaderHome = () => {
                     {link.name}
                   </div>
                 ))}
-
-                <div
-                  onClick={() => navigate('/auth/login')}
-                  className="w-[140px] h-[40px] bg-gray-700 text-white rounded-md cursor-pointer flex justify-center items-center hover:bg-gray-600">
-                  <div className="text-md">Iniciar sesión</div>
-                </div>
               </div>
             </div>
           </div>
