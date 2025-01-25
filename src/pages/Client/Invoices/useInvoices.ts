@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 export interface Orders {
     id: number;
-    patient: string;
+    user: string;
     email: string;
     documentNumber: string;
     documentType: string;
@@ -28,8 +28,8 @@ const useOrders = () => {
 
     const columns = [
         {
-            header: 'Paciente',
-            accessor: 'patient',
+            header: 'Usuario',
+            accessor: 'user',
             cell: PatientCell
         },
         {
@@ -57,7 +57,7 @@ const useOrders = () => {
     const userData: Orders[] = [
         {
           id: 1,
-          patient: "María José Rodríguez Sánchez",
+          user: "María José Rodríguez Sánchez",
           email: "maria@example.com",
           documentNumber: "45678912",
           documentType: "DNI",
@@ -68,7 +68,7 @@ const useOrders = () => {
         },
         {
           id: 2,
-          patient: "Juan Carlos Pérez López",
+          user: "Juan Carlos Pérez López",
           email: "juan@example.com",
           documentNumber: "72345678",
           documentType: "DNI",
@@ -79,7 +79,7 @@ const useOrders = () => {
         },
         {
           id: 3,
-          patient: "Ana Lucía Torres Vega",
+          user: "Ana Lucía Torres Vega",
           email: "ana@example.com",
           documentNumber: "CE789456",
           documentType: "Carné de Extranjería",
@@ -90,7 +90,7 @@ const useOrders = () => {
         },
         {
           id: 4,
-          patient: "Pedro Miguel Castro Díaz",
+          user: "Pedro Miguel Castro Díaz",
           email: "pedro@example.com",
           documentNumber: "89012345",
           documentType: "DNI",
@@ -101,7 +101,7 @@ const useOrders = () => {
         },
         {
           id: 5,
-          patient: "Carmen Rosa Flores Vargas",
+          user: "Carmen Rosa Flores Vargas",
           email: "carmen@example.com",
           documentNumber: "PTP234567",
           documentType: "PTP",
@@ -112,7 +112,7 @@ const useOrders = () => {
         },
         {
           id: 6,
-          patient: "Luis Alberto Mendoza Ríos",
+          user: "Luis Alberto Mendoza Ríos",
           email: "luis@example.com",
           documentNumber: "34567890",
           documentType: "DNI",
@@ -123,7 +123,7 @@ const useOrders = () => {
         },
         {
           id: 7,
-          patient: "Sandra Patricia Quiroz Mora",
+          user: "Sandra Patricia Quiroz Mora",
           email: "sandra@example.com",
           documentNumber: "CE567890",
           documentType: "Carné de Extranjería",
@@ -134,7 +134,7 @@ const useOrders = () => {
         },
         {
           id: 8,
-          patient: "Jorge Eduardo Paz Guerra",
+          user: "Jorge Eduardo Paz Guerra",
           email: "jorge@example.com",
           documentNumber: "23456789",
           documentType: "DNI",
@@ -145,7 +145,7 @@ const useOrders = () => {
         },
         {
           id: 9,
-          patient: "Mónica Andrea León Cruz",
+          user: "Mónica Andrea León Cruz",
           email: "monica@example.com",
           documentNumber: "90123456",
           documentType: "DNI",
@@ -156,7 +156,7 @@ const useOrders = () => {
         },
         {
           id: 10,
-          patient: "Roberto Carlos Benítez Silva",
+          user: "Roberto Carlos Benítez Silva",
           email: "roberto@example.com",
           documentNumber: "PTP789012",
           documentType: "PTP",

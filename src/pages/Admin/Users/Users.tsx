@@ -1,5 +1,142 @@
+import { IoAddSharp, IoCloudUploadOutline, IoDocumentOutline } from "react-icons/io5";
+import UseUsers from "./UseUser";
+import TableGlobal from "../../../components/TableData/TableGlobal";
+import { useEffect, useState } from "react";
+import ViewDetailUser from "./components/ViewDetailUser/ViewDetailUser";
+import { UsersDTO } from "./DTOUser";
+
 const Users = () => {
-  return <div>Users</div>;
-};
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const {
+    userData,
+    columns,
+    handleView,
+    handleEdit,
+    handleMessage,
+    handleDownload,
+    toggleModalUploadUser,
+    closeModalActionUploadUser,
+    RenderUploadUser,
+    toggleModalViewDetailUser,
+    closeModalActionViewDetailUser,
+    RenderViewDetailUser,
+    toggleModalEditInfoUser,
+    closeModalActionEditInfoUser,
+    RenderEditInfoUser,
+    user
+  } = UseUsers();
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validar que sea un archivo Excel
+      if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || 
+          file.type === 'application/vnd.ms-excel') {
+        setSelectedFile(file);
+      } else {
+        alert('Por favor, seleccione un archivo Excel válido (.xlsx, .xls)');
+        e.target.value = ''; // Limpiar el input
+      }
+    }
+  };
+
+  return (
+    <div className="w-full flex flex-col gap-4 p-4">
+      
+      <div className="w-full flex flex-col gap-8">
+        <div className="flex flex-row items-center justify-between">
+          <div className="text-[25px] font-semibold text-gray-600">Lista de Usuarios</div>
+          <div onClick={() => toggleModalUploadUser()} className="w-52 h-12 flex flex-row items-center justify-center gap-2 rounded-md cursor-pointer select-none hover:bg-gray-600 bg-gray-500">
+            <IoAddSharp className="text-3xl text-white" />
+            <div  className="text-[18px]  text-white">Subir Usuarios</div>
+          </div>
+        </div>
+      </div>
+      <TableGlobal
+        columns={columns}
+        data={userData}
+        itemsPerPage={4}
+        actions={{
+          view: (row) => handleView(row),
+          download: (row) => handleDownload(row),
+          edit: (row) => handleEdit(row),
+          message: (row) => handleMessage(row)
+        }}
+        filters={{
+          userName: true,
+          no_contract: true,
+          status: true,
+        }}
+      />
+      <RenderViewDetailUser>
+        <ViewDetailUser user={user}  />
+      </RenderViewDetailUser>
+      <RenderUploadUser>
+        <div className="w-full h-96 flex justify-center items-center gap-4">
+          <div className="w-full flex flex-col justify-center items-center gap-4">
+            <div className="font-medium text-gray-600">
+              Subir masivo de usuarios, archivo .xlsx
+            </div>
+            
+            <label className={`w-full max-w-2xl h-32 flex flex-col items-center justify-center border-2 border-dashed 
+              ${selectedFile ? 'border-green-300 bg-green-50' : 'border-gray-300'} 
+              rounded-lg hover:bg-gray-50 cursor-pointer transition-colors`}>
+              <div className="flex flex-col items-center justify-center">
+                {selectedFile ? (
+                  <>
+                    <IoDocumentOutline className="w-10 h-10 text-green-500" />
+                    <p className="text-green-600">Archivo seleccionado:</p>
+                    <p className="text-sm text-green-500">{selectedFile.name}</p>
+                    <p className="text-xs text-gray-500">
+                      ({(selectedFile.size / 1024).toFixed(2)} KB)
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <IoCloudUploadOutline className="w-10 h-10 text-gray-400" />
+                    <p className="text-gray-600">Haz clic para seleccionar archivo</p>
+                    <p className="text-sm text-gray-500">.xlsx, .xls</p>
+                  </>
+                )}
+              </div>
+              <input 
+                type="file" 
+                className="hidden" 
+                accept=".xlsx,.xls"
+                onChange={handleFileChange}
+              />
+            </label>
+
+            {selectedFile && (
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => setSelectedFile(null)}
+                  className="px-4 py-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                  onClick={() => {
+                    // Aquí puedes agregar la lógica para procesar el archivo
+                    console.log('Procesando archivo:', selectedFile);
+                  }}
+                >
+                  Procesar Archivo
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </RenderUploadUser>
+    </div>
+  )
+}
 
 export default Users;

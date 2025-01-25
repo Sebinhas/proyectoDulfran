@@ -35,21 +35,16 @@ const useFooter = () => {
   ];
 
   const contactInfo = [
-    {
-      icon: MdPhone,
-      text: '+57 (300) 123-4567',
-      link: 'tel:+573001234567'
-    },
+    // {
+    //   icon: MdPhone,
+    //   text: '+57 (300) 123-4567',
+    //   link: 'tel:+573001234567'
+    // },
     {
       icon: MdEmail,
-      text: 'contacto@laboratorio.com',
-      link: 'mailto:contacto@laboratorio.com'
+      text: 'info@devtronevolution.com',
+      link: 'mailto:contacto@devtronevolution.com'
     },
-    {
-      icon: MdLocationOn,
-      text: 'Turbo, Antioquia, Colombia',
-      link: 'https://maps.google.com/?q=Turbo,Antioquia'
-    }
   ];
 
   return {

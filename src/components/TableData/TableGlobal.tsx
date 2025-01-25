@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
-import { FaEdit, FaEye, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
+import { MdDownload } from "react-icons/md";
+
+import { FaMessage } from "react-icons/fa6";
 import { Tooltip } from 'react-tooltip';
 import { SlOptions } from 'react-icons/sl';
 
@@ -19,25 +22,21 @@ interface TableGlobalProps {
     setOptions?: (type: string, row: any) => void;
   };
   filters?: {
-    patient?: boolean;
-    createdAt?: boolean;
     name?: boolean;
+    userName?: boolean;
+    createdAt?: boolean;
+    no_contract?: boolean;
     status?: boolean;
     date?: boolean;
     nit?: boolean;
-  };
-  options?: {
-    edit?: boolean;
-    delete?: boolean;
-    view?: boolean;
-    download?: boolean;
-    actions?: boolean;
   };
   actions?: {
     edit?: (row: any) => void;
     delete?: (row: any) => void;
     view?: (row: any) => void;
     custom?: (row: any) => React.ReactNode;
+    message?: (row: any) => void;
+    download?: (row: any) => void;
   };
   isLoading?: boolean;
   emptyMessage?: string;
@@ -47,7 +46,6 @@ const TableGlobal = ({
   columns,
   data,
   itemsPerPage = 4,
-  options,
   actions,
   activateOptions,
   filters,
@@ -57,23 +55,18 @@ const TableGlobal = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const [filterValues, setFilterValues] = useState({
-    patient: '',
+    name: '',
     status: '',
     createdAt: '',
-    name: '',
     date: '',
     nit: '',
+    userName: '',
+    no_contract: '',
   });
 
   // Filtrar los datos antes de paginar
   const filteredData = React.useMemo(() => {
     let results = [...data];
-
-    if (filterValues.patient) {
-      results = results.filter(item => 
-        item.patient?.toLowerCase().includes(filterValues.patient.toLowerCase())
-      );
-    }
 
     if (filterValues.name) {
       results = results.filter(item =>
@@ -90,6 +83,19 @@ const TableGlobal = ({
     if (filterValues.nit) {
       results = results.filter(item =>
         item.nit?.includes(filterValues.nit)
+      );
+    }
+
+    if (filterValues.userName) {
+      results = results.filter(item =>
+        item.userName?.toLowerCase().includes(filterValues.userName.toLowerCase()) ||
+        item.cedula?.toLowerCase().includes(filterValues.userName.toLowerCase())
+      );
+    }
+
+    if (filterValues.no_contract) {
+      results = results.filter(item =>
+        item.no_contract?.includes(filterValues.no_contract)
       );
     }
 
@@ -114,10 +120,11 @@ const TableGlobal = ({
   const endIndex = startIndex + itemsPerPage;
   const currentData = filteredData.slice(startIndex, endIndex);
 
-  const handleFilterChange = (filterName: string, value: string) => {
+  const handleFilterChange = (filterName: string, value: string, secondFilterName?: string) => {
     setFilterValues(prev => ({
       ...prev,
-      [filterName]: value
+      [filterName]: value,
+      ...(secondFilterName ? { [secondFilterName]: value } : {})
     }));
     setCurrentPage(1); // Resetear a la primera página cuando se filtra
   };
@@ -143,15 +150,6 @@ const TableGlobal = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
   
-  const shouldShowMenuUpwards = (rowIdx: number) => {
-    const rowsVisible = currentData.length;
-    return rowIdx >= rowsVisible - 2;
-  };
-
-  const handleFilter = (filter: string, value: string) => {
-    console.log(filter, value);
-  };
-  
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -165,20 +163,20 @@ const TableGlobal = ({
                 placeholder="Ingrese nombre"
                 className="w-full p-2 border border-gray-300 outline-none rounded-md"
                 value={filterValues.name}
-                onChange={(e) => handleFilterChange('name', e.target.value)}
+                onChange={(e) => handleFilterChange('name','cedula', e.target.value)}
               />
           </div>
         )}
-        {filters?.patient && (
+        {filters?.userName && (
           <div className="w-full h-14 ">
-            <div className="text-[18px] font-medium text-gray-600">Paciente</div>
-            <input
-              type="text"
-              placeholder="Ingrese nombre del paciente"
-              className="w-full p-2 border border-gray-300 outline-none rounded-md"
-              value={filterValues.patient}
-              onChange={(e) => handleFilterChange('patient', e.target.value)}
-            />
+              <div className="text-[18px] font-medium text-gray-600">Buscar</div>
+              <input
+                type="text"
+                placeholder="Ingrese nombre de usuario o cédula"
+                className="w-full p-2 border border-gray-300 outline-none rounded-md"
+                value={filterValues.userName}
+                onChange={(e) => handleFilterChange('userName', e.target.value)}
+              />
           </div>
         )}
         {filters?.nit && (
@@ -193,6 +191,30 @@ const TableGlobal = ({
             />
           </div>
         )}
+        {filters?.name && (
+          <div className="w-full h-14 ">
+              <div className="text-[18px] font-medium text-gray-600">Nombre</div>
+              <input
+                type="text"
+                placeholder="Ingrese nombre"
+                className="w-full p-2 border border-gray-300 outline-none rounded-md"
+                value={filterValues.name}
+                onChange={(e) => handleFilterChange('name', e.target.value)}
+              />
+          </div>
+        )}
+        {filters?.no_contract && (
+          <div className="w-full h-14 ">
+              <div className="text-[18px] font-medium text-gray-600">Contrato</div>
+              <input
+                type="text"
+                placeholder="Ingrese contrato"
+                className="w-full p-2 border border-gray-300 outline-none rounded-md"
+                value={filterValues.no_contract}
+                onChange={(e) => handleFilterChange('no_contract', e.target.value)}
+              />
+          </div>
+        )}
         {filters?.status && (
           <div className="w-full h-14 ">
             <div className="text-[18px] font-medium text-gray-600">Estado</div>
@@ -201,8 +223,8 @@ const TableGlobal = ({
               onChange={(e) => handleFilterChange('status', e.target.value)}
               className="w-full p-2 border border-gray-300 outline-none rounded-md">
               <option value="">Seleccione un estado</option>
-              <option value="1">Activo</option>
-              <option value="2">Inactivo</option>
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
             </select>
           </div>
         )}
@@ -245,7 +267,7 @@ const TableGlobal = ({
                     {column.header}
                   </th>
                 ))}
-                {options?.actions && <th className="px-6 py-3 text-right">Acciones</th>}
+                {(actions?.view || actions?.download || actions?.edit || actions?.message) && <th className="px-6 py-3 text-right">Acciones</th>}
               </tr>
             </thead>
             {/* Cuerpo */}
@@ -258,56 +280,51 @@ const TableGlobal = ({
                         {column.cell ? column.cell(row) : row[column.accessor]}
                       </td>
                     ))}
-
-                    {/* Acciones */}
-                    {options?.actions && (
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex gap-2 justify-center items-center">
-                          {activateOptions && (
+                    {(actions?.view || actions?.download || actions?.edit || actions?.message) && (
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
+                        <div className="flex justify-end gap-2">
+                          {actions?.view && (
                             <button
-                              onClick={() => handleOptionsClick(row.id)}
-                              className="relative text-slate-600"
-                          >
-                              <SlOptions className="text-xl" />
-                              {selectedRow === row.id && (
-                                <div className={`absolute ${shouldShowMenuUpwards(rowIdx) ? 'bottom-0' : 'top-0'} z-50 right-0 w-44 flex flex-col bg-white shadow-lg rounded-md py-2 options-menu`}>
-                                  {/* {options?.view && (
-                                  <div
-                                    onClick={() => handleOptionAction('ver', row)}
-                                    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                                  >
-                                    Ver
-                                  </div>
-                                  )} */}
-                                  {options?.edit && (
-                                    <div
-                                      onClick={() => handleOptionAction('editar', row)}
-                                      className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                                    >
-                                      Editar
-                                    </div>
-                                  )}
-                                  {options?.delete && (
-                                    <div
-                                      onClick={() => handleOptionAction('eliminar', row)}
-                                      className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                                    >
-                                      Eliminar
-                                    </div>
-                                  )}
-                                  {options?.download && (
-                                    <div
-                                      onClick={() => handleOptionAction('descargar', row)}
-                                      className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                                    >
-                                      Ver
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                          </button>
+                              onClick={() => actions?.view?.(row)}
+                              className="p-1.5  hover:bg-blue-50 rounded-full"
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="Ver detalles"
+                            >
+                              <FaEye className="text-lg" />
+                            </button>
+                          )}
+                          {actions?.download && (
+                            <button
+                              onClick={() => actions?.download?.(row)}
+                              className="p-1.5 hover:bg-green-50 rounded-full"
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="Descargar"
+                            >
+                              <MdDownload className="text-lg" />
+                            </button>
+                          )}
+                          {actions?.edit && (
+                            <button
+                              onClick={() => actions?.edit?.(row)}
+                              className="p-1.5  hover:bg-yellow-50 rounded-full"
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="Editar"
+                            >
+                              <FaEdit className="text-lg" />
+                            </button>
+                          )}
+                          {actions?.message && (
+                            <button
+                              onClick={() => actions?.message?.(row)}
+                              className="p-1.5  hover:bg-purple-50 rounded-full"
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="PQR"
+                            >
+                              <FaMessage className="text-lg" />
+                            </button>
                           )}
                         </div>
+                        <Tooltip id="tooltip" />
                       </td>
                     )}
                   </tr>
