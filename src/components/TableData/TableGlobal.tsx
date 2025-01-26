@@ -6,6 +6,7 @@ import { MdDownload } from "react-icons/md";
 import { FaMessage } from "react-icons/fa6";
 import { Tooltip } from 'react-tooltip';
 import { SlOptions } from 'react-icons/sl';
+import { ClientsDTO } from '../../pages/Admin/Users/DTOUser';
 
 interface Column {
   header: string;
@@ -15,28 +16,28 @@ interface Column {
 
 interface TableGlobalProps {
   columns: Column[];
-  data: any[];
+  data: ClientsDTO[];
   itemsPerPage?: number;
   activateOptions?: {
-    options?: (row: any) => void;
-    setOptions?: (type: string, row: any) => void;
+    options?: (row: ClientsDTO) => void;
+    setOptions?: (type: string, row: ClientsDTO) => void;
   };
   filters?: {
     name?: boolean;
-    userName?: boolean;
+    username?: boolean;
     createdAt?: boolean;
     no_contract?: boolean;
     status?: boolean;
     date?: boolean;
-    nit?: boolean;
+    cedula?: boolean;
   };
   actions?: {
-    edit?: (row: any) => void;
-    delete?: (row: any) => void;
-    view?: (row: any) => void;
-    custom?: (row: any) => React.ReactNode;
-    message?: (row: any) => void;
-    download?: (row: any) => void;
+    edit?: (row: ClientsDTO) => void;
+    delete?: (row: ClientsDTO) => void;
+    view?: (row: ClientsDTO) => void;
+    custom?: (row: ClientsDTO) => React.ReactNode;
+    message?: (row: ClientsDTO) => void;
+    download?: (row: ClientsDTO) => void;
   };
   isLoading?: boolean;
   emptyMessage?: string;
@@ -59,8 +60,8 @@ const TableGlobal = ({
     status: '',
     createdAt: '',
     date: '',
-    nit: '',
-    userName: '',
+    cedula: '',
+    username: '',
     no_contract: '',
   });
 
@@ -70,7 +71,7 @@ const TableGlobal = ({
 
     if (filterValues.name) {
       results = results.filter(item =>
-        item.name?.toLowerCase().includes(filterValues.name.toLowerCase())
+        item.first_name?.toLowerCase().includes(filterValues.name.toLowerCase())
       );
     }
 
@@ -80,16 +81,16 @@ const TableGlobal = ({
       );
     }
 
-    if (filterValues.nit) {
+    if (filterValues.cedula) {
       results = results.filter(item =>
-        item.nit?.includes(filterValues.nit)
+        item.cedula?.includes(filterValues.cedula)
       );
     }
 
-    if (filterValues.userName) {
+    if (filterValues.username) {
       results = results.filter(item =>
-        item.userName?.toLowerCase().includes(filterValues.userName.toLowerCase()) ||
-        item.cedula?.toLowerCase().includes(filterValues.userName.toLowerCase())
+        item.username?.toLowerCase().includes(filterValues.username.toLowerCase()) ||
+        item.cedula?.toLowerCase().includes(filterValues.username.toLowerCase())
       );
     }
 
@@ -107,7 +108,7 @@ const TableGlobal = ({
 
     if (filterValues.date) {
       results = results.filter(item =>
-        item.date?.includes(filterValues.date)
+        item.date_contract?.includes(filterValues.date)
       );
     }
 
@@ -133,7 +134,7 @@ const TableGlobal = ({
     setSelectedRow(rowId); // Actualiza siempre al ID de la fila seleccionada
   };
   
-  const handleOptionAction = (type: string, row: any) => {
+  const handleOptionAction = (type: string, row: ClientsDTO) => {
     activateOptions?.setOptions?.(type, row);
     setSelectedRow(null); // Cierra el menú después de realizar una acción
   };
@@ -167,27 +168,27 @@ const TableGlobal = ({
               />
           </div>
         )}
-        {filters?.userName && (
+        {filters?.username && (
           <div className="w-full h-14 ">
               <div className="text-[18px] font-medium text-gray-600">Buscar</div>
               <input
                 type="text"
                 placeholder="Ingrese nombre de usuario o cédula"
                 className="w-full p-2 border border-gray-300 outline-none rounded-md"
-                value={filterValues.userName}
-                onChange={(e) => handleFilterChange('userName', e.target.value)}
+                value={filterValues.username}
+                onChange={(e) => handleFilterChange('username', e.target.value)}
               />
           </div>
         )}
-        {filters?.nit && (
+        {filters?.cedula && (
           <div className="w-full h-14 ">
-            <div className="text-[18px] font-medium text-gray-600">Nit</div>
+            <div className="text-[18px] font-medium text-gray-600">Cédula</div>
             <input
               type="text"
-              placeholder="Ingrese nit"
+              placeholder="Ingrese cédula"
               className="w-full p-2 border border-gray-300 outline-none rounded-md"
-              value={filterValues.nit}
-              onChange={(e) => handleFilterChange('nit', e.target.value)}
+              value={filterValues.cedula}
+              onChange={(e) => handleFilterChange('cedula', e.target.value)}
             />
           </div>
         )}
@@ -277,7 +278,7 @@ const TableGlobal = ({
                   <tr key={rowIdx} className="hover:bg-gray-50">
                     {columns.map((column, colIdx) => (
                       <td key={colIdx} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {column.cell ? column.cell(row) : row[column.accessor]}
+                        {column.cell ? column.cell(row) : row[column.accessor as keyof ClientsDTO]}
                       </td>
                     ))}
                     {(actions?.view || actions?.download || actions?.edit || actions?.message) && (
@@ -347,7 +348,7 @@ const TableGlobal = ({
       {/* Paginador */}
       {data.length > 0 && (
         <div className="flex justify-between items-center px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
-          <div className="flex items-center text-sm text-gray-700">
+          <div className="flex items-center text-sm select-none text-gray-700">
             Mostrando{' '}
             <span className="font-medium mx-1">
               {startIndex + 1}
@@ -391,7 +392,7 @@ const TableGlobal = ({
                   <button
                     key={i}
                     onClick={() => setCurrentPage(pageNumber)}
-                    className={`px-3 py-1 rounded-md ${
+                    className={`px-3 py-1 rounded-md select-none ${
                       currentPage === pageNumber
                         ? 'bg-blue-600 text-white'
                         : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'

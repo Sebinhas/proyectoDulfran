@@ -1,11 +1,11 @@
-export interface UsersDTO {
-    userName: string;
+export interface ClientsDTO {
+    username: string;
     password: string;
     cedula: string;
     first_name: string;
     second_name: string;
-    first_lastName: string;
-    second_lastName: string;
+    first_lastname: string;
+    second_lastname: string;
     no_contract: string;
     address: string;
     date_contract: string;

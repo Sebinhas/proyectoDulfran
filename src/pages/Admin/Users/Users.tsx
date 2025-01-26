@@ -3,13 +3,17 @@ import UseUsers from "./UseUser";
 import TableGlobal from "../../../components/TableData/TableGlobal";
 import { useEffect, useState } from "react";
 import ViewDetailUser from "./components/ViewDetailUser/ViewDetailUser";
-import { UsersDTO } from "./DTOUser";
+import { ClientsDTO } from "./DTOUser";
+import { uploadExcel } from "../../../api/axios.helper";
+import { toast } from "react-toastify";
 
 const Users = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
 
   const {
-    userData,
+    setIsLoading,
+    isLoading,
+    clients,
     columns,
     handleView,
     handleEdit,
@@ -24,7 +28,11 @@ const Users = () => {
     toggleModalEditInfoUser,
     closeModalActionEditInfoUser,
     RenderEditInfoUser,
-    user
+    user,
+    handleFileChange,
+    handleFileUpload,
+    selectedFile,
+    setSelectedFile
   } = UseUsers();
 
   useEffect(() => {
@@ -32,19 +40,8 @@ const Users = () => {
   }, [user]);
 
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validar que sea un archivo Excel
-      if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || 
-          file.type === 'application/vnd.ms-excel') {
-        setSelectedFile(file);
-      } else {
-        alert('Por favor, seleccione un archivo Excel válido (.xlsx, .xls)');
-        e.target.value = ''; // Limpiar el input
-      }
-    }
-  };
+  
+
 
   return (
     <div className="w-full flex flex-col gap-4 p-4">
@@ -60,7 +57,7 @@ const Users = () => {
       </div>
       <TableGlobal
         columns={columns}
-        data={userData}
+        data={clients ?? []}
         itemsPerPage={4}
         actions={{
           view: (row) => handleView(row),
@@ -69,7 +66,7 @@ const Users = () => {
           message: (row) => handleMessage(row)
         }}
         filters={{
-          userName: true,
+          username: true,
           no_contract: true,
           status: true,
         }}
@@ -126,6 +123,7 @@ const Users = () => {
                   onClick={() => {
                     // Aquí puedes agregar la lógica para procesar el archivo
                     console.log('Procesando archivo:', selectedFile);
+                    handleFileUpload(selectedFile);
                   }}
                 >
                   Procesar Archivo
