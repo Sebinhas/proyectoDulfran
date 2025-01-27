@@ -13,7 +13,7 @@ const PrivateLayout = () => {
   return (
     <div className="w-full h-screen relative flex bg-gray-100">
       <Sidebar />
-      <main className="w-full pl-[250px] h-[calc(100vh-80px)] flex flex-col">
+      <main className="w-full pl-[270px] h-[calc(100vh-80px)] flex flex-col">
         <HeaderDashboard />
         <Outlet/>
       </main>

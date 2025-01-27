@@ -22,8 +22,8 @@ const Render= ({ children }: { children: ReactNode }): JSX.Element | null => {
    return isOpen ? (
       <div onClick={closeModalAction} className="fixed z-[100] left-0 top-0 w-full h-screen bg-[rgba(0,0,0,.3)] flex justify-center items-center p-5">
         	<div onClick={(e)=>e.stopPropagation()} className={`${classModal}`}>
-				<div className='w-full font-medium flex justify-between'>
-					<div className='text-lg ml-5 mt-2'>{options.title?options.title:null}</div>
+				<div className='w-full font-semibold flex justify-between'>
+					<div className='text-xl  ml-5 mt-2'>{options.title?options.title:null}</div>
 					<button 
 						onClick={closeModalAction}
 						className="text-gray-400">

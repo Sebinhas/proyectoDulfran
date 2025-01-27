@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
-import { FaEdit, FaEye, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
+import { MdDownload } from "react-icons/md";
+
+import { FaMessage } from "react-icons/fa6";
 import { Tooltip } from 'react-tooltip';
 import { SlOptions } from 'react-icons/sl';
+import { ClientsDTO } from '../../pages/Admin/Users/DTOUser';
 
 interface Column {
   header: string;
@@ -12,32 +16,28 @@ interface Column {
 
 interface TableGlobalProps {
   columns: Column[];
-  data: any[];
+  data: ClientsDTO[];
   itemsPerPage?: number;
   activateOptions?: {
-    options?: (row: any) => void;
-    setOptions?: (type: string, row: any) => void;
+    options?: (row: ClientsDTO) => void;
+    setOptions?: (type: string, row: ClientsDTO) => void;
   };
   filters?: {
-    patient?: boolean;
-    createdAt?: boolean;
     name?: boolean;
+    username?: boolean;
+    createdAt?: boolean;
+    no_contract?: boolean;
     status?: boolean;
     date?: boolean;
-    nit?: boolean;
-  };
-  options?: {
-    edit?: boolean;
-    delete?: boolean;
-    view?: boolean;
-    download?: boolean;
-    actions?: boolean;
+    cedula?: boolean;
   };
   actions?: {
-    edit?: (row: any) => void;
-    delete?: (row: any) => void;
-    view?: (row: any) => void;
-    custom?: (row: any) => React.ReactNode;
+    edit?: (row: ClientsDTO) => void;
+    delete?: (row: ClientsDTO) => void;
+    view?: (row: ClientsDTO) => void;
+    custom?: (row: ClientsDTO) => React.ReactNode;
+    message?: (row: ClientsDTO) => void;
+    download?: (row: ClientsDTO) => void;
   };
   isLoading?: boolean;
   emptyMessage?: string;
@@ -47,7 +47,6 @@ const TableGlobal = ({
   columns,
   data,
   itemsPerPage = 4,
-  options,
   actions,
   activateOptions,
   filters,
@@ -57,27 +56,22 @@ const TableGlobal = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const [filterValues, setFilterValues] = useState({
-    patient: '',
+    name: '',
     status: '',
     createdAt: '',
-    name: '',
     date: '',
-    nit: '',
+    cedula: '',
+    username: '',
+    no_contract: '',
   });
 
   // Filtrar los datos antes de paginar
   const filteredData = React.useMemo(() => {
     let results = [...data];
 
-    if (filterValues.patient) {
-      results = results.filter(item => 
-        item.patient?.toLowerCase().includes(filterValues.patient.toLowerCase())
-      );
-    }
-
     if (filterValues.name) {
       results = results.filter(item =>
-        item.name?.toLowerCase().includes(filterValues.name.toLowerCase())
+        item.first_name?.toLowerCase().includes(filterValues.name.toLowerCase())
       );
     }
 
@@ -87,9 +81,22 @@ const TableGlobal = ({
       );
     }
 
-    if (filterValues.nit) {
+    if (filterValues.cedula) {
       results = results.filter(item =>
-        item.nit?.includes(filterValues.nit)
+        item.cedula?.includes(filterValues.cedula)
+      );
+    }
+
+    if (filterValues.username) {
+      results = results.filter(item =>
+        item.username?.toLowerCase().includes(filterValues.username.toLowerCase()) ||
+        item.cedula?.toLowerCase().includes(filterValues.username.toLowerCase())
+      );
+    }
+
+    if (filterValues.no_contract) {
+      results = results.filter(item =>
+        item.no_contract?.includes(filterValues.no_contract)
       );
     }
 
@@ -101,7 +108,7 @@ const TableGlobal = ({
 
     if (filterValues.date) {
       results = results.filter(item =>
-        item.date?.includes(filterValues.date)
+        item.date_contract?.includes(filterValues.date)
       );
     }
 
@@ -114,10 +121,11 @@ const TableGlobal = ({
   const endIndex = startIndex + itemsPerPage;
   const currentData = filteredData.slice(startIndex, endIndex);
 
-  const handleFilterChange = (filterName: string, value: string) => {
+  const handleFilterChange = (filterName: string, value: string, secondFilterName?: string) => {
     setFilterValues(prev => ({
       ...prev,
-      [filterName]: value
+      [filterName]: value,
+      ...(secondFilterName ? { [secondFilterName]: value } : {})
     }));
     setCurrentPage(1); // Resetear a la primera página cuando se filtra
   };
@@ -126,7 +134,7 @@ const TableGlobal = ({
     setSelectedRow(rowId); // Actualiza siempre al ID de la fila seleccionada
   };
   
-  const handleOptionAction = (type: string, row: any) => {
+  const handleOptionAction = (type: string, row: ClientsDTO) => {
     activateOptions?.setOptions?.(type, row);
     setSelectedRow(null); // Cierra el menú después de realizar una acción
   };
@@ -143,15 +151,6 @@ const TableGlobal = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
   
-  const shouldShowMenuUpwards = (rowIdx: number) => {
-    const rowsVisible = currentData.length;
-    return rowIdx >= rowsVisible - 2;
-  };
-
-  const handleFilter = (filter: string, value: string) => {
-    console.log(filter, value);
-  };
-  
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -165,32 +164,56 @@ const TableGlobal = ({
                 placeholder="Ingrese nombre"
                 className="w-full p-2 border border-gray-300 outline-none rounded-md"
                 value={filterValues.name}
+                onChange={(e) => handleFilterChange('name','cedula', e.target.value)}
+              />
+          </div>
+        )}
+        {filters?.username && (
+          <div className="w-full h-14 ">
+              <div className="text-[18px] font-medium text-gray-600">Buscar</div>
+              <input
+                type="text"
+                placeholder="Ingrese nombre de usuario o cédula"
+                className="w-full p-2 border border-gray-300 outline-none rounded-md"
+                value={filterValues.username}
+                onChange={(e) => handleFilterChange('username', e.target.value)}
+              />
+          </div>
+        )}
+        {filters?.cedula && (
+          <div className="w-full h-14 ">
+            <div className="text-[18px] font-medium text-gray-600">Cédula</div>
+            <input
+              type="text"
+              placeholder="Ingrese cédula"
+              className="w-full p-2 border border-gray-300 outline-none rounded-md"
+              value={filterValues.cedula}
+              onChange={(e) => handleFilterChange('cedula', e.target.value)}
+            />
+          </div>
+        )}
+        {filters?.name && (
+          <div className="w-full h-14 ">
+              <div className="text-[18px] font-medium text-gray-600">Nombre</div>
+              <input
+                type="text"
+                placeholder="Ingrese nombre"
+                className="w-full p-2 border border-gray-300 outline-none rounded-md"
+                value={filterValues.name}
                 onChange={(e) => handleFilterChange('name', e.target.value)}
               />
           </div>
         )}
-        {filters?.patient && (
+        {filters?.no_contract && (
           <div className="w-full h-14 ">
-            <div className="text-[18px] font-medium text-gray-600">Paciente</div>
-            <input
-              type="text"
-              placeholder="Ingrese nombre del paciente"
-              className="w-full p-2 border border-gray-300 outline-none rounded-md"
-              value={filterValues.patient}
-              onChange={(e) => handleFilterChange('patient', e.target.value)}
-            />
-          </div>
-        )}
-        {filters?.nit && (
-          <div className="w-full h-14 ">
-            <div className="text-[18px] font-medium text-gray-600">Nit</div>
-            <input
-              type="text"
-              placeholder="Ingrese nit"
-              className="w-full p-2 border border-gray-300 outline-none rounded-md"
-              value={filterValues.nit}
-              onChange={(e) => handleFilterChange('nit', e.target.value)}
-            />
+              <div className="text-[18px] font-medium text-gray-600">Contrato</div>
+              <input
+                type="text"
+                placeholder="Ingrese contrato"
+                className="w-full p-2 border border-gray-300 outline-none rounded-md"
+                value={filterValues.no_contract}
+                onChange={(e) => handleFilterChange('no_contract', e.target.value)}
+              />
           </div>
         )}
         {filters?.status && (
@@ -201,8 +224,8 @@ const TableGlobal = ({
               onChange={(e) => handleFilterChange('status', e.target.value)}
               className="w-full p-2 border border-gray-300 outline-none rounded-md">
               <option value="">Seleccione un estado</option>
-              <option value="1">Activo</option>
-              <option value="2">Inactivo</option>
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
             </select>
           </div>
         )}
@@ -245,7 +268,7 @@ const TableGlobal = ({
                     {column.header}
                   </th>
                 ))}
-                {options?.actions && <th className="px-6 py-3 text-right">Acciones</th>}
+                {(actions?.view || actions?.download || actions?.edit || actions?.message) && <th className="px-6 py-3 text-right">Acciones</th>}
               </tr>
             </thead>
             {/* Cuerpo */}
@@ -255,59 +278,54 @@ const TableGlobal = ({
                   <tr key={rowIdx} className="hover:bg-gray-50">
                     {columns.map((column, colIdx) => (
                       <td key={colIdx} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {column.cell ? column.cell(row) : row[column.accessor]}
+                        {column.cell ? column.cell(row) : row[column.accessor as keyof ClientsDTO]}
                       </td>
                     ))}
-
-                    {/* Acciones */}
-                    {options?.actions && (
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex gap-2 justify-center items-center">
-                          {activateOptions && (
+                    {(actions?.view || actions?.download || actions?.edit || actions?.message) && (
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
+                        <div className="flex justify-end gap-2">
+                          {actions?.view && (
                             <button
-                              onClick={() => handleOptionsClick(row.id)}
-                              className="relative text-slate-600"
-                          >
-                              <SlOptions className="text-xl" />
-                              {selectedRow === row.id && (
-                                <div className={`absolute ${shouldShowMenuUpwards(rowIdx) ? 'bottom-0' : 'top-0'} z-50 right-0 w-44 flex flex-col bg-white shadow-lg rounded-md py-2 options-menu`}>
-                                  {/* {options?.view && (
-                                  <div
-                                    onClick={() => handleOptionAction('ver', row)}
-                                    className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                                  >
-                                    Ver
-                                  </div>
-                                  )} */}
-                                  {options?.edit && (
-                                    <div
-                                      onClick={() => handleOptionAction('editar', row)}
-                                      className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                                    >
-                                      Editar
-                                    </div>
-                                  )}
-                                  {options?.delete && (
-                                    <div
-                                      onClick={() => handleOptionAction('eliminar', row)}
-                                      className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                                    >
-                                      Eliminar
-                                    </div>
-                                  )}
-                                  {options?.download && (
-                                    <div
-                                      onClick={() => handleOptionAction('descargar', row)}
-                                      className="cursor-pointer px-4 py-2 hover:bg-gray-100"
-                                    >
-                                      Ver
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                          </button>
+                              onClick={() => actions?.view?.(row)}
+                              className="p-1.5  hover:bg-blue-50 rounded-full"
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="Ver detalles"
+                            >
+                              <FaEye className="text-lg" />
+                            </button>
+                          )}
+                          {actions?.download && (
+                            <button
+                              onClick={() => actions?.download?.(row)}
+                              className="p-1.5 hover:bg-green-50 rounded-full"
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="Descargar"
+                            >
+                              <MdDownload className="text-lg" />
+                            </button>
+                          )}
+                          {actions?.edit && (
+                            <button
+                              onClick={() => actions?.edit?.(row)}
+                              className="p-1.5  hover:bg-yellow-50 rounded-full"
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="Editar"
+                            >
+                              <FaEdit className="text-lg" />
+                            </button>
+                          )}
+                          {actions?.message && (
+                            <button
+                              onClick={() => actions?.message?.(row)}
+                              className="p-1.5  hover:bg-purple-50 rounded-full"
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="PQR"
+                            >
+                              <FaMessage className="text-lg" />
+                            </button>
                           )}
                         </div>
+                        <Tooltip id="tooltip" />
                       </td>
                     )}
                   </tr>
@@ -330,7 +348,7 @@ const TableGlobal = ({
       {/* Paginador */}
       {data.length > 0 && (
         <div className="flex justify-between items-center px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
-          <div className="flex items-center text-sm text-gray-700">
+          <div className="flex items-center text-sm select-none text-gray-700">
             Mostrando{' '}
             <span className="font-medium mx-1">
               {startIndex + 1}
@@ -374,7 +392,7 @@ const TableGlobal = ({
                   <button
                     key={i}
                     onClick={() => setCurrentPage(pageNumber)}
-                    className={`px-3 py-1 rounded-md ${
+                    className={`px-3 py-1 rounded-md select-none ${
                       currentPage === pageNumber
                         ? 'bg-blue-600 text-white'
                         : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'

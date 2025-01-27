@@ -13,18 +13,18 @@ export const Sidebar = () => {
 
 
   return (
-    <div className="w-full left-0 top-0 fixed max-w-[250px] h-full px-4 pt-3 flex flex-col gap-5 bg-[#101C42]">
+    <div className="w-full left-0 top-0 fixed max-w-[270px] h-full px-4 pt-3 flex flex-col gap-5 bg-[#101C42]">
       <div className="w-full h-[60px] flex flex-row justify-center items-center bg-slate-400">
         Logo
       </div>
       <div className="flex flex-col justify-between pb-1 h-full">
         <div className="flex flex-col gap-2">
           <div id="invoices-badge">
-            <Badge icon="facturas" title="Facturas" route="/dashboard/invoices" />
+            <Badge icon="facturas" title="Gestión de facturas" route="/dashboard/invoices" />
           </div>
           {user?.role === 'admin' && (
             <div id="settings-badge">
-              <Badge icon="usuarios" title="Usuarios" route="/dashboard/users" />
+              <Badge icon="usuarios" title="Gestión de usuarios" route="/dashboard/users" />
             </div>
           )}
           {user?.role === 'admin' && (
