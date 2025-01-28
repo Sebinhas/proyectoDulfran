@@ -35,132 +35,128 @@ export function PersonalInfoDetails({
 
   return (
     <div className="w-full px-4 py-6">
-      <div className="mx-auto w-full max-w-2xl">
+      <div className="mx-auto w-full max-w-[900px]">
         <h3 className="text-lg font-medium text-gray-900 mb-4">
           Ingresa tus datos personales
         </h3>
         
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-lg shadow">
-          <div className="grid grid-cols-1 gap-6">
-            <div>
-              <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
-                Nombre completo
-              </label>
-              <input
-                {...register("nombre", { 
-                  required: "El nombre es requerido",
-                  minLength: { value: 3, message: "Mínimo 3 caracteres" }
-                })}
-                type="text"
-                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                  errors.nombre ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.nombre && (
-                <p className="mt-1 text-sm text-red-500">{errors.nombre.message}</p>
-              )}
+          <div className="flex flex-col gap-6 md:gap-8">
+            <div className="w-full flex flex-col gap-6 md:flex-row">
+              <div className="w-full h-14 ">
+                <div className="text-[18px] font-medium text-gray-600">Nombre completo</div>
+                <input
+                  value={'juanes espinosa rincon'}
+                  {...register("nombre", { 
+                    required: "El nombre es requerido",
+                    minLength: { value: 3, message: "Mínimo 3 caracteres" }
+                  })}
+                  type="text"
+                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${errors.nombre ? 'border-red-500' : '' }`}
+                />
+                {errors.nombre && (
+                  <p className="mt-1 text-sm text-red-500">{errors.nombre.message}</p>
+                )}
+              </div>
+
+              <div className="w-full h-14 ">
+                <div className="text-[18px] font-medium text-gray-600">Correo electrónico</div>
+                <input
+                  value={'juanesespinosa@gmail.com'}
+                  {...register("email", { 
+                    required: "El email es requerido",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Email inválido"
+                    }
+                  })}
+                  type="email"
+                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${
+                    errors.email ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+                )}
+              </div>
             </div>
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Correo electrónico
-              </label>
-              <input
-                {...register("email", { 
-                  required: "El email es requerido",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Email inválido"
-                  }
-                })}
-                type="email"
-                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                  errors.email ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="telefono" className="block text-sm font-medium text-gray-700">
-                Teléfono
-              </label>
-              <input
-                {...register("telefono", { 
-                  required: "El teléfono es requerido",
-                  pattern: {
-                    value: /^[0-9]{10}$/,
-                    message: "Teléfono inválido (10 dígitos)"
-                  }
-                })}
-                type="tel"
-                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                  errors.telefono ? 'border-red-500' : ''
-                }`}
-              />
+            <div className="w-full flex flex-col gap-6 md:flex-row">
+              <div className="w-full h-14 ">
+                <div className="text-[18px] font-medium text-gray-600">Teléfono</div>
+                <input
+                  value={'3178654321'}
+                  {...register("telefono", { 
+                    required: "El teléfono es requerido",
+                    pattern: {
+                      value: /^[0-9]{10}$/,
+                      message: "Teléfono inválido (10 dígitos)"
+                    }
+                  })}
+                  type="tel"
+                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${
+                    errors.telefono ? 'border-red-500' : ''
+                  }`}
+                />
               {errors.telefono && (
                 <p className="mt-1 text-sm text-red-500">{errors.telefono.message}</p>
               )}
+              </div>
+              <div className="w-full h-14 ">
+                <div className="text-[18px] font-medium text-gray-600">Dirección</div>
+                <input
+                  value={'calle 123 # 45-67'}
+                  {...register("direccion", { 
+                    required: "La dirección es requerida" 
+                  })}
+                  type="text"
+                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${
+                    errors.direccion ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.direccion && (
+                  <p className="mt-1 text-sm text-red-500">{errors.direccion.message}</p>
+                )}
+              </div>
             </div>
 
-            <div>
-              <label htmlFor="direccion" className="block text-sm font-medium text-gray-700">
-                Dirección
-              </label>
-              <input
-                {...register("direccion", { 
-                  required: "La dirección es requerida" 
-                })}
-                type="text"
-                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                  errors.direccion ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.direccion && (
-                <p className="mt-1 text-sm text-red-500">{errors.direccion.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700">
-                Ciudad
-              </label>
-              <input
+            <div className="w-full flex flex-col gap-6 md:flex-row">
+              <div className="w-full h-14 ">
+                <div className="text-[18px] font-medium text-gray-600">Ciudad</div>
+                <input
+                  value={'bogota'}
                 {...register("ciudad", { 
                   required: "La ciudad es requerida" 
                 })}
-                type="text"
-                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                  errors.ciudad ? 'border-red-500' : ''
-                }`}
-              />
+                  type="text"
+                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${
+                    errors.ciudad ? 'border-red-500' : ''
+                  }`}
+                />
               {errors.ciudad && (
-                <p className="mt-1 text-sm text-red-500">{errors.ciudad.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="documento" className="block text-sm font-medium text-gray-700">
-                Documento de identidad
-              </label>
-              <input
-                {...register("documento", { 
-                  required: "El documento es requerido",
-                  pattern: {
-                    value: /^[0-9]{8,10}$/,
-                    message: "Documento inválido (8-10 dígitos)"
-                  }
-                })}
-                type="text"
-                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                  errors.documento ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.documento && (
-                <p className="mt-1 text-sm text-red-500">{errors.documento.message}</p>
-              )}
+                  <p className="mt-1 text-sm text-red-500">{errors.ciudad.message}</p>
+                )}
+              </div>
+              <div className="w-full h-14 ">
+                <div className="text-[18px] font-medium text-gray-600">Documento de identidad</div>
+                <input
+                  value={'1000000000'}
+                  {...register("documento", { 
+                    required: "El documento es requerido",
+                    pattern: {
+                      value: /^[0-9]{8,10}$/,
+                      message: "Documento inválido (8-10 dígitos)"
+                    }
+                  })}
+                  type="text"
+                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${
+                    errors.documento ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.documento && (
+                  <p className="mt-1 text-sm text-red-500">{errors.documento.message}</p>
+                )}
+              </div>
             </div>
           </div>
 
