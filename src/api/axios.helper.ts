@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "https://be1a-186-84-88-166.ngrok-free.app/api";
+export const BASE_URL = "https://f0e6-2800-e2-9c00-1c5e-ecbe-8bda-23f5-11bb.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -65,4 +65,14 @@ export const getMessagesByNumber = async (number: string) => {
     console.error('Error fetching messages for number:', error);
     return [];
   }
+};
+
+export const getPqr = async () => {
+  const response = await axiosInstance.get('/pqr');
+  return response.data;
+};
+
+export const createPqr = async (data: any) => {
+  const response = await axiosInstance.post('/pqr', data);
+  return response.data;
 };

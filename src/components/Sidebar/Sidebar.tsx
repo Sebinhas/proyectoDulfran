@@ -32,9 +32,16 @@ export const Sidebar = () => {
               <Badge icon="reportes" title="Reportes" route="/dashboard/reports" />
             </div>
           )}
-          <div id="pqr-badge">
-            <Badge icon="pqr" title="PQR" route="/dashboard/pqr" />
-          </div>
+          {user?.role === 'user' && (
+            <div id="pqr-badge">
+              <Badge icon="pqr" title="PQR" route="/dashboard/pqr" />
+            </div>
+          )}
+          {user?.role === 'admin' && (
+            <div id="pqr-response-badge">
+              <Badge icon="pqr" title="PQR" route="/dashboard/pqrResponse" />
+            </div>
+          )}
           <div id="notifications-badge">
             <Badge icon="notificaciones" title="Notificaciones" route="/dashboard/notifications" />
           </div>
