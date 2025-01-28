@@ -58,7 +58,7 @@ const Users = () => {
       <TableGlobal
         columns={columns}
         data={clients ?? []}
-        itemsPerPage={4}
+        itemsPerPage={8}
         actions={{
           view: (row) => handleView(row),
           download: (row) => handleDownload(row),

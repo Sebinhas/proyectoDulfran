@@ -153,7 +153,7 @@ const TableGlobal = ({
   
 
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-3">
       {/* Filtros y Búsqueda */}
       <div className="w-full flex flex-row gap-4 pb-4">
         {filters?.name && (
