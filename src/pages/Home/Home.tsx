@@ -1,15 +1,23 @@
 import HeaderHome from "../../components/Headers/HeaderHome/HeaderHome";
-import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import imgPagos from "../../../public/Pagos.svg"
+import { useHome } from "./useHome";
 
 SwiperCore.use([Autoplay]);
 
 const Home = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    onSubmit,
+    showPassword,
+    setShowPassword,
+  } = useHome();
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
       <div className="w-full flex justify-center items-center h-56 sm:h-64 xl:h-80 2xl:h-96">
@@ -52,12 +60,13 @@ const Home = () => {
         <div className="w-full lg:w-1/2 h-full flex flex-col items-center shadow-lg">
           <div className="w-full h-full flex flex-col items-center justify-center">
             <div className="text-5xl sm:text-6xl font-bold">Iniciar sesión</div>
-            <form className="w-full flex flex-col items-center py-9 gap-6 sm:gap-8">
+            <form className="w-full flex flex-col items-center py-9 gap-6 sm:gap-8" onSubmit={handleSubmit(onSubmit)}>
               <div className="relative">
                 <input
-                  autoComplete="off"
+                  autoComplete="on"
                   type="text"
                   id="username"
+                  {...register('username', { required: 'El usuario es requerido' })}
                   className="w-[270px] sm:w-[320px] block px-2.5 pb-2.5 pt-4 pl-10 text-sm text-gray-900 bg-transparent rounded-lg border-[1px] border-gray-300 appearance-none focus:outline-none focus:ring-0 peer"
                   placeholder=" "
                 />
@@ -75,9 +84,10 @@ const Home = () => {
               </div>
               <div className="relative">
                 <input
-                  autoComplete="off"
+                  autoComplete="on"
                   type={showPassword ? "text" : "password"}
                   id="password"
+                  {...register('password', { required: 'La contraseña es requerida' })}
                   className="w-[270px] sm:w-[320px] block px-2.5 pb-2.5 pt-4 pl-10 text-sm text-gray-900 bg-transparent rounded-lg border-[1px] border-gray-300 appearance-none focus:outline-none focus:ring-0 peer"
                   placeholder=" "
                 />

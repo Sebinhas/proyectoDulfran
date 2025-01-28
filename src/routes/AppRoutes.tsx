@@ -13,8 +13,6 @@ const SkeletonPrivateLayout = lazy(
 const MainLayout = lazy(() => import('../layouts/MainLayout'));
 const AuthLayout = lazy(() => import('../layouts/AuthLayout'));
 const PrivateLayout = lazy(() => import('../layouts/PrivateLayout'));
-// pages auth
-const Login = lazy(() => import('../pages/Auth/Login/Login'));
 // pages dashboard
 // const Patients = lazy(() => import('../pages/Admin/Patients/Patients.tsx'));
 const Profile = lazy(() => import('../pages/Client/Profile/Profile.tsx'));
@@ -23,7 +21,7 @@ const Invoices = lazy(() => import('../pages/Client/Invoices/Invoices.tsx'));
 const Users = lazy(() => import('../pages/Admin/Users/Users.tsx'));
 const Notifications = lazy(() => import('../pages/Client/Notifications/Notifications.tsx'));
 const Pqr = lazy(() => import('../pages/Client/Pqr/Pqr.tsx'));
-const PqrResponse = lazy(() => import('../pages/Admin/PqrResponse/pqrResponse.tsx'));
+const PqrResponse = lazy(() => import('../pages/Admin/PqrResponse/PqrResponse.tsx'));
 
 import { useAuthStore } from '../hooks/authStore.ts';
 import Reports from '../pages/Admin/Reports/Reports.tsx';
@@ -56,25 +54,6 @@ const AppRoutes = createBrowserRouter([
         path: 'auth',
         element: <AuthLayout />
       }
-    ]
-  },
-  {
-    path: '/auth',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <AuthLayout />
-      </Suspense>
-    ),
-    errorElement: <NotFound />,
-    children: [
-      {
-        index: true,
-        element: <Login />
-      },
-      {
-        path: '/auth/login',
-        element: <Login />
-      },
     ]
   },
   {
