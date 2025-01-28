@@ -8,7 +8,7 @@ export const Sidebar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/auth/login");
+    navigate("/");
   };
 
 
@@ -50,7 +50,7 @@ export const Sidebar = () => {
           </div>
         </div>
         <div id="logout-badge" className="cursor-pointer" onClick={handleLogout}>
-          <Badge icon="salir" title="Salir" route="/auth/login" />
+          <Badge icon="salir" title="Salir" route="/" />
         </div>
       </div>
     </div>
