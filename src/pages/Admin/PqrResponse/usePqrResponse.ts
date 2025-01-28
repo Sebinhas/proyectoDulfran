@@ -1,8 +1,11 @@
 import { CreatedByCell, TipoCell, CategoriaCell, AsuntoCell, DescripcionCell, EstadoCell, FechaCreacionCell } from './template/cellTemplate'
 import { getPqr } from "../../../api/axios.helper";
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import Modal from '../../../components/Modal/Modal';
 const usePqrResponse = () => {
    const [pqr, setPqr] = useState([]);
+   const { toggleModal: toggleModalResponsePqr, closeModalAction: closeModalActionResponsePqr, Render: RenderResponsePqr } = Modal({ title: 'Responder PQR' });
 
    useEffect(() => {
       const response = async () => {
@@ -50,9 +53,21 @@ const usePqrResponse = () => {
       },
     ]
 
+    const handleEdit = (row: any): void => {
+      toast.success(`Orden vista, estado: ${row.status}`);
+      toggleModalResponsePqr();
+      console.log(row);
+        //toggleModalEditInfoUser();
+        // navigate(`/dashboard/ordenes/${row.id}`);
+    };
+
    return {
       columns,
-      pqr
+      pqr,
+      handleEdit,
+      toggleModalResponsePqr,
+      closeModalActionResponsePqr,
+      RenderResponsePqr
    }
 }
 

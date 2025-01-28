@@ -72,7 +72,18 @@ export const getPqr = async () => {
   return response.data;
 };
 
-export const createPqr = async (data: any) => {
+export const createPqr = async (data: {
+  type: string;
+  category: string;
+  sub_category: string;
+  description: string;
+  client_cedula: string;
+}) => {
   const response = await axiosInstance.post('/pqr', data);
+  return response.data;
+};
+
+export const responsePqr = async (data: any) => {
+  const response = await axiosInstance.patch(`/pqr/${data.id}`, data);
   return response.data;
 };

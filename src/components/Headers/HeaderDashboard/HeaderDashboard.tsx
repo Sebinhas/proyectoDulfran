@@ -1,11 +1,10 @@
-import useLocalStorage from '../../../hooks/useLocalStorage.ts';
+import { useAuthStore } from '../../../hooks/authStore.ts';
 import { Help } from './Components/Help/Help.tsx';
 import { NotificationsPanel } from './Components/Notificactions/NotificactionsPanel.tsx';
 import { useHeaderDashboard } from './UseHeaderDashboard.ts';
 
 export const HeaderDashboard = () => {
-  const { getItem } = useLocalStorage();
-  const userData = getItem('userData');
+  const { user } = useAuthStore();
   const { showNotifications, handleShowNotifications, unreadCount } =
     useHeaderDashboard();
 
@@ -65,9 +64,9 @@ export const HeaderDashboard = () => {
           </svg>
           <div className="flex flex-col">
             <div className="text-sm font-semibold text-gray-600">
-              {userData?.name || 'Undefined'}
+              {user?.name || 'Undefined'}
             </div>
-            <div className="text-xs">{userData?.rol || 'Undefined'}</div>
+            <div className="text-xs">{user?.role || 'Undefined'}</div>
           </div>
         </div>
       </div>

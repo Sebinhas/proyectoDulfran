@@ -23,7 +23,7 @@ const Invoices = lazy(() => import('../pages/Client/Invoices/Invoices.tsx'));
 const Users = lazy(() => import('../pages/Admin/Users/Users.tsx'));
 const Notifications = lazy(() => import('../pages/Client/Notifications/Notifications.tsx'));
 const Pqr = lazy(() => import('../pages/Client/Pqr/Pqr.tsx'));
-const PqrResponse = lazy(() => import('../pages/Admin/PqrResponse/pqrResponse.tsx'));
+const PqrResponse = lazy(() => import('../pages/Admin/PqrResponse/PqrResponse.tsx'));
 
 import { useAuthStore } from '../hooks/authStore.ts';
 import Reports from '../pages/Admin/Reports/Reports.tsx';

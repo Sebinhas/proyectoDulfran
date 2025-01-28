@@ -1,7 +1,7 @@
 import usePqr from "./usePqr";
 
 const Pqr = () => {
-  const {register, handleSubmit, pqr, createPqr} = usePqr();
+  const {register, handleSubmit, pqr, createNewPqr, errors} = usePqr();
 
   return (
     <div className="w-full h-full flex justify-center items-center p-6 select-none">
@@ -9,34 +9,41 @@ const Pqr = () => {
         <h1 className="text-3xl font-bold mb-2">Formulario de PQR</h1>
         <p className="text-gray-600 mb-6 text-sm">Porfavor, complete el formulario para enviar su petición, queja o reclamo.</p>
 
-        <form onSubmit={handleSubmit(createPqr)} className="space-y-4">
+        <form onSubmit={handleSubmit(createNewPqr)} className="space-y-4">
           <div className="space-y-2">
             <label className="block text-sm font-medium">Tipo de solicitud</label>
-            <select {...register("requestType")} className="w-full h-11 p-2 border rounded-lg">
+            <select {...register("requestType", { required: "Este campo es obligatorio" })} className="w-full h-11 p-2 border rounded-lg">
               <option className="text-gray-600" value="">Seleccione un tipo de solicitud</option>
-              <option value="petition">Petición</option>
-              <option value="complaint">Queja</option>
-              <option value="claim">Reclamo</option>
+              <option value="Peticion">Petición</option>
+              <option value="Queja">Queja</option>
+              <option value="Reclamo">Reclamo</option>
             </select>
+            {errors.requestType && <p className="text-red-500 text-xs mt-1">Este campo es obligatorio</p>}
           </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-medium">Categoría</label>
-            <select {...register("category")} className="w-full h-11 p-2 border rounded-lg">
+            <select {...register("category", { required: "Este campo es obligatorio" })} className="w-full h-11 p-2 border rounded-lg">
               <option className="text-gray-600" value="">Seleccione una categoría</option>
-              <option value="service">Servicio al cliente</option>
-              <option value="technical">Problema técnico</option>
-              <option value="billing">Facturación</option>
+              <option value="Incidencia técnica">Incidencia técnica</option>
+              <option value="Calidad del servicio">Calidad del servicio</option>
+              <option value="Instalación">Instalación</option>
+              <option value="Mantenimiento">Mantenimiento</option>
+              <option value="Cambio de plan">Cambio de plan</option>
+              <option value="Suspensión de servicio">Suspensión de servicio</option>
+              <option value="Reactivación">Reactivación</option>
             </select>
+            {errors.category && <p className="text-red-500 text-xs mt-1">Este campo es obligatorio</p>}
           </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-medium">Descripción</label>
             <textarea 
-              {...register("description")} 
-              className="w-full h-40 p-3 border rounded-lg  focus:outline-none resize-none"
+              {...register("description", { required: "Este campo es obligatorio" })} 
+              className="w-full h-40 p-3 border rounded-lg focus:outline-none resize-none"
               placeholder="Por favor, describa su solicitud en detalle..."
             />
+            {errors.description && <p className="text-red-500 text-xs mt-1">Este campo es obligatorio</p>}
           </div>
 
           <button 

@@ -56,6 +56,13 @@ export const useAuthStore = create<AuthState>()(
               email: 'user@lab.com',
               password: 'user',
               role: 'user'
+            },
+            {
+              id: '1234567899',
+              name: 'Cliente',
+              email: 'cliente@lab.com',
+              password: 'cliente',
+              role: 'user'
             }
           ];
 
