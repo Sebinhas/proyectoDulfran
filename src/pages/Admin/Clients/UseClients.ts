@@ -27,24 +27,67 @@ const UseClients = () => {
 
   const { toggleModal: toggleModalEditInfoUser, closeModalAction: closeModalActionEditInfoUser, Render: RenderEditInfoUser } = Modal({ title: 'Editar Información' });
 
-  const { register, handleSubmit, reset, setValue } = useForm<ClientsDTO>();
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<ClientsDTO>();
 
   const onSubmit = async (data: ClientsDTO) => {
-    const nit = currentNit || 0;
-    setValue('admin_nit', nit);
-    console.log(data);
     try {
+      // Mostrar loading mientras se procesa
+      Swal.fire({
+        title: 'Creando usuario',
+        text: 'Por favor espere...',
+        didOpen: () => {
+          Swal.showLoading();
+        },
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false
+      });
 
-
+      const nit = currentNit || 0;
+      data.admin_nit = nit;
       const response = await createUser(data);
-      console.log(response);
+
+      // Cerrar el loading
+      Swal.close();
+
+      if (response) {
+        // Mostrar mensaje de éxito
+        await Swal.fire({
+          title: '¡Usuario Creado!',
+          text: 'El usuario ha sido creado exitosamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
+
+        // Cerrar el modal y limpiar el formulario
+        closeModalActionUploadUser();
+        reset();
+
+        // Actualizar la lista de usuarios
+        try {
+          const updatedUsers = await getUsers();
+          if (updatedUsers) {
+            setDataUsers(updatedUsers);
+          }
+        } catch (error) {
+          console.error('Error al actualizar la lista:', error);
+          Swal.fire({
+            title: 'Error',
+            text: 'Error al actualizar la lista de usuarios',
+            icon: 'error'
+          });
+        }
+      }
     } catch (error) {
       console.error('Error al crear usuario:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un error al crear el usuario',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
     }
-
-
-
-  }
+  };
 
 
 
@@ -56,10 +99,6 @@ const UseClients = () => {
                 if (response) {
                     setDataUsers(response);
                 }
-
-
-
-
             } catch (error) {
                 console.error('Error fetching clients:', error);
                 Swal.fire({
@@ -114,11 +153,11 @@ const UseClients = () => {
       cell: date_createdAt
     },
 
-    {
-      header: 'Fecha de Actualización',
-      accessor: 'updatedAt',
-      cell: date_updatedAt
-    },
+    // {
+    //   header: 'Fecha de Actualización',
+    //   accessor: 'updatedAt',
+    //   cell: date_updatedAt
+    // },
     
 
 
@@ -170,12 +209,15 @@ const UseClients = () => {
     handleSubmit,
     reset,
     onSubmit,
+    errors,
     toggleModalViewDetailUser,
     closeModalActionViewDetailUser,
     RenderViewDetailUser,
     toggleModalEditInfoUser,
     closeModalActionEditInfoUser,
     RenderEditInfoUser,
+
+
 
     user,
     selectedFile,

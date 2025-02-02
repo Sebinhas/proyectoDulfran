@@ -60,7 +60,18 @@ export const getUsers = async () => {
   const currentNit = useAuthStore.getState().currentNit;
   try {
     const response = await axiosInstance.get(`/admin/companies/${currentNit}/admin-users`);
-    return response.data;
+    const users = response.data?.users || [];
+    return users.map((item: any) => ({
+      "cedula": item.cedula || '',
+      "name": item.name || '',
+      "email": item.email || '',
+      "username": item.username || '',
+      "profile_type": item.profile_type || '',
+      "status": item.status || '',
+      "createdAt": item.createdAt || '',
+      "updatedAt": item.updatedAt || ''
+    }));
+
   } catch (error) {
     console.error('Error al obtener usuarios:', error);
     return [];
