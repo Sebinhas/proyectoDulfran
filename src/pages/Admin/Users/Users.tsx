@@ -6,6 +6,7 @@ import ViewDetailUser from "./components/ViewDetailUser/ViewDetailUser";
 import { ClientsDTO } from "./DTOUser";
 import { uploadExcel } from "../../../api/axios.helper";
 import { toast } from "react-toastify";
+import EditInfoUser from "./components/EditInfoUser/EditInfoUser";
 
 const Users = () => {
   
@@ -71,9 +72,16 @@ const Users = () => {
           status: true,
         }}
       />
+
       <RenderViewDetailUser>
         <ViewDetailUser user={user}  />
       </RenderViewDetailUser>
+
+      <RenderEditInfoUser>
+        <EditInfoUser user={user} closeModalActionUploadUser={closeModalActionUploadUser} />
+      </RenderEditInfoUser>
+
+
       <RenderUploadUser>
         <div className="w-full h-96 flex justify-center items-center gap-4">
           <div className="w-full flex flex-col justify-center items-center gap-4">

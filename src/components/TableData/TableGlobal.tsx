@@ -31,6 +31,7 @@ interface TableGlobalProps {
     status?: boolean;
     date?: boolean;
     cedula?: boolean;
+    profile_type?: boolean;
   };
   actions?: {
     edit?: (row: any) => void;
@@ -65,7 +66,9 @@ const TableGlobal = ({
     cedula: '',
     username: '',
     no_contract: '',
+    profile_type: '',
   });
+
 
   // Filtrar los datos antes de paginar
   const filteredData = React.useMemo(() => {
@@ -113,6 +116,13 @@ const TableGlobal = ({
         item.date_contract?.includes(filterValues.date)
       );
     }
+
+    if (filterValues.profile_type) {
+      results = results.filter(item =>
+        item.profile_type?.includes(filterValues.profile_type)
+      );
+    }
+
 
     return results;
   }, [filterValues, data]);
@@ -218,6 +228,24 @@ const TableGlobal = ({
               />
           </div>
         )}
+        {filters?.profile_type && (
+          <div className="w-full h-14 ">
+            <div className="text-[18px] font-medium text-gray-600">Rol</div>
+            <select
+              value={filterValues.profile_type}
+              onChange={(e) => handleFilterChange('profile_type', e.target.value)}
+              className="w-full p-2 border border-gray-300 outline-none rounded-md">
+              <option value="">Seleccione un rol</option>
+              <option value="Admin">Admin</option>
+
+              <option value="Soporte">Soporte</option>
+            </select>
+
+
+          </div>
+        )}
+        
+
         {filters?.status && (
           <div className="w-full h-14 ">
             <div className="text-[18px] font-medium text-gray-600">Estado</div>
@@ -296,16 +324,6 @@ const TableGlobal = ({
                               <FaEye className="text-lg" />
                             </button>
                           )}
-                          {actions?.download && (
-                            <button
-                              onClick={() => actions?.download?.(row)}
-                              className="p-1.5 hover:bg-green-50 rounded-full"
-                              data-tooltip-id="tooltip"
-                              data-tooltip-content="Descargar"
-                            >
-                              <MdDownload className="text-lg" />
-                            </button>
-                          )}
                           {actions?.edit && (
                             <button
                               onClick={() => actions?.edit?.(row)}
@@ -314,6 +332,16 @@ const TableGlobal = ({
                               data-tooltip-content="Editar"
                             >
                               <FaEdit className="text-lg" />
+                            </button>
+                          )}
+                          {actions?.download && (
+                            <button
+                              onClick={() => actions?.download?.(row)}
+                              className="p-1.5 hover:bg-green-50 rounded-full"
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="Descargar"
+                            >
+                              <MdDownload className="text-lg" />
                             </button>
                           )}
                           {actions?.message && (

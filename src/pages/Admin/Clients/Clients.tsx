@@ -7,6 +7,7 @@ import { ClientsDTO } from "./DTOClients";
 import { uploadExcel } from "../../../api/axios.helper";
 
 import { toast } from "react-toastify";
+import EditInfoUser from "./components/EditInfoUser/EditInfoUser";
 
 const Clients = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,6 +37,7 @@ const Clients = () => {
     register,
     handleSubmit,
     reset,
+    errors,
   } = UseClients();
 
   useEffect(() => {
@@ -67,17 +69,24 @@ const Clients = () => {
           view: (row) => handleView(row),
           download: (row) => handleDownload(row),
           edit: (row) => handleEdit(row),
-          message: (row) => handleMessage(row)
+          // message: (row) => handleMessage(row)
         }}
         filters={{
           username: true,
-          no_contract: true,
+          profile_type: true,
           status: true,
         }}
       />
+
       <RenderViewDetailUser>
         <ViewDetailUser user={user}  />
       </RenderViewDetailUser>
+
+      <RenderEditInfoUser>
+        <EditInfoUser user={user} closeModalActionUploadUser={closeModalActionUploadUser} />
+      </RenderEditInfoUser>
+
+
       <RenderUploadUser>
         <div className="w-full flex flex-col gap-3 p-4">
           <div className="w-full flex flex-col md:flex-row gap-4">
@@ -90,26 +99,6 @@ const Clients = () => {
               />
             </div>
 
-            <div className="w-full relative">
-              <div className="text-sm font-medium pb-0.5">Contraseña</div>
-
-              <div onClick={() => setShowPassword(!showPassword)}  className="absolute right-3 top-3 h-full flex items-center justify-center cursor-pointer">
-                {showPassword ? <IoEyeOutline className="text-gray-500 text-2xl" /> : <IoEyeOffOutline className="text-gray-500 text-2xl" />}
-              </div>
-              <input  
-
-
-                type={showPassword ? "text" : "password"}
-                {...register('password')}
-
-                placeholder="Mínimo 8 caracteres"
-
-                className="w-full border rounded-md p-2 outline-none border-gray-300" 
-              />
-            </div>
-          </div>
-
-          <div className="w-full flex flex-col md:flex-row gap-4">
             <div className="w-full">
               <div className="text-sm font-medium pb-0.5">Cédula</div>
               <input  
@@ -118,6 +107,12 @@ const Clients = () => {
                 className="w-full border rounded-md p-2 outline-none border-gray-300" 
               />
             </div>
+
+
+          </div>
+
+          <div className="w-full flex flex-col md:flex-row gap-4">
+            
             <div className="w-full">
               <div className="text-sm font-medium pb-0.5">Nombre Completo</div>
               <input  
@@ -126,9 +121,7 @@ const Clients = () => {
                 className="w-full border rounded-md p-2 outline-none border-gray-300" 
               />
             </div>
-          </div>
 
-          <div className="w-full flex flex-col md:flex-row gap-4">
             <div className="w-full">
               <div className="text-sm font-medium pb-0.5">Correo Electrónico</div>
               <input  
@@ -138,6 +131,50 @@ const Clients = () => {
                 className="w-full border rounded-md p-2 outline-none border-gray-300" 
               />
             </div>
+          </div>
+
+          <div className="w-full flex flex-col md:flex-row gap-4">
+  
+          <div className="w-full relative">
+              <div className="text-sm font-medium pb-0.5">Contraseña</div>
+
+              <div onClick={() => setShowPassword(!showPassword)} className="absolute right-3 -top-10 h-full flex items-center justify-center cursor-pointer">
+                {showPassword ? <IoEyeOutline className="text-gray-500 text-2xl" /> : <IoEyeOffOutline className="text-gray-500 text-2xl" />}
+              </div>
+              <input  
+                type={showPassword ? "text" : "password"}
+                {...register('password', {
+                  required: "La contraseña es requerida",
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                    message: "La contraseña debe contener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial"
+                  },
+                  minLength: {
+                    value: 8,
+                    message: "La contraseña debe tener al menos 8 caracteres"
+                  }
+                })}
+                placeholder="Mínimo 8 caracteres"
+                className="w-full border rounded-md p-2 outline-none border-gray-300" 
+              />
+              {errors.password && (
+                <div className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </div>
+              )}
+              
+              <div className="text-xs text-gray-500 mt-1">
+                La contraseña debe contener:
+                <ul className="list-disc list-inside">
+                  <li>Mínimo 8 caracteres</li>
+                  <li>Al menos una letra mayúscula</li>
+                  <li>Al menos una letra minúscula</li>
+                  <li>Al menos un número</li>
+                  <li>Al menos un carácter especial (@$!%*?&)</li>
+                </ul>
+              </div>
+            </div>
+
             <div className="w-full">
               <div className="text-sm font-medium pb-0.5">Tipo de Perfil</div>
               <select
