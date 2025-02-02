@@ -1,6 +1,7 @@
 import axios from "axios";
+import { useAuthStore } from "../hooks/authStore";
 
-export const BASE_URL = "https://e43c-2800-e2-9c00-1c5e-c882-b291-7d70-7c87.ngrok-free.app/api";
+export const BASE_URL = "http://62.72.5.152:3000/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -10,11 +11,28 @@ export const axiosInstance = axios.create({
   },
 });
 
-// Obtener lista de chats
+// Obtener lista de clientes de una empresa
 export const getClients = async () => {
+  const currentNit = useAuthStore.getState().currentNit;
+  
+  if (!currentNit) {
+    console.error('No hay NIT seleccionado');
+    return [];
+  }
+
   try {
-    const response = await axiosInstance.get('/client');
-    return response.data.map((item: any) => ({
+    const response = await axiosInstance.get(`/admin/companies/${currentNit}/clients`);
+    
+    // Accedemos específicamente a response.data.clients
+    const clients = response.data?.clients || [];
+    
+    // Verificamos si clients es un array antes de usar map
+    if (!Array.isArray(clients)) {
+      console.error('La respuesta no es un array:', clients);
+      return [];
+    }
+
+    return clients.map((item: any) => ({
       username: item.user?.username || '',
       password: item.user?.password || '',
       status: item.user?.status || '',
@@ -32,13 +50,40 @@ export const getClients = async () => {
       updatedAt: item.updatedAt || ''
     }));
   } catch (error) {
-    console.error('Error fetching clients:', error);
+    console.error('Error al obtener clientes:', error);
     return [];
   }
 };
 
+// Obtener usuarios de una empresa
+export const getUsers = async () => {
+  const currentNit = useAuthStore.getState().currentNit;
+  try {
+    const response = await axiosInstance.get(`/admin/companies/${currentNit}/admin-users`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    return [];
+  }
+};
+
+// Crear usuarios individuales
+
+export const createUser = async (data: any) => {
+  const currentNit = useAuthStore.getState().currentNit;
+  try {
+    const response = await axiosInstance.post(`/admin/companies/${currentNit}/admin-users`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error al crear usuario:', error);
+    throw error;
+  }
+
+};
+
 export const uploadExcel = async (file: File) => {
     const formData = new FormData();
+
     formData.append('file', file);
 
     try {

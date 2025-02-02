@@ -19,6 +19,7 @@ const Profile = lazy(() => import('../pages/Client/Profile/Profile.tsx'));
 const Loading = lazy(() => import('../components/LoadingSpinner/Loading.tsx'));
 const Invoices = lazy(() => import('../pages/Client/Invoices/Invoices.tsx'));
 const Users = lazy(() => import('../pages/Admin/Users/Users.tsx'));
+const Clients = lazy(() => import('../pages/Admin/Clients/Clients.tsx'));
 const Notifications = lazy(() => import('../pages/Client/Notifications/Notifications.tsx'));
 const Pqr = lazy(() => import('../pages/Client/Pqr/Pqr.tsx'));
 const PqrResponse = lazy(() => import('../pages/Admin/PqrResponse/PqrResponse.tsx'));
@@ -30,7 +31,7 @@ import Reports from '../pages/Admin/Reports/Reports.tsx';
 // Agregamos un nuevo loader para verificar el rol de admin
 const adminLoader = () => {
   const user = useAuthStore.getState().user;
-  if (user?.role !== 'admin') {
+  if (user?.role !== 'superAdmin') {
     return redirect('/404');
   }
   return null;
@@ -99,6 +100,11 @@ const AppRoutes = createBrowserRouter([
       {
         path: '/dashboard/users',
         element: <Users />,
+        loader: adminLoader
+      },
+      {
+        path: '/dashboard/clients',
+        element: <Clients />,
         loader: adminLoader
       },
 
