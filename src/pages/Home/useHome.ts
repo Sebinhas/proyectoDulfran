@@ -41,7 +41,7 @@ export const useHome = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      if (user.role === "admin") {
+      if (user.role === "superAdmin") {
         navigate("/dashboard");
       } else if (user.role === "user") {
         navigate("/dashboard/invoices");
@@ -58,8 +58,9 @@ export const useHome = () => {
 
       const currentUser = useAuthStore.getState().user;
 
-      if (currentUser?.role === "admin") {
-        navigate("/dashboard/users");
+      if (currentUser?.role === "superAdmin") {
+        navigate("/dashboard/invoices");
+
 
         toast.success(`¡Bienvenido ${currentUser?.role}!`);
       } else if (currentUser?.role === "user") {

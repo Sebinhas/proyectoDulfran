@@ -18,10 +18,18 @@ export interface PersonalData {
   documento: string
 }
 
+export interface PaymentInfo {
+  monto: number
+  descripcion: string
+  referencia: string
+  fecha: string
+}
+
 export const usePasarela = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const [previousStep, setPreviousStep] = useState(1)
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('')
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null)
+  const [paymentStatus, setPaymentStatus] = useState<'success' | 'error' | 'pending'>('pending')
   const [personalData, setPersonalData] = useState<PersonalData>({
     nombre: '',
     email: '',
@@ -29,6 +37,12 @@ export const usePasarela = () => {
     direccion: '',
     ciudad: '',
     documento: ''
+  })
+  const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
+    monto: 0,
+    descripcion: '',
+    referencia: '',
+    fecha: new Date().toISOString()
   })
   
   useEffect(() => {
@@ -42,7 +56,7 @@ export const usePasarela = () => {
   }, [currentStep, previousStep])
 
   const updateStep = (stepNumber: number) => {
-    if (stepNumber >= 1 && stepNumber <= 3) {
+    if (stepNumber >= 1 && stepNumber <= 5) {
       setCurrentStep(stepNumber)
     }
   }
@@ -55,8 +69,15 @@ export const usePasarela = () => {
     setPersonalData(data)
   }
 
+  const handlePaymentInfoChange = (info: PaymentInfo) => {
+    setPaymentInfo(info)
+  }
+
   const handleNext = () => {
-    if (currentStep < 3) {
+    if (currentStep === 1 && !selectedPaymentMethod) {
+      return;
+    }
+    if (currentStep < 6) {
       setCurrentStep(prev => prev + 1)
     }
   }
@@ -83,9 +104,15 @@ export const usePasarela = () => {
       },
       {
         id: '03',
+        name: 'Información del Pago',
+        href: '#',
+        status: currentStep > 3 ? 'complete' : currentStep === 3 ? 'current' : 'upcoming',
+      },
+      {
+        id: '04',
         name: 'Confirmación',
         href: '#',
-        status: currentStep === 3 ? 'current' : 'upcoming',
+        status: currentStep === 4 ? 'current' : 'upcoming',
       },
     ]
   }
@@ -101,5 +128,9 @@ export const usePasarela = () => {
     handleBack,
     personalData,
     handlePersonalDataChange,
+    paymentStatus,
+    setPaymentStatus,
+    paymentInfo,
+    handlePaymentInfoChange,
   }
 } 

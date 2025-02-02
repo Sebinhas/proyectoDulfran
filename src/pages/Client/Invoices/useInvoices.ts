@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { PatientCell, DateCell, StatusCell, CreatedByCell, ValueCell } from './templates/cellTemplates';
 import { toast } from 'react-toastify';
+import { useAuthStore } from '../../../hooks/authStore';
+
 
 
 export interface Orders {
@@ -17,7 +19,9 @@ export interface Orders {
 
 
 const useOrders = () => {
+    const currentNit = useAuthStore.getState().currentNit;
     const [isLoading, setIsLoading] = useState(true);
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -25,10 +29,14 @@ const useOrders = () => {
         }, 1000);
     }, []);
 
+    useEffect(() => {
+        console.log(currentNit);
+    }, [currentNit]);
 
     const columns = [
         {
             header: 'Usuario',
+
             accessor: 'user',
             cell: PatientCell
         },
