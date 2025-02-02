@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getPqr, createPqr } from "../../../api/axios.helper";
+import { getPqrByClient, createPqr } from "../../../api/axios.helper";
 import { useAuthStore } from "../../../hooks/authStore";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -10,15 +10,29 @@ const usePqr = () => {
   const { user } = useAuthStore();
 
   useEffect(() => {
-    const response = async () => {
-      const response = await getPqr();
-      setPqr(response);
+    const fetchPqrs = async () => {
+      try {
+        const response = await getPqrByClient(user?.id || '', user?.id);
+        if (response.status === 'success') {
+          const userPqrs = response.pqrs.filter((pqr: any) => 
+            pqr.client?.cedula === String(user?.id)
+          );
+          setPqr(userPqrs);
+        }
+      } catch (error) {
+        toast.error('Error al obtener las PQRs');
+        console.error('Error:', error);
+      }
     };
-    response();
-  }, []);
+
+    if (user?.id) {
+      fetchPqrs();
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     console.log(pqr);
+    console.log(user)
   }, [pqr]);
 
   const createNewPqr = async (data: any) => {
@@ -40,7 +54,7 @@ const usePqr = () => {
       }
     } catch (error: any) {
       console.error('Error al crear PQR:', error);
-      toast.error(error);
+      toast.error(error.response.data.message || 'Error al crear la PQR');
     }
   };
 

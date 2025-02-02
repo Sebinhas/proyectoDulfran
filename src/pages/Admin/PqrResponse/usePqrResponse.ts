@@ -1,16 +1,55 @@
 import { CreatedByCell, TipoCell, CategoriaCell, AsuntoCell, DescripcionCell, EstadoCell, FechaCreacionCell } from './template/cellTemplate'
-import { getPqr } from "../../../api/axios.helper";
+import { getPqrById , responsePqr } from "../../../api/axios.helper";
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import Modal from '../../../components/Modal/Modal';
+import { useForm } from "react-hook-form";
+import { useAuthStore } from '../../../hooks/authStore';
+import { toast } from 'react-toastify';
+
+interface PqrType {
+  id: number;
+  type: string;
+  category: string;
+  sub_category: string;
+  description: string;
+  status: string;
+  response?: string;
+  created_at: string;
+  client: {
+    cedula: string;
+    no_contract: string;
+    first_name: string;
+    second_name: string;
+    first_lastname: string;
+    second_lastname: string;
+    phone: string;
+    email: string;
+    speed_plan: string;
+  };
+}
+
 const usePqrResponse = () => {
+   
    const [pqr, setPqr] = useState([]);
    const { toggleModal: toggleModalResponsePqr, closeModalAction: closeModalActionResponsePqr, Render: RenderResponsePqr } = Modal({ title: 'Responder PQR' });
+   const [selectedPqr, setSelectedPqr] = useState<PqrType | null>(null);
+   const [response, setResponse] = useState('');
+   const [status, setStatus] = useState('pendiente');
+   const { user } = useAuthStore();
+   const {  register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      status: selectedPqr?.status,
+      response: ''
+    }
+  });
 
    useEffect(() => {
       const response = async () => {
-        const response = await getPqr();
-        setPqr(response);
+        const response = await getPqrById(user?.id || '');
+        if(response.status === 'success'){
+          setPqr(response.pqrs);
+          console.log(response.pqrs);
+        }
       };
       response();
     }, []);
@@ -53,12 +92,36 @@ const usePqrResponse = () => {
       },
     ]
 
-    const handleEdit = (row: any): void => {
-      toast.success(`Orden vista, estado: ${row.status}`);
+    const handleEdit = (row: any) => {
+      setSelectedPqr(row);
+      setStatus(row.status);
       toggleModalResponsePqr();
-      console.log(row);
-        //toggleModalEditInfoUser();
-        // navigate(`/dashboard/ordenes/${row.id}`);
+    };
+
+    const handleSubmitResponse = async (data: any) => {
+      try {
+        const payload = {
+          'id': selectedPqr?.id,
+          'response': data.response,
+          'status': data.status,
+          'admin_nit': Number(user?.id),
+          'response_type': 'ADMIN'
+        }
+        
+        const response = await responsePqr(payload);
+        if (response) {
+          toast.success('PQR respondida exitosamente');
+          closeModalActionResponsePqr();
+          const updatedPqr = await getPqr();
+          setPqr(updatedPqr);
+          reset();
+        } else {
+          toast.error('Error al responder la PQR');
+        }
+      } catch (error: any) {
+        toast.error(error.response?.data?.message || 'Error al responder la PQR');
+        console.error('Error al responder PQR:', error.response?.data?.message);
+      }
     };
 
    return {
@@ -67,7 +130,15 @@ const usePqrResponse = () => {
       handleEdit,
       toggleModalResponsePqr,
       closeModalActionResponsePqr,
-      RenderResponsePqr
+      RenderResponsePqr,
+      selectedPqr,
+      status,
+      setStatus,
+      response,
+      setResponse,
+      handleSubmitResponse,
+      register,
+      handleSubmit
    }
 }
 

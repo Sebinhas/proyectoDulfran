@@ -30,7 +30,7 @@ export const useAuthStore = create<AuthState>()(
           // Aquí iría tu lógica de autenticación con el backend
           const mockUsers = [
             {
-              id: '1234567890',
+              id: '1111',
               name: 'Sebastian Cuervo',
               email: 'cuervo@lab.com',
               password: 'cuervo',

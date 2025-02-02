@@ -77,7 +77,9 @@ export const FechaCreacionCell = (row: PQRS): React.ReactNode => (
 export const CreatedByCell = (row: PQRS): React.ReactNode => (
   <div className="flex items-center gap-2">
     <div className="font-medium text-gray-900">
-      {`${row.client.first_name} ${row.client.first_lastname}`}
+      {row.client ? 
+        `${row.client.first_name} ${row.client.first_lastname}` : 
+        'No disponible'}
     </div>
   </div>
 );

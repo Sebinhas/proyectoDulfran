@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BASE_URL = "https://f0e6-2800-e2-9c00-1c5e-ecbe-8bda-23f5-11bb.ngrok-free.app/api";
+export const BASE_URL = "https://ad06-2800-e2-9c00-398-f9a5-d895-eec8-1501.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -67,8 +67,13 @@ export const getMessagesByNumber = async (number: string) => {
   }
 };
 
-export const getPqr = async () => {
-  const response = await axiosInstance.get('/pqr');
+export const getPqrByClient = async (company: string, client: string) => {
+  const response = await axiosInstance.get(`/pqr/company/${company}/client/${client}`);
+  return response.data;
+};
+
+export const getPqrById = async (company: string) => {
+  const response = await axiosInstance.get(`/pqr/company/${company}`);
   return response.data;
 };
 
