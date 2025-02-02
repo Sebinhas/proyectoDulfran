@@ -16,12 +16,13 @@ interface Column {
 
 interface TableGlobalProps {
   columns: Column[];
-  data: ClientsDTO[];
+  data: any[];
   itemsPerPage?: number;
   activateOptions?: {
     options?: (row: ClientsDTO) => void;
     setOptions?: (type: string, row: ClientsDTO) => void;
   };
+
   filters?: {
     name?: boolean;
     username?: boolean;
@@ -32,13 +33,14 @@ interface TableGlobalProps {
     cedula?: boolean;
   };
   actions?: {
-    edit?: (row: ClientsDTO) => void;
-    delete?: (row: ClientsDTO) => void;
-    view?: (row: ClientsDTO) => void;
-    custom?: (row: ClientsDTO) => React.ReactNode;
-    message?: (row: ClientsDTO) => void;
-    download?: (row: ClientsDTO) => void;
+    edit?: (row: any) => void;
+    delete?: (row: any) => void;
+    view?: (row: any) => void;
+    custom?: (row: any) => React.ReactNode;
+    message?: (row: any) => void;
+    download?: (row: any) => void;
   };
+
   isLoading?: boolean;
   emptyMessage?: string;
 }

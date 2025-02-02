@@ -6,15 +6,18 @@ interface User {
   name: string;
   email: string;
   role: string;
+  nit?: number;
 }
 
 interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  currentNit: number | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   updateUser: (user: Partial<User>) => void;
+  setCurrentNit: (nit: number) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -24,6 +27,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      currentNit: null,
 
       login: async (email: string, password: string) => {
         try {
@@ -34,21 +38,24 @@ export const useAuthStore = create<AuthState>()(
               name: 'Sebastian Cuervo',
               email: 'cuervo@lab.com',
               password: 'cuervo',
-              role: 'admin'
+              role: 'superAdmin',
+              nit: 1111
             },
             {
               id: '1234567891',
               name: 'Sebastian Guerra',
               email: 'sebastian@lab.com',
               password: 'sebastian',
-              role: 'admin'
+              role: 'superAdmin',
+              nit: 3333
             },
             {
               id: '1234567892',
               name: 'Juanes Espinoza',
               email: 'juanes@lab.com',
               password: 'juanes',
-              role: 'admin'
+              role: 'superAdmin',
+              nit: 2222
             },
             {
               id: '1234567893',
@@ -73,7 +80,8 @@ export const useAuthStore = create<AuthState>()(
           set({
             user: userWithoutPassword,
             token: 'mock-jwt-token',
-            isAuthenticated: true
+            isAuthenticated: true,
+            currentNit: userWithoutPassword.nit || null
           });
 
         } catch (error) {
@@ -87,12 +95,17 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           token: null,
           isAuthenticated: false,
+          currentNit: null,
           login: useAuthStore.getState().login,
           logout: useAuthStore.getState().logout,
-          updateUser: useAuthStore.getState().updateUser
+          updateUser: useAuthStore.getState().updateUser,
+          setCurrentNit: useAuthStore.getState().setCurrentNit
         }));
       },
 
+      setCurrentNit: (nit) => {
+        set({ currentNit: nit });
+      },
 
       updateUser: (userData) => {
         set((state) => ({

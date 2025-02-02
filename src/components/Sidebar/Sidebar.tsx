@@ -22,22 +22,27 @@ export const Sidebar = () => {
           <div id="invoices-badge">
             <Badge icon="facturas" title="Gestión de facturas" route="/dashboard/invoices" />
           </div>
-          {user?.role === 'admin' && (
+          {user?.role === 'superAdmin' && (
             <div id="settings-badge">
-              <Badge icon="usuarios" title="Gestión de usuarios" route="/dashboard/users" />
+              <Badge icon="clientes" title="Gestión de usuarios" route="/dashboard/clients" />
             </div>
           )}
-          {user?.role === 'admin' && (
+          {user?.role === 'admin' || user?.role === 'superAdmin' && (
+            <div id="settings-badge">
+              <Badge icon="usuarios" title="Gestión de clientes" route="/dashboard/users" />
+            </div>
+          )}
+          {user?.role === 'admin' || user?.role === 'superAdmin' && (
             <div id="reports-badge">
               <Badge icon="reportes" title="Reportes" route="/dashboard/reports" />
             </div>
           )}
-          {user?.role === 'user' && (
+          {user?.role === 'user' || user?.role === 'superAdmin' && (
             <div id="pqr-badge">
               <Badge icon="pqr" title="PQR" route="/dashboard/pqr" />
             </div>
           )}
-          {user?.role === 'admin' && (
+          {user?.role === 'admin' || user?.role === 'superAdmin' && (
             <div id="pqr-response-badge">
               <Badge icon="pqr" title="PQR" route="/dashboard/pqrResponse" />
             </div>

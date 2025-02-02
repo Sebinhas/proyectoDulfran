@@ -48,7 +48,7 @@ const Users = () => {
       
       <div className="w-full flex flex-col gap-8">
         <div className="flex flex-row items-center justify-between">
-          <div className="text-[25px] font-semibold text-gray-600">Lista de Usuarios</div>
+          <div className="text-[25px] font-semibold text-gray-600">Lista de Clientes</div>
           <div onClick={() => toggleModalUploadUser()} className="w-52 h-12 flex flex-row items-center justify-center gap-2 rounded-md cursor-pointer select-none hover:bg-gray-600 bg-gray-500">
             <IoAddSharp className="text-3xl text-white" />
             <div  className="text-[18px]  text-white">Subir Usuarios</div>

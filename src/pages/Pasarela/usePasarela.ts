@@ -28,7 +28,7 @@ export interface PaymentInfo {
 export const usePasarela = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const [previousStep, setPreviousStep] = useState(1)
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('')
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null)
   const [paymentStatus, setPaymentStatus] = useState<'success' | 'error' | 'pending'>('pending')
   const [personalData, setPersonalData] = useState<PersonalData>({
     nombre: '',
@@ -74,6 +74,9 @@ export const usePasarela = () => {
   }
 
   const handleNext = () => {
+    if (currentStep === 1 && !selectedPaymentMethod) {
+      return;
+    }
     if (currentStep < 6) {
       setCurrentStep(prev => prev + 1)
     }

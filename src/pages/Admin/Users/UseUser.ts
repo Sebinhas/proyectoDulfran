@@ -6,14 +6,17 @@ import { toast } from 'react-toastify';
 import { ClientsDTO } from "./DTOUser";
 import { getClients, uploadExcel } from '../../../api/axios.helper';
 import Swal from 'sweetalert2';
-
+import { useAuthStore } from '../../../hooks/authStore';
 
 const UseUsers = () => {
+  const currentNit = useAuthStore.getState().currentNit;
+
   const [isLoading, setIsLoading] = useState(true);
   const [options, setOptions] = useState('');
   const [user, setUser] = useState<ClientsDTO | null>(null);
   const [clients, setClients] = useState<ClientsDTO[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
 
   const { toggleModal: toggleModalUploadUser, closeModalAction: closeModalActionUploadUser, Render: RenderUploadUser } = Modal({ title: 'Subir Usuarios' });
   const { toggleModal: toggleModalViewDetailUser, closeModalAction: closeModalActionViewDetailUser, Render: RenderViewDetailUser } = Modal({ title: 'Datos Personales' });
@@ -84,6 +87,8 @@ const UseUsers = () => {
                 if (response) {
                     setClients(response);
                 }
+
+
             } catch (error) {
                 console.error('Error al actualizar los datos:', error);
                 Swal.fire({
@@ -111,6 +116,8 @@ const UseUsers = () => {
                 if (response) {
                     setClients(response);
                 }
+
+
             } catch (error) {
                 console.error('Error fetching clients:', error);
                 Swal.fire({

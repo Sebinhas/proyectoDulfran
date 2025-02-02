@@ -1,9 +1,9 @@
 import CryptoJS from 'crypto-js';
 
-const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY;
+const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY || 'clave_predeterminada_desarrollo';
 
-if (!ENCRYPTION_KEY) {
-  console.error('¡ADVERTENCIA: La clave de encriptación no está configurada!');
+if (!import.meta.env.VITE_ENCRYPTION_KEY) {
+  console.warn('⚠️ ADVERTENCIA: Usando clave de encriptación predeterminada. Configure VITE_ENCRYPTION_KEY en el archivo .env para producción.');
 }
 
 const encrypt = (text: string) => {
