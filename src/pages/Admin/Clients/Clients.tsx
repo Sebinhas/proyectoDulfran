@@ -83,8 +83,10 @@ const Clients = () => {
       </RenderViewDetailUser>
 
       <RenderEditInfoUser>
-        <EditInfoUser user={user} closeModalActionUploadUser={closeModalActionUploadUser} />
+        <EditInfoUser setIsLoading={setIsLoading} loading={isLoading} user={user} closeModalActionEditInfoUser={closeModalActionEditInfoUser} />
       </RenderEditInfoUser>
+
+
 
 
       <RenderUploadUser>
