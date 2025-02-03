@@ -92,6 +92,19 @@ export const createUser = async (data: any) => {
 
 };
 
+export const updateUser = async (data: any) => {
+  const currentNit = useAuthStore.getState().currentNit;
+  try {
+    const response = await axiosInstance.patch(`/admin/companies/${currentNit}/admin-users/${data.cedula}`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar usuario:', error);
+    throw error;
+  }
+
+};
+
+
 export const uploadExcel = async (file: File) => {
     const formData = new FormData();
 
