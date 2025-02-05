@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 
-export const BASE_URL = "http://62.72.5.152:3000/api";
+export const BASE_URL = "https://ad06-2800-e2-9c00-398-f9a5-d895-eec8-1501.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -136,12 +136,35 @@ export const getMessagesByNumber = async (number: string) => {
   }
 };
 
-export const getPqr = async () => {
-  const response = await axiosInstance.get('/pqr');
+export const getPqrByClient = async (company: string, client: string) => {
+  const response = await axiosInstance.get(`/pqr/company/${company}/client/${client}`);
   return response.data;
 };
 
-export const createPqr = async (data: any) => {
+export const getPqrById = async (company: string) => {
+  const response = await axiosInstance.get(`/pqr/company/${company}`);
+  return response.data;
+};
+
+export const createPqr = async (data: {
+  type: string;
+  category: string;
+  sub_category: string;
+  description: string;
+  client_cedula: string;
+}) => {
   const response = await axiosInstance.post('/pqr', data);
+  return response.data;
+};
+
+export const responsePqr = async (data: {
+  admin_nit: string;
+  id: string;
+  response: string;
+  status: string;
+  response_type: string;
+  pqr_id: string;
+}) => {
+  const response = await axiosInstance.patch(`/pqr/company/${data.admin_nit}/client/${data.id}/id/${data.pqr_id}`, data);
   return response.data;
 };

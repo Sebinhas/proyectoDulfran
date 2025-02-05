@@ -58,7 +58,9 @@ export const EstadoCell = (row: PQRS): React.ReactNode => (
     row.status === 'resuelto' ? 'bg-green-100 text-green-800' :
     'bg-gray-100 text-gray-800'
   }`}>
-    {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+    {row.status === 'en_proceso' 
+      ? 'En proceso'
+      : row.status.charAt(0).toUpperCase() + row.status.slice(1)}
   </span>
 );
 
@@ -77,7 +79,9 @@ export const FechaCreacionCell = (row: PQRS): React.ReactNode => (
 export const CreatedByCell = (row: PQRS): React.ReactNode => (
   <div className="flex items-center gap-2">
     <div className="font-medium text-gray-900">
-      {`${row.client.first_name} ${row.client.first_lastname}`}
+      {row.client ? 
+        `${row.client.first_name} ${row.client.first_lastname}` : 
+        'No disponible'}
     </div>
   </div>
 );
