@@ -37,7 +37,7 @@ export const Sidebar = () => {
               <Badge icon="reportes" title="Reportes" route="/dashboard/reports" />
             </div>
           )}
-          {user?.role === 'user' || user?.role === 'superAdmin' && (
+          {user?.role === 'user' && (
             <div id="pqr-badge">
               <Badge icon="pqr" title="PQR" route="/dashboard/pqr" />
             </div>
