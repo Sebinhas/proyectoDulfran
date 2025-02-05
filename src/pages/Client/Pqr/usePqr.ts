@@ -12,7 +12,7 @@ const usePqr = () => {
   useEffect(() => {
     const fetchPqrs = async () => {
       try {
-        const response = await getPqrByClient(user?.id || '', user?.id);
+        const response = await getPqrByClient(String(user?.nit), String(user?.id));
         if (response.status === 'success') {
           const userPqrs = response.pqrs.filter((pqr: any) => 
             pqr.client?.cedula === String(user?.id)

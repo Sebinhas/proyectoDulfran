@@ -4,6 +4,141 @@ import {useSocketPqr } from "./service/useSocketPqr";
 import { useEffect } from "react";
 
 
+export const mockAdminPqrs = [
+  {
+    id: 1,
+    type: "PETICION",
+    category: "Facturación",
+    sub_category: "Ajuste de factura",
+    description: "Solicito revisión del cargo adicional en la factura del mes de marzo",
+    status: "pendiente",
+    client_cedula: "1234567890",
+    created_at: "2024-03-15T10:30:00",
+    updated_at: "2024-03-15T10:30:00",
+    client: {
+      first_name: "Juan",
+      second_name: "Carlos",
+      first_lastname: "Pérez",
+      second_lastname: "Gómez",
+      cedula: "1234567890",
+      no_contract: "CON-2024-001",
+      phone: "3001234567",
+      email: "juan.perez@email.com",
+      speed_plan: "50 MB"
+    }
+  },
+  {
+    id: 2,
+    type: "QUEJA",
+    category: "Servicio técnico",
+    sub_category: "Velocidad del servicio",
+    description: "El servicio de internet presenta lentitud constante desde hace una semana",
+    status: "en_proceso",
+    client_cedula: "2345678901",
+    created_at: "2024-03-14T15:45:00",
+    updated_at: "2024-03-15T09:20:00",
+    client: {
+      first_name: "María",
+      second_name: "Fernanda",
+      first_lastname: "González",
+      second_lastname: "López",
+      cedula: "2345678901",
+      no_contract: "CON-2024-002",
+      phone: "3109876543",
+      email: "maria.gonzalez@email.com",
+      speed_plan: "100 MB"
+    }
+  },
+  {
+    id: 3,
+    type: "RECLAMO",
+    category: "Atención al cliente",
+    sub_category: "Incumplimiento de visita",
+    description: "El técnico no se presentó en la fecha programada para la instalación",
+    status: "cerrado",
+    client_cedula: "3456789012",
+    created_at: "2024-03-10T08:00:00",
+    updated_at: "2024-03-12T16:30:00",
+    client: {
+      first_name: "Pedro",
+      second_name: "",
+      first_lastname: "Ramírez",
+      second_lastname: "Silva",
+      cedula: "3456789012",
+      no_contract: "CON-2024-003",
+      phone: "3203456789",
+      email: "pedro.ramirez@email.com",
+      speed_plan: "200 MB"
+    }
+  },
+  {
+    id: 4,
+    type: "PETICION",
+    category: "Servicios",
+    sub_category: "Cambio de plan",
+    description: "Solicito aumentar la velocidad de mi plan actual",
+    status: "pendiente",
+    client_cedula: "4567890123",
+    created_at: "2024-03-16T11:20:00",
+    updated_at: "2024-03-16T11:20:00",
+    client: {
+      first_name: "Ana",
+      second_name: "María",
+      first_lastname: "Castro",
+      second_lastname: "Ruiz",
+      cedula: "4567890123",
+      no_contract: "CON-2024-004",
+      phone: "3156789012",
+      email: "ana.castro@email.com",
+      speed_plan: "30 MB"
+    }
+  },
+  {
+    id: 5,
+    type: "QUEJA",
+    category: "Facturación",
+    sub_category: "Cobro indebido",
+    description: "Me están cobrando un servicio adicional que nunca solicité",
+    status: "en_proceso",
+    client_cedula: "5678901234",
+    created_at: "2024-03-13T09:15:00",
+    updated_at: "2024-03-14T14:20:00",
+    client: {
+      first_name: "Luis",
+      second_name: "Alberto",
+      first_lastname: "Mendoza",
+      second_lastname: "Torres",
+      cedula: "5678901234",
+      no_contract: "CON-2024-005",
+      phone: "3167890123",
+      email: "luis.mendoza@email.com",
+      speed_plan: "150 MB"
+    }
+  },
+  {
+    id: 6,
+    type: "RECLAMO",
+    category: "Técnico",
+    sub_category: "Intermitencia del servicio",
+    description: "El servicio se cae constantemente en horas de la noche",
+    status: "pendiente",
+    client_cedula: "6789012345",
+    created_at: "2024-03-16T08:30:00",
+    updated_at: "2024-03-16T08:30:00",
+    client: {
+      first_name: "Carmen",
+      second_name: "Elena",
+      first_lastname: "Vargas",
+      second_lastname: "Díaz",
+      cedula: "6789012345",
+      no_contract: "CON-2024-006",
+      phone: "3178901234",
+      email: "carmen.vargas@email.com",
+      speed_plan: "80 MB"
+    }
+  }
+];
+
 const PqrResponse = () => {
   const { columns, pqr, handleEdit, RenderResponsePqr, selectedPqr, handleSubmitResponse, register, handleSubmit, closeModalActionResponsePqr } = usePqrResponse();
   const { response } = useSocketPqr([1,2]);
@@ -14,7 +149,7 @@ const PqrResponse = () => {
     <div className="w-full flex flex-col p-4">
       <TableGlobal
         columns={columns}
-        data={pqr ?? []}
+        data={mockAdminPqrs ?? []}
         itemsPerPage={8}
         actions={{
           edit: (row) => handleEdit(row)

@@ -58,7 +58,9 @@ export const EstadoCell = (row: PQRS): React.ReactNode => (
     row.status === 'resuelto' ? 'bg-green-100 text-green-800' :
     'bg-gray-100 text-gray-800'
   }`}>
-    {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+    {row.status === 'en_proceso' 
+      ? 'En proceso'
+      : row.status.charAt(0).toUpperCase() + row.status.slice(1)}
   </span>
 );
 

@@ -43,6 +43,10 @@ const usePqrResponse = () => {
     }
   });
 
+  useEffect(() => {
+    console.log('selectedPqr',selectedPqr);
+  }, [selectedPqr]);
+
    useEffect(() => {
       const response = async () => {
         const response = await getPqrById(user?.id || '');
@@ -99,12 +103,14 @@ const usePqrResponse = () => {
     };
 
     const handleSubmitResponse = async (data: any) => {
+      
       try {
         const payload = {
-          'id': selectedPqr?.id,
+          'id': String(selectedPqr?.client?.cedula || ''),
+          'pqr_id': String(selectedPqr?.id || ''),
           'response': data.response,
           'status': data.status,
-          'admin_nit': Number(user?.id),
+          'admin_nit': String(user?.nit),
           'response_type': 'ADMIN'
         }
         
@@ -112,8 +118,8 @@ const usePqrResponse = () => {
         if (response) {
           toast.success('PQR respondida exitosamente');
           closeModalActionResponsePqr();
-          const updatedPqr = await getPqr();
-          setPqr(updatedPqr);
+          const updatedPqr = await getPqrById(String(user?.id));
+          setPqr(updatedPqr.pqrs);
           reset();
         } else {
           toast.error('Error al responder la PQR');

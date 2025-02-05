@@ -133,7 +133,14 @@ export const createPqr = async (data: {
   return response.data;
 };
 
-export const responsePqr = async (data: any) => {
-  const response = await axiosInstance.patch(`/pqr/${data.id}`, data);
+export const responsePqr = async (data: {
+  admin_nit: string;
+  id: string;
+  response: string;
+  status: string;
+  response_type: string;
+  pqr_id: string;
+}) => {
+  const response = await axiosInstance.patch(`/pqr/company/${data.admin_nit}/client/${data.id}/id/${data.pqr_id}`, data);
   return response.data;
 };
