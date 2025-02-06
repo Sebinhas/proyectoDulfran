@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { ClientsDTO } from "../../DTOUser";
+import { ClientsDTO } from "../../DTOClients";
 const useEditInfoUser = () => {
 
 

@@ -1,12 +1,12 @@
 import { IoAddSharp, IoCloudUploadOutline, IoDocumentOutline } from "react-icons/io5";
-import UseUsers from "./UseUser";
+import UseUsers from "./useClients";
 import TableGlobal from "../../../components/TableData/TableGlobal";
 import { useEffect, useState } from "react";
-import ViewDetailUser from "./components/ViewDetailUser/ViewDetailUser";
-import { ClientsDTO } from "./DTOUser";
+import ViewDetailUser from "./components/ViewDetailClient/ViewDetailClient";
+import { ClientsDTO } from "./DTOClients";
 import { uploadExcel } from "../../../api/axios.helper";
 import { toast } from "react-toastify";
-import EditInfoUser from "./components/EditInfoUser/EditInfoUser";
+import EditInfoUser from "./components/EditInfoClient/EditInfoClient";
 
 const Users = () => {
   
@@ -52,10 +52,11 @@ const Users = () => {
           <div className="text-[25px] font-semibold text-gray-600">Lista de Clientes</div>
           <div onClick={() => toggleModalUploadUser()} className="w-52 h-12 flex flex-row items-center justify-center gap-2 rounded-md cursor-pointer select-none hover:bg-gray-600 bg-gray-500">
             <IoAddSharp className="text-3xl text-white" />
-            <div  className="text-[18px]  text-white">Subir Usuarios</div>
+            <div  className="text-[18px]  text-white">Subir Clientes</div>
           </div>
         </div>
       </div>
+
       <TableGlobal
         columns={columns}
         data={clients ?? []}

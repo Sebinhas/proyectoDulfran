@@ -38,38 +38,59 @@ export const useAuthStore = create<AuthState>()(
               name: 'Sebastian Cuervo',
               email: 'cuervo@lab.com',
               password: 'cuervo',
-              role: 'superAdmin',
+              role: 'administrador',
               nit: 1111
+
             },
             {
               id: '1234567891',
               name: 'Sebastian Guerra',
               email: 'sebastian@lab.com',
               password: 'sebastian',
-              role: 'superAdmin',
+              role: 'administrador',
               nit: 3333
+
             },
             {
               id: '1234567892',
-              name: 'Juanes Espinoza',
+              name: 'Juanes Espinosa',
               email: 'juanes@lab.com',
               password: 'juanes',
-              role: 'superAdmin',
+              role: 'administrador',
               nit: 2222
+
             },
             {
               id: '1234567893',
-              name: 'Usuario',
-              email: 'user@lab.com',
-              password: 'user',
-              role: 'user'
+              name: 'Cliente 1',
+              email: 'cliente1@lab.com',
+              password: 'cliente1',
+              role: 'cliente',
+              nit: 4444
             },
             {
               id: '1234567899',
-              name: 'Cliente',
-              email: 'cliente@lab.com',
-              password: 'cliente',
-              role: 'user'
+              name: 'Cliente 2',
+              email: 'cliente2@lab.com',
+              password: 'cliente2',
+              role: 'cliente',
+              nit: 5555
+            },
+            {
+              id: '1234567894',
+              name: 'financiero',
+              email: 'financiero@lab.com',
+              password: 'financiero',
+              role: 'financiero',
+              nit: 6666
+            },
+            {
+              id: '1234567895',
+              name: 'tecnico',
+              email: 'tecnico@lab.com',
+              password: 'tecnico',
+              role: 'tecnico',
+              nit: 7777
             }
           ];
 

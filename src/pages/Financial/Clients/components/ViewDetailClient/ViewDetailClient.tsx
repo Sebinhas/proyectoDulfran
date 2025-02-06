@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ClientsDTO } from "../../DTOUser"; 
+import { ClientsDTO } from "../../DTOClients"; 
 import { getClients } from "../../../../../api/axios.helper";
 
 

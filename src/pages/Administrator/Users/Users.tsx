@@ -1,9 +1,9 @@
 import { IoAddSharp, IoCloudUploadOutline, IoDocumentOutline, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-import UseClients from "./UseClients";
+import UseClients from "./useUsers";
 import TableGlobal from "../../../components/TableData/TableGlobal";
 import { useEffect, useState } from "react";
 import ViewDetailUser from "./components/ViewDetailUser/ViewDetailUser";
-import { ClientsDTO } from "./DTOClients";
+import { ClientsDTO } from "./DTOUsers";
 import { uploadExcel } from "../../../api/axios.helper";
 
 import { toast } from "react-toastify";

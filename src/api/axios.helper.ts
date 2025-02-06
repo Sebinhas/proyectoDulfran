@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 
-export const BASE_URL = "https://ad06-2800-e2-9c00-398-f9a5-d895-eec8-1501.ngrok-free.app/api";
+export const BASE_URL = "http://62.72.5.152:3000/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,

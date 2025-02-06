@@ -6,7 +6,7 @@ import { MdDownload } from "react-icons/md";
 import { FaMessage } from "react-icons/fa6";
 import { Tooltip } from 'react-tooltip';
 import { SlOptions } from 'react-icons/sl';
-import { ClientsDTO } from '../../pages/Admin/Users/DTOUser';
+import { ClientsDTO } from '../../pages/Financial/Clients/DTOClients';
 
 interface Column {
   header: string;

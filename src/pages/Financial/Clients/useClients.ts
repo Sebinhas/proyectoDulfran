@@ -3,7 +3,7 @@ import { NameCell, CedulaCell, ContractCell, StatusCell, EmailCell, date_contrac
 import { useForm } from 'react-hook-form';
 import Modal from "../../../components/Modal/Modal";
 import { toast } from 'react-toastify';
-import { ClientsDTO } from "./DTOUser";
+import { ClientsDTO } from "./DTOClients";
 import { getClients, uploadExcel } from '../../../api/axios.helper';
 import Swal from 'sweetalert2';
 import { useAuthStore } from '../../../hooks/authStore';

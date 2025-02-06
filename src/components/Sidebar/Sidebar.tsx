@@ -19,37 +19,61 @@ export const Sidebar = () => {
       </div>
       <div className="flex flex-col justify-between pb-1 h-full">
         <div className="flex flex-col gap-2">
-          <div id="invoices-badge">
-            <Badge icon="facturas" title="Gestión de facturas" route="/dashboard/invoices" />
-          </div>
-          {user?.role === 'superAdmin' && (
-            <div id="settings-badge">
-              <Badge icon="clientes" title="Gestión de usuarios" route="/dashboard/clients" />
+          {user?.role === 'financiero' && (
+            <div id="invoices-badge">
+              <Badge icon="facturas" title="Gestión de facturas" route="/dashboard/invoices" />
             </div>
           )}
-          {user?.role === 'admin' || user?.role === 'superAdmin' && (
-            <div id="settings-badge">
-              <Badge icon="usuarios" title="Gestión de clientes" route="/dashboard/users" />
+          {user?.role === 'financiero' && (
+            <div id="clients-badge">
+              <Badge icon="clientes" title="Gestión de clientes" route="/dashboard/clients" />
             </div>
           )}
-          {user?.role === 'admin' || user?.role === 'superAdmin' && (
+          {user?.role === 'administrador' && (
+            <div id="users-badge">
+              <Badge icon="usuarios" title="Gestión de usuarios" route="/dashboard/users" />
+            </div>
+          )}
+
+          {(user?.role === 'administrador' || user?.role === 'financiero') && (
             <div id="reports-badge">
               <Badge icon="reportes" title="Reportes" route="/dashboard/reports" />
             </div>
           )}
-          {user?.role === 'user' && (
+
+          {(user?.role === 'tecnico' || user?.role === 'financiero') && (
             <div id="pqr-badge">
-              <Badge icon="pqr" title="PQR" route="/dashboard/pqr" />
+              <Badge icon="pqrManagement" title="Gestión de PQR" route="/dashboard/pqr" />
             </div>
           )}
-          {user?.role === 'admin' || user?.role === 'superAdmin' && (
+          {user?.role === 'cliente' && (
             <div id="pqr-response-badge">
-              <Badge icon="pqr" title="PQR" route="/dashboard/pqrResponse" />
+              <Badge icon="pqr" title="Mis PQR" route="/dashboard/pqrResponse" />
             </div>
           )}
+
+
+          {user?.role === 'tecnico' && (
+            <div id="contracts-badge">
+              <Badge icon="contratos" title="Contratos" route="/dashboard/contracts" />
+            </div>
+          )}
+          {user?.role === 'cliente' && (
+            <div id="payments-badge">
+              <Badge icon="pagos" title="Gestión de pagos" route="/dashboard/payments" />
+            </div>
+          )}
+
+          {user?.role === 'administrador' && (
+            <div id="binnacle-badge">
+              <Badge icon="bitacora" title="Bitacora"   route="/dashboard/binnacle" />
+            </div>
+          )}
+
           <div id="notifications-badge">
             <Badge icon="notificaciones" title="Notificaciones" route="/dashboard/notifications" />
           </div>
+
           <div id="profile-badge">
             <Badge icon="perfil" title="Perfil" route="/dashboard/profile" />
           </div>

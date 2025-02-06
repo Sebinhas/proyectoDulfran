@@ -41,14 +41,21 @@ export const useHome = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      if (user.role === "superAdmin") {
+      if (user.role === "administrador") {
         navigate("/dashboard");
-      } else if (user.role === "user") {
+      } else if (user.role === "financiero") {
         navigate("/dashboard/invoices");
+
+      } else if (user.role === "tecnico") {
+        navigate("/dashboard/contracts");
+
+      } else if (user.role === "cliente") {
+        navigate("/dashboard/payments");
       }
     } else {
       navigate("/");
     }
+
   }, [isAuthenticated, user, navigate]);
 
   const onSubmit = async (data: LoginFormInputs) => {

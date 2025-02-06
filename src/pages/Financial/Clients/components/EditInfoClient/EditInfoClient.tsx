@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { ClientsDTO } from "../../DTOUser"; 
+import { ClientsDTO } from "../../DTOClients"; 
 import { getClients } from "../../../../../api/axios.helper";
-import useEditInfoUser from "./useEditInfoUser";
+import useEditInfoUser from "./useEditInfoClient";
 
 const EditInfoUser = ({ user, closeModalActionUploadUser }: { user: ClientsDTO | null, closeModalActionUploadUser: () => void }) => {
 

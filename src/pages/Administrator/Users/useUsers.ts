@@ -3,7 +3,7 @@ import { NameCell, CedulaCell, UsernameCell, StatusCell, EmailCell, date_created
 import { useForm } from 'react-hook-form';
 import Modal from "../../../components/Modal/Modal";
 import { toast } from 'react-toastify';
-import { ClientsDTO } from "./DTOClients";
+import { ClientsDTO } from "./DTOUsers";
 
 
 import { getClients, uploadExcel, createUser, getUsers } from '../../../api/axios.helper';
