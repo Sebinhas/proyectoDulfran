@@ -3,12 +3,22 @@ import { NameCell, CedulaCell, UsernameCell, StatusCell, EmailCell, date_created
 import { useForm } from 'react-hook-form';
 import Modal from "../../../components/Modal/Modal";
 import { toast } from 'react-toastify';
-import { ClientsDTO } from "./DTOUsers";
+import { ClientsDTO } from "../../Administrator/Users/DTOUsers";
 
 
 import { getClients, uploadExcel, createUser, getUsers } from '../../../api/axios.helper';
 import Swal from 'sweetalert2';
 import { useAuthStore } from "../../../hooks/authStore";
+import {
+  InvoiceNumberCell,
+  ClientNameCell,
+  AmountCell,
+  DueDateCell,
+  PaymentStatusCell,
+  PaymentMethodCell,
+  PeriodCell,
+  Payment
+} from './templates/cellTemplates';
 
 
 
@@ -30,6 +40,9 @@ const usePayments = () => {
   const { toggleModal: toggleModalEditInfoUser, closeModalAction: closeModalActionEditInfoUser, Render: RenderEditInfoUser } = Modal({ title: 'Editar Información' });
 
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<ClientsDTO>();
+
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [showDetail, setShowDetail] = useState(false);
 
   const onSubmit = async (data: ClientsDTO) => {
     try {
@@ -119,58 +132,50 @@ const usePayments = () => {
 
   const columns = [
     {
-      header: 'Nombre',
-      accessor: 'first_name',
-      cell: NameCell
+      header: 'No. Factura',
+      accessor: 'invoice_number',
+      cell: InvoiceNumberCell
     },
     {
-      header: 'Cédula',
-      accessor: 'cedula',
-      cell: CedulaCell
+      header: 'Cliente',
+      accessor: 'client',
+      cell: ClientNameCell
     },
     {
-      header: 'Nombre de Usuario',
-      accessor: 'username',
-      cell: UsernameCell
+      header: 'Monto',
+      accessor: 'amount',
+      cell: AmountCell
+    },
+    {
+      header: 'Fecha Vencimiento',
+      accessor: 'due_date',
+      cell: DueDateCell
     },
     {
       header: 'Estado',
       accessor: 'status',
-      cell: StatusCell
-    },
-
-    {
-      header: 'Email',
-      accessor: 'email',
-      cell: EmailCell
+      cell: PaymentStatusCell
     },
     {
-      header: 'Tipo de Perfil',
-      accessor: 'profile_type',
-      cell: profile_type
+      header: 'Método de Pago',
+      accessor: 'payment_method',
+      cell: PaymentMethodCell
     },
     {
-      header: 'Fecha de Creación',
-      accessor: 'createdAt',
-      cell: date_createdAt
-    },
-
-    // {
-    //   header: 'Fecha de Actualización',
-    //   accessor: 'updatedAt',
-    //   cell: date_updatedAt
-    // },
-    
-
-
+      header: 'Periodo',
+      accessor: 'period',
+      cell: PeriodCell
+    }
   ]
 
-  const handleView = (row: ClientsDTO): void => {
-    toast.success(`Orden vista, estado: ${row}`);
-    // console.log(row);
-    setUser(row);
-    toggleModalViewDetailUser();
-    // navigate(`/dashboard/ordenes/${row.id}`);
+  const handleView = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setShowDetail(true);
+  };
+
+  const handleBack = () => {
+    setShowDetail(false);
+    setSelectedPayment(null);
   };
 
   const handleMessage = (row: ClientsDTO): void => {
@@ -223,7 +228,10 @@ const usePayments = () => {
 
     user,
     selectedFile,
-    setSelectedFile
+    setSelectedFile,
+    selectedPayment,
+    showDetail,
+    handleBack
 
 
   }

@@ -1,5 +1,7 @@
 // Nuevo archivo para los templates JSX
 import React from 'react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { priceFormatter } from '../../../../helpers/priceFormatter.helper';
 // Nuevo archivo para tipos
 export interface Users {
@@ -11,7 +13,27 @@ export interface Users {
   status: string;
   createdAt: string;
   updatedAt: string;
+}
 
+export interface Payment {
+  id: number;
+  invoice_number: string;
+  client: {
+    first_name: string;
+    second_name: string;
+    first_lastname: string;
+    second_lastname: string;
+    cedula: string;
+    no_contract: string;
+  };
+  amount: number;
+  payment_date: string | null;
+  due_date: string;
+  status: 'pagado' | 'pendiente' | 'vencido';
+  payment_method: string | null;
+  period: string;
+  speed_plan: string;
+  invoice_url: string;
 }
 
 export const CedulaCell = (row: Users): React.ReactNode => (
@@ -20,15 +42,12 @@ export const CedulaCell = (row: Users): React.ReactNode => (
   </div>
 );
 
-
-
 export const NameCell = (row: Users): React.ReactNode => (
-<div className="flex items-center gap-2">
-  <div className="flex flex-row gap-1 items-center">
-    <div className="font-medium text-gray-900">{row.name} </div>
+  <div className="flex items-center gap-2">
+    <div className="flex flex-row gap-1 items-center">
+      <div className="font-medium text-gray-900">{row.name} </div>
+    </div>
   </div>
-</div>
-
 );
 
 export const UsernameCell = (row: Users): React.ReactNode => (
@@ -36,7 +55,6 @@ export const UsernameCell = (row: Users): React.ReactNode => (
     <div className="font-medium text-gray-900">{row.username}</div>
   </div>
 );
-
 
 export const StatusCell = (row: Users): React.ReactNode => (
   <span className={`px-2 py-1 rounded-full text-sm ${
@@ -56,8 +74,6 @@ export const profile_type = (row: Users): React.ReactNode => (
   </span> 
 );
 
-
-
 export const EmailCell = (row: Users): React.ReactNode => (
   <span className="text-gray-600">
     {row.email}
@@ -68,15 +84,72 @@ export const date_createdAt = (row: Users): React.ReactNode => (
   <span className="text-gray-600">
     {new Date(row.createdAt).toLocaleDateString()}
   </span>
-
-
-
 );
 
 export const date_updatedAt = (row: Users): React.ReactNode => (
   <span className="text-gray-600">
     {new Date(row.updatedAt).toLocaleDateString()}
   </span>
+);
 
+export const InvoiceNumberCell = (row: Payment): React.ReactNode => (
+  <div className="font-medium text-gray-900">
+    {row.invoice_number}
+  </div>
+);
 
+export const ClientNameCell = (row: Payment): React.ReactNode => (
+  <div className="flex items-center gap-2">
+    <div className="font-medium text-gray-900">
+      {`${row.client.first_name} ${row.client.first_lastname}`}
+    </div>
+  </div>
+);
+
+export const AmountCell = (row: Payment): React.ReactNode => (
+  <div className="font-medium text-gray-900">
+    {priceFormatter(row.amount)}
+  </div>
+);
+
+export const DueDateCell = (row: Payment): React.ReactNode => (
+  <span className="text-gray-600">
+    {format(new Date(row.due_date), 'dd/MM/yyyy', { locale: es })}
+  </span>
+);
+
+export const PaymentStatusCell = (row: Payment): React.ReactNode => (
+  <span className={`px-2 py-1 rounded-full text-sm ${
+    row.status === 'pagado' ? 'bg-green-100 text-green-800' :
+    row.status === 'pendiente' ? 'bg-yellow-100 text-yellow-800' :
+    'bg-red-100 text-red-800'
+  }`}>
+    {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+  </span>
+);
+
+export const PaymentMethodCell = (row: Payment): React.ReactNode => (
+  <span className="text-gray-600">
+    {row.payment_method || '-'}
+  </span>
+);
+
+export const PeriodCell = (row: Payment): React.ReactNode => (
+  <span className="text-gray-600">
+    {row.period}
+  </span>
+);
+
+export const SpeedPlanCell = (row: Payment): React.ReactNode => (
+  <span className="text-gray-600">
+    {row.speed_plan}
+  </span>
+);
+
+export const PaymentDateCell = (row: Payment): React.ReactNode => (
+  <span className="text-gray-600">
+    {row.payment_date 
+      ? format(new Date(row.payment_date), 'dd/MM/yyyy', { locale: es })
+      : '-'}
+  </span>
 );
