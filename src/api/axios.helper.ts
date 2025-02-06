@@ -55,6 +55,44 @@ export const getClients = async () => {
   }
 };
 
+// Obtener lista de facturas de una empresa
+export const getInvoices = async () => {
+  const currentNit = useAuthStore.getState().currentNit;
+  
+
+  if (!currentNit) {
+    console.error('No hay NIT seleccionado');
+    return [];
+  }
+
+  try {
+    const response = await axiosInstance.get(`/admin/companies/${currentNit}/invoices`);
+    
+
+    // Accedemos específicamente a response.data.clients
+    const invoices = response.data?.invoices || [];
+    
+
+    // Verificamos si clients es un array antes de usar map
+    if (!Array.isArray(invoices)) {
+      console.error('La respuesta no es un array:', invoices);
+      return [];
+    }
+
+
+    return invoices.map((item: any) => ({
+      id: item.id || '',
+      user: item.user || '',
+      email: item.email || '',
+      documentNumber: item.documentNumber || '',
+      documentType: item.documentType || '',
+    }));
+  } catch (error) {
+    console.error('Error al obtener clientes:', error);
+    return [];
+  }
+};
+
 // Obtener usuarios de una empresa
 export const getUsers = async () => {
   const currentNit = useAuthStore.getState().currentNit;

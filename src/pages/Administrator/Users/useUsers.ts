@@ -12,12 +12,13 @@ import { useAuthStore } from "../../../hooks/authStore";
 
 
 
-const UseClients = () => {
+const useUsers = () => {
   const currentNit = useAuthStore.getState().currentNit;
   const [isLoading, setIsLoading] = useState(true);
   const [options, setOptions] = useState('');
   const [user, setUser] = useState<ClientsDTO | null>(null);
   const [dataUsers, setDataUsers] = useState<ClientsDTO[]>([]);
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
 
@@ -227,4 +228,4 @@ const UseClients = () => {
   }
 }
 
-export default UseClients;
+export default useUsers;

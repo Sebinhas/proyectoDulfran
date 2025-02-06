@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NameCell, CedulaCell, ContractCell, StatusCell, EmailCell, date_contract, Users } from './templates/cellTemplates';
+import { NameCell, CedulaCell, ContractCell, StatusCell, EmailCell, date_contract } from './templates/cellTemplates';
 import { useForm } from 'react-hook-form';
 import Modal from "../../../components/Modal/Modal";
 import { toast } from 'react-toastify';
@@ -8,8 +8,9 @@ import { getClients, uploadExcel } from '../../../api/axios.helper';
 import Swal from 'sweetalert2';
 import { useAuthStore } from '../../../hooks/authStore';
 
-const UseUsers = () => {
+const useClients = () => {
   const currentNit = useAuthStore.getState().currentNit;
+
 
   const [isLoading, setIsLoading] = useState(true);
   const [options, setOptions] = useState('');
@@ -39,8 +40,6 @@ const UseUsers = () => {
       }
     }
   };
-
-
 
   const handleFileUpload = async (file: File) => {
     try {
@@ -224,4 +223,4 @@ const UseUsers = () => {
   }
 }
 
-export default UseUsers;
+export default useClients;

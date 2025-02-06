@@ -1,17 +1,19 @@
 import { IoAddSharp, IoCloudUploadOutline, IoDocumentOutline } from "react-icons/io5";
-import UseUsers from "./useClients";
+import useClients from "./useClients";
 import TableGlobal from "../../../components/TableData/TableGlobal";
 import { useEffect, useState } from "react";
 import ViewDetailUser from "./components/ViewDetailClient/ViewDetailClient";
 import { ClientsDTO } from "./DTOClients";
 import { uploadExcel } from "../../../api/axios.helper";
+
 import { toast } from "react-toastify";
 import EditInfoUser from "./components/EditInfoClient/EditInfoClient";
 
-const Users = () => {
+const Clients = () => {
   
 
   const {
+
     setIsLoading,
     isLoading,
     clients,
@@ -34,7 +36,7 @@ const Users = () => {
     handleFileUpload,
     selectedFile,
     setSelectedFile
-  } = UseUsers();
+  } = useClients();
 
   useEffect(() => {
     console.log(user);
@@ -146,4 +148,4 @@ const Users = () => {
   )
 }
 
-export default Users;
+export default Clients;

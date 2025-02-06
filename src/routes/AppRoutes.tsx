@@ -149,11 +149,6 @@ const AppRoutes = createBrowserRouter([
         element: <Binnacle />,
         loader: roleLoader(['administrador'])
       },
-
-
-
-
-
     ]
   },
   {

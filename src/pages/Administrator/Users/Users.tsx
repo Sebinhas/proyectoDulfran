@@ -1,5 +1,5 @@
 import { IoAddSharp, IoCloudUploadOutline, IoDocumentOutline, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-import UseClients from "./useUsers";
+import useUsers from "./useUsers";
 import TableGlobal from "../../../components/TableData/TableGlobal";
 import { useEffect, useState } from "react";
 import ViewDetailUser from "./components/ViewDetailUser/ViewDetailUser";
@@ -9,7 +9,7 @@ import { uploadExcel } from "../../../api/axios.helper";
 import { toast } from "react-toastify";
 import EditInfoUser from "./components/EditInfoUser/EditInfoUser";
 
-const Clients = () => {
+const Users = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -38,7 +38,8 @@ const Clients = () => {
     handleSubmit,
     reset,
     errors,
-  } = UseClients();
+  } = useUsers();
+
 
   useEffect(() => {
     console.log(user);
@@ -213,4 +214,4 @@ const Clients = () => {
   )
 }
 
-export default Clients;
+export default Users;
