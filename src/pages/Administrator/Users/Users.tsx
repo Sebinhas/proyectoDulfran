@@ -184,10 +184,11 @@ const Clients = () => {
                 className="w-full border rounded-md p-2 outline-none border-gray-300"
               >
                 <option value="">Seleccione un tipo</option>
-                <option value="Admin">Admin</option>
-                <option value="Soporte">Soporte</option>
+                <option value="Financiero">Financiero</option>
+                <option value="Tecnico">Tecnico</option>
               </select>
             </div>
+
 
 
           </div>

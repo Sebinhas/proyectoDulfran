@@ -30,40 +30,20 @@ import Reports from '../pages/Global/Reports/Reports.tsx';
 import Contracts from '../pages/Technical/Contracts/Contracts.tsx';
 import Payments from '../pages/Clients/Payments/Payments.tsx';
 import Binnacle from '../pages/Administrator/Binnacle/Binnacle.tsx';
+import Dashboard from '../pages/Global/Dashboard/Dasboard.tsx';
 
 
 // Agregamos un nuevo loader para verificar el rol de admin
-const adminLoader = () => {
-  const user = useAuthStore.getState().user;
-  if (user?.role !== 'administrador') {
-    return redirect('/404');
-  }
-  return null;
+const roleLoader = (allowedRoles: string[]) => {
+  return () => {
+    const user = useAuthStore.getState().user;
+    if (!allowedRoles.includes(user?.role || '')) {
+      return redirect('/404');
+    }
+    return null;
+  };
 };
 
-const financieroLoader = () => {
-  const user = useAuthStore.getState().user;
-  if (user?.role !== 'financiero') {
-    return redirect('/404');
-  }
-  return null;
-};
-
-const clienteLoader = () => {
-  const user = useAuthStore.getState().user;
-  if (user?.role !== 'cliente') {
-    return redirect('/404');
-  }
-  return null;
-};
-
-const tecnicoLoader = () => {
-  const user = useAuthStore.getState().user;
-  if (user?.role !== 'tecnico') {
-    return redirect('/404');
-  }
-  return null;
-};
 
 const AppRoutes = createBrowserRouter([
   {
@@ -93,11 +73,15 @@ const AppRoutes = createBrowserRouter([
       </Suspense>
     ),
     children: [
-      
+      {
+        index: true,
+        element: <Dashboard />
+      },
       // {
       //   path: '/dashboard/pacientes',
       //   element: <Patients />
       // },
+
 
       {
         path: '/dashboard/profile',
@@ -109,49 +93,63 @@ const AppRoutes = createBrowserRouter([
       },
       {
         path: '/dashboard/pqr',
-        element: <Pqr />
+        element: <Pqr />,
+        loader: roleLoader(['cliente'])
       },              
       // Rutas protegidas solo para admin
+
+
       {
         path: '/dashboard/invoices',
         element: <Invoices />,
-        loader: financieroLoader
+        loader: roleLoader(['financiero'])
       },
+
 
       {
         path: '/dashboard/pqrResponse',
-        element: <PqrResponse />
+        element: <PqrResponse />,
+        loader: roleLoader(['financiero', 'tecnico'])
       },
+
+
+
       {
         path: '/dashboard/reports',
         element: <Reports />,
-        loader: adminLoader || financieroLoader
+        loader: roleLoader(['administrador', 'financiero'])
       },
+
+
       {
         path: '/dashboard/users',
         element: <Users />,
-        loader: adminLoader
+        loader: roleLoader(['administrador'])
       },
       {
         path: '/dashboard/clients',
         element: <Clients />,
-        loader: financieroLoader
+        loader: roleLoader(['financiero'])
       },
+
       {
         path: '/dashboard/contracts',
         element: <Contracts />,
-        loader: tecnicoLoader
+        loader: roleLoader(['tecnico'])
       },
+
       {
         path: '/dashboard/payments',
         element: <Payments />,
-        loader: clienteLoader
+        loader: roleLoader(['cliente'])
       },
+
       {
         path: '/dashboard/binnacle',
         element: <Binnacle />,
-        loader: adminLoader
+        loader: roleLoader(['administrador'])
       },
+
 
 
 

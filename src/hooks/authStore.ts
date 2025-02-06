@@ -82,7 +82,7 @@ export const useAuthStore = create<AuthState>()(
               email: 'financiero@lab.com',
               password: 'financiero',
               role: 'financiero',
-              nit: 6666
+              nit: 2222
             },
             {
               id: '1234567895',

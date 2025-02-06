@@ -43,12 +43,12 @@ export const Sidebar = () => {
 
           {(user?.role === 'tecnico' || user?.role === 'financiero') && (
             <div id="pqr-badge">
-              <Badge icon="pqrManagement" title="Gestión de PQR" route="/dashboard/pqr" />
+              <Badge icon="pqrManagement" title="Gestión de PQR" route="/dashboard/pqrResponse" />
             </div>
           )}
           {user?.role === 'cliente' && (
             <div id="pqr-response-badge">
-              <Badge icon="pqr" title="Mis PQR" route="/dashboard/pqrResponse" />
+              <Badge icon="pqr" title="Mis PQR" route="/dashboard/pqr" />
             </div>
           )}
 

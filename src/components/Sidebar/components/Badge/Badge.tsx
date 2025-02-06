@@ -19,18 +19,18 @@ export const Badge = ({ icon, title, route }: BadgeProps) => {
 
   const renderIcon = () => {
     switch (icon) {
-      case 'usuarios': return (<LuUsers />);
-      case 'clientes': return(<LuUser />);
-      case 'pqrManagement': return (<LuMessagesSquare />);
-      case 'pqr': return(<LuMessageSquareText />);
       case 'notificaciones': return(<IoNotificationsOutline />);
+      case 'pqrManagement': return (<LuMessagesSquare />);
       case 'reportes': return(<LuMessageSquareWarning />);
-      case 'facturas': return(<LuFileInput />);
-      case 'perfil': return(<LuUser />);
       case 'bitacora': return(<AiOutlineNotification />);
-      case 'salir': return(<LuLogOut />);
-      case 'pagos': return(<MdPayment />);
+      case 'pqr': return(<LuMessageSquareText />);
+      case 'facturas': return(<LuFileInput />);
       case 'contratos': return(<LuFilePen />);
+      case 'usuarios': return (<LuUsers />);
+      case 'pagos': return(<MdPayment />);
+      case 'clientes': return(<LuUser />);
+      case 'salir': return(<LuLogOut />);
+      case 'perfil': return(<LuUser />);
       default:
         return null; // Si no hay ícono, devuelve null
     }
