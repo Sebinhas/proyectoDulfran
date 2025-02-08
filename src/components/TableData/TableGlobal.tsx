@@ -317,7 +317,7 @@ const TableGlobal = ({
                           {actions?.view && (
                             <button
                               onClick={() => actions?.view?.(row)}
-                              className="p-1.5  hover:bg-blue-50 rounded-full"
+                              className="p-1.5  hover:bg-gray-200 rounded-full text-gray-500"
                               data-tooltip-id="tooltip"
                               data-tooltip-content="Ver detalles"
                             >
@@ -327,7 +327,7 @@ const TableGlobal = ({
                           {actions?.edit && (
                             <button
                               onClick={() => actions?.edit?.(row)}
-                              className="p-1.5  hover:bg-yellow-50 rounded-full"
+                              className="p-1.5  hover:bg-gray-200 rounded-full text-gray-500"
                               data-tooltip-id="tooltip"
                               data-tooltip-content="Editar"
                             >
@@ -337,7 +337,7 @@ const TableGlobal = ({
                           {actions?.download && (
                             <button
                               onClick={() => actions?.download?.(row)}
-                              className="p-1.5 hover:bg-green-50 rounded-full"
+                              className="p-1.5 hover:bg-gray-200 rounded-full text-gray-500"
                               data-tooltip-id="tooltip"
                               data-tooltip-content="Descargar"
                             >
@@ -347,7 +347,7 @@ const TableGlobal = ({
                           {actions?.message && (
                             <button
                               onClick={() => actions?.message?.(row)}
-                              className="p-1.5  hover:bg-purple-50 rounded-full"
+                              className="p-1.5  hover:bg-gray-200 rounded-full text-gray-500"
                               data-tooltip-id="tooltip"
                               data-tooltip-content="PQR"
                             >
