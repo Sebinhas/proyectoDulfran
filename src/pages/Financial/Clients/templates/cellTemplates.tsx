@@ -10,9 +10,9 @@ export interface Clients {
   second_name: string;
   first_lastName: string;
   second_lastName: string;
-  no_contract: string;
+  no_contract?: string;
   address: string;
-  date_contract: string;
+  date_contract?: string;
   phone: string;
   email: string;
   createdAt: string;
@@ -20,19 +20,17 @@ export interface Clients {
   status: 'activo' | 'inactivo' ;
 }
 
-export const ContractCell = (row: Clients): React.ReactNode => (
-  <div className="flex items-center gap-2">
-    <div className="font-medium text-gray-900">{row.no_contract}</div>
-  </div>
-);
-
-
 export const NameCell = (row: Clients): React.ReactNode => (
-<div className="flex items-center gap-2">
-  <div className="flex flex-row gap-1 items-center">
-    <div className="font-medium text-gray-900">{row.first_name} {row.first_lastName} </div>
+  <div className="flex items-center gap-2">
+    <div className="flex flex-col">
+      <div className="font-medium text-gray-900">
+        {row.first_name} {row.second_name} {row.first_lastName} {row.second_lastName}
+      </div>
+      <div className="text-sm text-gray-500">
+        {row.phone}
+      </div>
+    </div>
   </div>
-</div>
 );
 
 
@@ -55,13 +53,44 @@ export const StatusCell = (row: Clients): React.ReactNode => (
 );
 
 export const EmailCell = (row: Clients): React.ReactNode => (
-  <span className="text-gray-600">
-    {row.email}
-  </span>
+  <div className="flex items-center">
+    <span className="text-gray-600">
+      {row.email}
+    </span>
+  </div>
 );
 
-export const date_contract = (row: Clients): React.ReactNode => (
-  <span className="text-gray-600">
-    {new Date(row.date_contract).toLocaleDateString()}
-  </span>
+export const CreatedAtCell = (row: Clients): React.ReactNode => (
+  <div className="flex flex-col">
+    <span className="text-gray-900">
+      {new Date(row.createdAt).toLocaleDateString()}
+    </span>
+    <span className="text-sm text-gray-500">
+      {new Date(row.createdAt).toLocaleTimeString()}
+    </span>
+  </div>
+);
+
+export const FirstNameCell = (row: Clients): React.ReactNode => (
+  <div className="flex items-center">
+    <span className="text-gray-900">
+      {row.first_name} {row.second_name}
+    </span>
+  </div>
+);
+
+export const AddressCell = (row: Clients): React.ReactNode => (
+  <div className="flex items-center">
+    <span className="text-gray-600">
+      {row.address}
+    </span>
+  </div>
+);
+
+export const PhoneCell = (row: Clients): React.ReactNode => (
+  <div className="flex items-center">
+    <span className="text-gray-600">
+      {row.phone}
+    </span>
+  </div>
 );

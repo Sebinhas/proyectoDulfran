@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { NameCell, CedulaCell, ContractCell, StatusCell, EmailCell, date_contract } from './templates/cellTemplates';
+import { 
+  CedulaCell, 
+  StatusCell, 
+  EmailCell, 
+  CreatedAtCell,
+  FirstNameCell,
+  AddressCell,
+  PhoneCell 
+} from './templates/cellTemplates';
 import { useForm } from 'react-hook-form';
 import Modal from "../../../components/Modal/Modal";
 import { toast } from 'react-toastify';
@@ -135,19 +143,29 @@ const useClients = () => {
 
   const columns = [
     {
-      header: 'Contrato',
-      accessor: 'no_contract',
-      cell: ContractCell
-    },
-    {
-      header: 'Nombre',
-      accessor: 'first_name',
-      cell: NameCell
-    },
-    {
       header: 'Cédula',
       accessor: 'cedula',
       cell: CedulaCell
+    },
+    {
+      header: 'Nombres',
+      accessor: 'first_name',
+      cell: FirstNameCell
+    },
+    {
+      header: 'Dirección',
+      accessor: 'address',
+      cell: AddressCell
+    },
+    {
+      header: 'Teléfono',
+      accessor: 'phone',
+      cell: PhoneCell
+    },
+    {
+      header: 'Correo',
+      accessor: 'email',
+      cell: EmailCell
     },
     {
       header: 'Estado',
@@ -155,17 +173,10 @@ const useClients = () => {
       cell: StatusCell
     },
     {
-      header: 'Email',
-      accessor: 'email',
-      cell: EmailCell
-    },
-    {
-      header: 'Fecha de Creación',
-      accessor: 'date_contract',
-      cell: date_contract
-    },
-
-
+      header: 'Fecha de Registro',
+      accessor: 'createdAt',
+      cell: CreatedAtCell
+    }
   ]
 
   const handleView = (row: ClientsDTO): void => {
