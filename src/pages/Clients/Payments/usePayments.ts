@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
-import { NameCell, CedulaCell, UsernameCell, StatusCell, EmailCell, date_createdAt, date_updatedAt, profile_type } from './templates/cellTemplates';
 import { useForm } from 'react-hook-form';
 import Modal from "../../../components/Modal/Modal";
 import { toast } from 'react-toastify';
 import { ClientsDTO } from "../../Administrator/Users/DTOUsers";
 
+import { useNavigate } from "react-router-dom";
+import { DTOPayment } from "./DTOPayment";
 
 import { getClients, uploadExcel, createUser, getUsers } from '../../../api/axios.helper';
 import Swal from 'sweetalert2';
 import { useAuthStore } from "../../../hooks/authStore";
 import {
-  InvoiceNumberCell,
-  ClientNameCell,
-  AmountCell,
-  DueDateCell,
-  PaymentStatusCell,
-  PaymentMethodCell,
-  PeriodCell,
-  Payment
-} from './templates/cellTemplates';
+  NumberContractCell,
+  TotalCell,
+  PaymentPeriodCell,
+  StatusCell,
+  numberInvoicesCell
+}
+  from './templates/cellTemplates';
+
 
 
 
@@ -28,7 +28,7 @@ const usePayments = () => {
   const [options, setOptions] = useState('');
   const [user, setUser] = useState<ClientsDTO | null>(null);
   const [dataUsers, setDataUsers] = useState<ClientsDTO[]>([]);
-
+  const navigate = useNavigate();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -41,8 +41,33 @@ const usePayments = () => {
 
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<ClientsDTO>();
 
-  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<DTOPayment | null>(null);
   const [showDetail, setShowDetail] = useState(false);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+        if (isLoading) {
+            try {
+                const response = await getUsers();
+                if (response) {
+                    setDataUsers(response);
+                }
+            } catch (error) {
+                console.error('Error fetching clients:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un error al cargar los datos',
+                    icon: 'error'
+                });
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
+
+    fetchData();
+}, [isLoading]);
 
   const onSubmit = async (data: ClientsDTO) => {
     try {
@@ -106,72 +131,106 @@ const usePayments = () => {
 
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-        if (isLoading) {
-            try {
-                const response = await getUsers();
-                if (response) {
-                    setDataUsers(response);
-                }
-            } catch (error) {
-                console.error('Error fetching clients:', error);
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Hubo un error al cargar los datos',
-                    icon: 'error'
-                });
-            } finally {
-                setIsLoading(false);
-            }
-        }
-    };
 
-    fetchData();
-}, [isLoading]);
 
   const columns = [
     {
       header: 'No. Factura',
-      accessor: 'invoice_number',
-      cell: InvoiceNumberCell
+      accessor: 'numberInvoices',
+      cell: numberInvoicesCell
     },
     {
-      header: 'Cliente',
-      accessor: 'client',
-      cell: ClientNameCell
-    },
-    {
-      header: 'Monto',
-      accessor: 'amount',
-      cell: AmountCell
-    },
-    {
-      header: 'Fecha Vencimiento',
-      accessor: 'due_date',
-      cell: DueDateCell
+      header: 'No. Contrato',
+      accessor: 'numberContract',
+      cell: NumberContractCell
     },
     {
       header: 'Estado',
       accessor: 'status',
-      cell: PaymentStatusCell
-    },
-    {
-      header: 'Método de Pago',
-      accessor: 'payment_method',
-      cell: PaymentMethodCell
+      cell: StatusCell
     },
     {
       header: 'Periodo',
-      accessor: 'period',
-      cell: PeriodCell
-    }
+      accessor: 'paymentPeriod',
+      cell: PaymentPeriodCell
+    },
+    {
+      header: 'Total',
+      accessor: 'total',
+      cell: TotalCell
+    },
+
+
   ]
 
-  const handleView = (payment: Payment) => {
+
+  const mockPayments: DTOPayment[] = [
+    {
+      numberInvoices: 1,
+      numberContract: "FAC-2024-001",
+      total: 85000,
+      paymentPeriod: "01/03/2024 - 31/03/2024",
+      status: "pendiente"
+
+    },
+    {
+      numberInvoices: 2,
+      numberContract: "FAC-2024-001",
+      total: 85000,
+      paymentPeriod: "01/04/2024 - 31/04/2024",
+      status: "pendiente"
+    },
+
+    {
+      numberInvoices: 3,
+      numberContract: "FAC-2024-001",
+      total: 85000,
+      paymentPeriod: "01/05/2024 - 31/05/2024",
+      status: "pendiente"
+
+
+    },
+    {
+      numberInvoices: 4,
+      numberContract: "FAC-2024-001",
+      total: 85000,
+      paymentPeriod: "01/06/2024 - 31/06/2024",
+      status: "pendiente"
+    },
+
+    {
+      numberInvoices: 5,
+      numberContract: "FAC-2024-001",
+      total: 85000,
+      paymentPeriod: "01/07/2024 - 31/07/2024",
+      status: "pendiente"
+    },
+
+    {
+      numberInvoices: 6,
+      numberContract: "FAC-2024-001",
+      total: 85000,
+      paymentPeriod: "01/08/2024 - 31/08/2024",
+      status: "pendiente"
+
+
+    },
+
+
+
+
+    
+
+  ];
+
+
+
+
+  const handleView = (payment: DTOPayment) => {
     setSelectedPayment(payment);
     setShowDetail(true);
   };
+
 
   const handleBack = () => {
     setShowDetail(false);
@@ -188,6 +247,12 @@ const usePayments = () => {
     toast.success(`Orden vista, estado: ${row}`);
     // navigate(`/dashboard/ordenes/${row.id}`);
   };
+
+  const handlePay = (row: ClientsDTO): void => {
+    toast.success(`Orden vista, estado: ${row}`);
+    navigate(`/pasarela`, { state: { row } });
+  };
+
 
 
   const handleEdit = (row: ClientsDTO): void => {
@@ -223,7 +288,7 @@ const usePayments = () => {
     toggleModalEditInfoUser,
     closeModalActionEditInfoUser,
     RenderEditInfoUser,
-
+    handlePay,
 
 
     user,
@@ -231,7 +296,9 @@ const usePayments = () => {
     setSelectedFile,
     selectedPayment,
     showDetail,
-    handleBack
+    handleBack,
+    mockPayments
+
 
 
   }
