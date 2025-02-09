@@ -206,3 +206,13 @@ export const responsePqr = async (data: {
   const response = await axiosInstance.patch(`/pqr/company/${data.admin_nit}/client/${data.id}/id/${data.pqr_id}`, data);
   return response.data;
 };
+
+export const login = async (data: {
+  username: string;
+  password: string;
+}) => {
+  const response = await axiosInstance.post('/login', data);
+  return response.data;
+};
+
+
