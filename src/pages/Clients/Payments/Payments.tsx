@@ -40,7 +40,7 @@ const Payments = () => {
             </div>
           </div>
 
-          <div className="overflow-auto flex-1">
+          <div className="overflow-auto ">
             <TableGlobal
               columns={columns}
               data={mockPayments ?? []}
@@ -56,7 +56,9 @@ const Payments = () => {
             />
           </div>
           <RenderDownloadInvoice>
-            <GenerateInvoice invoice={invoice} />
+            <div className="w-full h-full flex flex-col gap-4 py-4">
+              <GenerateInvoice invoice={invoice} />
+            </div>
           </RenderDownloadInvoice>
         </>
       ) : (

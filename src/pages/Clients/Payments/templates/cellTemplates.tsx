@@ -48,12 +48,13 @@ export const PaymentPeriodCell = (row: Users): React.ReactNode => (
 
 export const StatusCell = (row: Users): React.ReactNode => (
   <span className={`px-2 py-1 rounded-full text-sm ${
-    row.status === 'activo' 
+    row.status === 'pagado' 
       ? 'bg-green-100 text-green-800' 
-      : row.status === 'inactivo'
+      : row.status === 'vencido'
       ? 'bg-red-100 text-red-800'
       : 'bg-yellow-100 text-yellow-800'
   }`}>
+
     {row.status}
   </span>
 );

@@ -169,6 +169,35 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
   },
+  clientLabel: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    marginBottom: 3,
+  },
+  clientValue: {
+    fontSize: 10,
+    marginBottom: 5,
+  },
+  clientInfo: {
+    fontSize: 9,
+    color: '#555',
+    marginBottom: 3,
+  },
+  dateBox: {
+    width: '40%',
+    backgroundColor: '#f9f9f9',
+    padding: 8,
+    borderRadius: 4,
+  },
+  dateLabel: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  dateValue: {
+    fontSize: 9,
+    color: '#555',
+  },
 });
 
 export default styles;

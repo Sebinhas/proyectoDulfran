@@ -38,7 +38,7 @@ const usePayments = () => {
 
 
   const { toggleModal: toggleModalUploadUser, closeModalAction: closeModalActionUploadUser, Render: RenderUploadUser } = Modal({ title: 'Subir Usuarios' });
-  const { toggleModal: toggleModalDownloadInvoice, closeModalAction: closeModalActionDownloadInvoice, Render: RenderDownloadInvoice } = Modal({ title: 'Datos Personales' });
+  const { toggleModal: toggleModalDownloadInvoice, closeModalAction: closeModalActionDownloadInvoice, Render: RenderDownloadInvoice } = Modal({ title: 'Desacargar Factura' });
 
   const { toggleModal: toggleModalEditInfoUser, closeModalAction: closeModalActionEditInfoUser, Render: RenderEditInfoUser } = Modal({ title: 'Editar Información' });
 
@@ -142,11 +142,11 @@ const usePayments = () => {
       accessor: 'numberInvoices',
       cell: numberInvoicesCell
     },
-    {
-      header: 'No. Contrato',
-      accessor: 'numberContract',
-      cell: NumberContractCell
-    },
+    // {
+    //   header: 'No. Contrato',
+    //   accessor: 'numberContract',
+    //   cell: NumberContractCell
+    // },
     {
       header: 'Estado',
       accessor: 'status',
@@ -171,9 +171,9 @@ const usePayments = () => {
     {
       numberInvoices: 1,
       numberContract: "FAC-2024-001",
-      total: 85000,
+      total: 120000,
       paymentPeriod: "01/03/2024 - 31/03/2024",
-      status: "pendiente"
+      status: "pagado"
 
     },
     {
@@ -181,30 +181,31 @@ const usePayments = () => {
       numberContract: "FAC-2024-001",
       total: 85000,
       paymentPeriod: "01/04/2024 - 31/04/2024",
-      status: "pendiente"
+      status: "pagado"
     },
 
     {
       numberInvoices: 3,
       numberContract: "FAC-2024-001",
-      total: 85000,
+      total: 90000,
       paymentPeriod: "01/05/2024 - 31/05/2024",
-      status: "pendiente"
+      status: "pagado"
+
 
 
     },
     {
       numberInvoices: 4,
       numberContract: "FAC-2024-001",
-      total: 85000,
+      total: 110000,
       paymentPeriod: "01/06/2024 - 31/06/2024",
-      status: "pendiente"
+      status: "vencido"
     },
 
     {
       numberInvoices: 5,
       numberContract: "FAC-2024-001",
-      total: 85000,
+      total: 80000,
       paymentPeriod: "01/07/2024 - 31/07/2024",
       status: "pendiente"
     },
@@ -249,10 +250,10 @@ const usePayments = () => {
   const handleDownload = (row: any): void => {
     toast.success(`Orden vista, estado: ${row}`);
     toggleModalDownloadInvoice();
-    
+    console.log('row',row);
     // Inicializar invoice si es null
     const invoiceData = {
-      documentNumber: user?.documentNumber || '',
+      client_cedula: user?.documentNumber || '',
       email: user?.email || '',
       name: user?.name || '',
       nit: user?.nit || '',
