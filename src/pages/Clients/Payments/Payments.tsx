@@ -3,18 +3,12 @@ import usePayments from "./usePayments";
 import TableGlobal from "../../../components/TableData/TableGlobal";
 import { useEffect } from "react";
 import ViewPaymentDetail from "./viewPaymentsDetail/viewPaymentsDetails";
-
-
-
-
-
-
+import { LuDownload, LuPrinter } from "react-icons/lu";
+import GenerateInvoice from "./components/GenerateInvoice/GenerateInvoice";
 
 const Payments = () => {
 
-
   const {
- 
     columns,
     handleView,
     handleDownload,
@@ -23,14 +17,16 @@ const Payments = () => {
     showDetail,
     handleBack,
     handlePay,
-    mockPayments
-
+    mockPayments,
+    RenderDownloadInvoice,
+    closeModalActionDownloadInvoice,
+    toggleModalDownloadInvoice,
+    invoice
   } = usePayments();
 
   useEffect(() => {
     console.log(user);
   }, [user]);
-
 
   return (
     <div className="w-full h-full flex flex-col gap-4 p-4 overflow-hidden">
@@ -57,9 +53,11 @@ const Payments = () => {
               filters={{
                 status: true,
               }}
-
             />
           </div>
+          <RenderDownloadInvoice>
+            <GenerateInvoice invoice={invoice} />
+          </RenderDownloadInvoice>
         </>
       ) : (
         <div className="w-full h-full overflow-auto">
