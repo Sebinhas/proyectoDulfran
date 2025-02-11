@@ -37,7 +37,7 @@ import Dashboard from '../pages/Global/Dashboard/Dasboard.tsx';
 const roleLoader = (allowedRoles: string[]) => {
   return () => {
     const user = useAuthStore.getState().user;
-    if (!allowedRoles.includes(user?.role || '')) {
+    if (!allowedRoles.includes(user?.profile_type || '')) {
       return redirect('/404');
     }
     return null;
@@ -77,12 +77,6 @@ const AppRoutes = createBrowserRouter([
         index: true,
         element: <Dashboard />
       },
-      // {
-      //   path: '/dashboard/pacientes',
-      //   element: <Patients />
-      // },
-
-
       {
         path: '/dashboard/profile',
         element: <Profile />
@@ -97,34 +91,25 @@ const AppRoutes = createBrowserRouter([
         loader: roleLoader(['cliente'])
       },              
       // Rutas protegidas solo para admin
-
-
       {
         path: '/dashboard/invoices',
         element: <Invoices />,
         loader: roleLoader(['financiero'])
       },
-
-
       {
         path: '/dashboard/pqrResponse',
         element: <PqrResponse />,
         loader: roleLoader(['financiero', 'tecnico'])
       },
-
-
-
       {
         path: '/dashboard/reports',
         element: <Reports />,
-        loader: roleLoader(['administrador', 'financiero'])
+        loader: roleLoader(['admin', 'financiero'])
       },
-
-
       {
         path: '/dashboard/users',
         element: <Users />,
-        loader: roleLoader(['administrador'])
+        loader: roleLoader(['admin'])
       },
       {
         path: '/dashboard/clients',
@@ -137,7 +122,6 @@ const AppRoutes = createBrowserRouter([
         element: <Contracts />,
         loader: roleLoader(['tecnico'])
       },
-
       {
         path: '/dashboard/payments',
         element: <Payments />,
@@ -147,12 +131,12 @@ const AppRoutes = createBrowserRouter([
       {
         path: '/dashboard/binnacle',
         element: <Binnacle />,
-        loader: roleLoader(['administrador'])
+        loader: roleLoader(['admin'])
       },
     ]
   },
   {
-    path: '/pasarela',
+    path: '/payment',
     element: <Pasarela />
   },
   {

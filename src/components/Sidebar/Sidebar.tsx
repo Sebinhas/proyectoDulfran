@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export const Sidebar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
+  console.log(user);
 
   const handleLogout = () => {
     logout();
@@ -19,52 +20,52 @@ export const Sidebar = () => {
       </div>
       <div className="flex flex-col justify-between pb-1 h-full">
         <div className="flex flex-col gap-2">
-          {user?.role === 'financiero' && (
+          {user?.profile_type === 'financiero' && (
             <div id="invoices-badge">
               <Badge icon="facturas" title="Gestión de facturas" route="/dashboard/invoices" />
             </div>
           )}
-          {user?.role === 'financiero' && (
+          {user?.profile_type === 'financiero' && (
             <div id="clients-badge">
               <Badge icon="clientes" title="Gestión de clientes" route="/dashboard/clients" />
             </div>
           )}
-          {user?.role === 'administrador' && (
+          {user?.profile_type === 'admin' && (
             <div id="users-badge">
               <Badge icon="usuarios" title="Gestión de usuarios" route="/dashboard/users" />
             </div>
           )}
 
-          {(user?.role === 'administrador' || user?.role === 'financiero') && (
+          {(user?.profile_type === 'admin' || user?.profile_type === 'financiero') && (
             <div id="reports-badge">
               <Badge icon="reportes" title="Reportes" route="/dashboard/reports" />
             </div>
           )}
 
-          {(user?.role === 'tecnico' || user?.role === 'financiero') && (
+          {(user?.profile_type === 'tecnico' || user?.profile_type === 'financiero') && (
             <div id="pqr-badge">
               <Badge icon="pqrManagement" title="Gestión de PQR" route="/dashboard/pqrResponse" />
             </div>
           )}
-          {user?.role === 'cliente' && (
+          {user?.profile_type === 'cliente' && (
             <div id="pqr-response-badge">
               <Badge icon="pqr" title="Mis PQR" route="/dashboard/pqr" />
             </div>
           )}
 
 
-          {user?.role === 'tecnico' && (
+          {user?.profile_type === 'tecnico' && (
             <div id="contracts-badge">
               <Badge icon="contratos" title="Contratos" route="/dashboard/contracts" />
             </div>
           )}
-          {user?.role === 'cliente' && (
+          {user?.profile_type === 'cliente' && (
             <div id="payments-badge">
               <Badge icon="pagos" title="Gestión de pagos" route="/dashboard/payments" />
             </div>
           )}
 
-          {user?.role === 'administrador' && (
+          {user?.profile_type === 'admin' && (
             <div id="binnacle-badge">
               <Badge icon="bitacora" title="Bitacora"   route="/dashboard/binnacle" />
             </div>

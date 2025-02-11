@@ -13,7 +13,6 @@ import { useAuthStore } from "../../../hooks/authStore";
 
 
 const useUsers = () => {
-  const currentNit = useAuthStore.getState().currentNit;
   const [isLoading, setIsLoading] = useState(true);
   const [options, setOptions] = useState('');
   const [user, setUser] = useState<ClientsDTO | null>(null);
@@ -43,11 +42,8 @@ const useUsers = () => {
         allowEscapeKey: false,
         showConfirmButton: false
       });
-
-      const nit = currentNit || 0;
-      data.admin_nit = nit;
+      
       const response = await createUser(data);
-
       // Cerrar el loading
       Swal.close();
 
@@ -165,11 +161,12 @@ const useUsers = () => {
   ]
 
   const handleView = (row: ClientsDTO): void => {
+    console.log(row);
+    return;
     toast.success(`Orden vista, estado: ${row}`);
-    // console.log(row);
     setUser(row);
     toggleModalViewDetailUser();
-    // navigate(`/dashboard/ordenes/${row.id}`);
+    
   };
 
   const handleMessage = (row: ClientsDTO): void => {
@@ -185,7 +182,7 @@ const useUsers = () => {
 
 
   const handleEdit = (row: ClientsDTO): void => {
-    toast.success(`Orden vista, estado: ${row.name}`);
+    toast.success(`Orden vista, estado: ${row.first_name}`);
     setUser(row);
     console.log(row);
     toggleModalEditInfoUser();

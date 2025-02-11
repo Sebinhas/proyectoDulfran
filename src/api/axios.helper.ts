@@ -3,7 +3,7 @@ import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
 
 
-export const BASE_URL = "https://d008-2800-e2-9c00-398-19fa-744d-cf99-9ed9.ngrok-free.app/api";
+export const BASE_URL = "http://62.72.5.152:3000/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -14,18 +14,18 @@ export const axiosInstance = axios.create({
   },
 });
 
+axiosInstance.interceptors.request.use((config) => {
+  const token = useAuthStore.getState().token;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // Obtener lista de clientes de una empresa
 export const getClients = async () => {
-  const currentNit = useAuthStore.getState().currentNit;
-  console.log(currentNit);
-  
-  if (!currentNit) {
-    console.error('No hay NIT seleccionado');
-    return [];
-  }
-
   try {
-    const response = await axiosInstance.get(`/admin/companies/${currentNit}/clients`);
+    const response = await axiosInstance.get(`/admin/clients`);
     
     // Accedemos específicamente a response.data.clients
     const clients = response.data?.clients || [];
@@ -99,7 +99,7 @@ export const getInvoicesForClient = async () => {
 
 // Obtener lista de facturas de una empresa
 export const getInvoices = async () => {
-  const currentNit = useAuthStore.getState().currentNit;
+  const currentNit = useAuthStore.getState().user?.admin_nit;
   
 
   if (!currentNit) {
@@ -137,13 +137,15 @@ export const getInvoices = async () => {
 
 // Obtener usuarios de una empresa
 export const getUsers = async () => {
-  const currentNit = useAuthStore.getState().currentNit;
   try {
-    const response = await axiosInstance.get(`/admin/companies/${currentNit}/admin-users`);
+    const response = await axiosInstance.get(`/admin/admin-users`);
     const users = response.data?.users || [];
     return users.map((item: any) => ({
       "cedula": item.cedula || '',
-      "name": item.name || '',
+      "first_name": item.first_name || '',
+      "second_name": item.second_name || '',
+      "first_lastname": item.first_lastname || '',
+      "second_lastname": item.second_lastname || '',
       "email": item.email || '',
       "username": item.username || '',
       "profile_type": item.profile_type || '',
@@ -159,11 +161,9 @@ export const getUsers = async () => {
 };
 
 // Crear usuarios individuales
-
 export const createUser = async (data: any) => {
-  const currentNit = useAuthStore.getState().currentNit;
   try {
-    const response = await axiosInstance.post(`/admin/companies/${currentNit}/admin-users`, data);
+    const response = await axiosInstance.post(`/admin/create-admin-user`, data);
     return response.data;
   } catch (error) {
     console.error('Error al crear usuario:', error);
@@ -173,9 +173,8 @@ export const createUser = async (data: any) => {
 };
 
 export const updateUser = async (data: any) => {
-  const currentNit = useAuthStore.getState().currentNit;
   try {
-    const response = await axiosInstance.patch(`/admin/companies/${currentNit}/admin-users/${data.cedula}`, data);
+    const response = await axiosInstance.patch(`/admin/update-admin-users/${data.cedula}`, data);
     return response.data;
   } catch (error) {
     console.error('Error al actualizar usuario:', error);
@@ -186,7 +185,7 @@ export const updateUser = async (data: any) => {
 
 
 export const uploadExcel = async (file: File) => {
-  const currentNit = useAuthStore.getState().currentNit;
+  const currentNit = useAuthStore.getState().user?.admin_nit;
   const formData = new FormData();
 
 
@@ -260,7 +259,12 @@ export const login = async (data: {
   username: string;
   password: string;
 }) => {
-  const response = await axiosInstance.post('/login', data);
+  const response = await axiosInstance.post('/auth/login', data);
+  return response.data;
+};
+
+export const getCurrentProfile = async () => {
+  const response = await axiosInstance.get('/auth/profile')
   return response.data;
 };
 
