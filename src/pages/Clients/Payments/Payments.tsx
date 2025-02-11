@@ -51,7 +51,7 @@ const Payments = () => {
                 pay: (row) => handlePay(row)
               }}
               filters={{
-                status: true,
+                status_payment: true,
               }}
             />
           </div>
