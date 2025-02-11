@@ -161,11 +161,12 @@ const useUsers = () => {
   ]
 
   const handleView = (row: ClientsDTO): void => {
+    console.log(row);
+    return;
     toast.success(`Orden vista, estado: ${row}`);
-    // console.log(row);
     setUser(row);
     toggleModalViewDetailUser();
-    // navigate(`/dashboard/ordenes/${row.id}`);
+    
   };
 
   const handleMessage = (row: ClientsDTO): void => {

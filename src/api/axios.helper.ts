@@ -24,16 +24,8 @@ axiosInstance.interceptors.request.use((config) => {
 
 // Obtener lista de clientes de una empresa
 export const getClients = async () => {
-  const currentNit = useAuthStore.getState().user?.admin_nit;
-  console.log(currentNit);
-  
-  if (!currentNit) {
-    console.error('No hay NIT seleccionado');
-    return [];
-  }
-
   try {
-    const response = await axiosInstance.get(`/admin/companies/${currentNit}/clients`);
+    const response = await axiosInstance.get(`/admin/clients`);
     
     // Accedemos específicamente a response.data.clients
     const clients = response.data?.clients || [];

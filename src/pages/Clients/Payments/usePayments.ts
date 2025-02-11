@@ -10,7 +10,7 @@ import { DTOPayment } from "./DTOPayment";
 import { getClients, uploadExcel, createUser, getUsers } from '../../../api/axios.helper';
 import Swal from 'sweetalert2';
 import { useAuthStore } from "../../../hooks/authStore";
-import { getInvoicesForClient } from "../../../api/axios.helper";
+//import { getInvoicesForClient } from "../../../api/axios.helper";
 import {
   NumberContractCell,
   TotalCell,
