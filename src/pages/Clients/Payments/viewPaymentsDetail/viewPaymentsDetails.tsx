@@ -121,6 +121,16 @@ const ViewPaymentDetail = ({ payment }: { payment: Payment | null }) => {
               <IoDocumentOutline className="text-xl" />
               <span>Descargar Factura</span>
             </a>
+            
+            {payment.status !== 'pagado' && (
+              <button
+                onClick={() => {/* Aquí irá la lógica para pagar */}}
+                className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-600 rounded-md hover:bg-green-100 transition-colors"
+              >
+                <IoCashOutline className="text-xl" />
+                <span>Realizar Pago</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
+import { toast } from "react-toastify";
 
-export const BASE_URL = "http://62.72.5.152:3000/api";
+
+export const BASE_URL = "https://0aa7-2800-e2-9c00-398-800b-d223-806-d351.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -14,6 +16,7 @@ export const axiosInstance = axios.create({
 // Obtener lista de clientes de una empresa
 export const getClients = async () => {
   const currentNit = useAuthStore.getState().currentNit;
+  console.log(currentNit);
   
   if (!currentNit) {
     console.error('No hay NIT seleccionado');
@@ -49,11 +52,14 @@ export const getClients = async () => {
       second_name: item.second_name || '',
       updatedAt: item.updatedAt || ''
     }));
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error al obtener clientes:', error);
+    toast.error(error.response.data.message);
     return [];
   }
+
 };
+
 
 // Obtener lista de facturas de una empresa
 export const getInvoices = async () => {
@@ -144,23 +150,30 @@ export const updateUser = async (data: any) => {
 
 
 export const uploadExcel = async (file: File) => {
-    const formData = new FormData();
+  const currentNit = useAuthStore.getState().currentNit;
+  const formData = new FormData();
 
-    formData.append('file', file);
+
+  formData.append('file', file);
 
     try {
-        const response = await axiosInstance.post('/client/massive', formData, {
+        const response = await axiosInstance.post(`/client/companies/${currentNit}/massive`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
+
         });
-        
+        const errors = response?.data?.errors;
+        errors.forEach((error: any) => {
+            toast.warning(error.type);
+        });
         console.log('Respuesta:', response.data);
         return response.data;
-    } catch (error) {
-        console.error('Error:', error);
+    } catch (error: any) {
+        toast.error(error.response.data.message);
         throw error;
     }
+
 };
 
 // Obtener mensajes de un chat específico

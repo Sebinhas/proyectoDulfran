@@ -51,67 +51,109 @@ const useClients = () => {
 
   const handleFileUpload = async (file: File) => {
     try {
-        // Mostrar loading inicial
-        Swal.fire({
-            title: 'Subiendo archivo',
-            text: 'Procesando usuarios...',
-            didOpen: () => {
-                Swal.showLoading();
-            },
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            showConfirmButton: false,
-            showCancelButton: true,
-            cancelButtonText: 'Cancelar'
-        });
+      // Mostrar loading inicial
+      Swal.fire({
+        title: 'Subiendo archivo',
+        text: 'Procesando usuarios...',
+        didOpen: () => {
+          Swal.showLoading();
+        },
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar'
+      });
 
-        // Realizar el post
-        const result = await uploadExcel(file);
-        
-        // Cerrar el loading inicial
-        Swal.close();
+      const result = await uploadExcel(file);
+      Swal.close();
 
-        if (result) {
-            // Mostrar resumen del proceso
-            await Swal.fire({
-                title: '¡Proceso Completado!',
-                html: `
-                    <p>${result.message}</p>
-                    <p>Total procesados: ${result.totalProcessed}</p>
-                    <p>Exitosos: ${result.successCount}</p>
-                    <p>Errores: ${result.errorCount}</p>
-                `,
-                icon: 'success',
-                confirmButtonText: 'Aceptar'
-            });
+      if (result) {
+        let htmlContent = `<p>${result.message}</p>
+          <p>Total procesados: ${result.totalProcessed}</p>
+          <p>Exitosos: ${result.successCount}</p>
+          <p>Errores: ${result.errorCount}</p>`;
 
-            closeModalActionUploadUser();
-            setSelectedFile(null);
-
-            // Actualizar la lista de clientes
-            try {
-                const response = await getClients();
-                if (response) {
-                    setClients(response);
-                }
-
-
-            } catch (error) {
-                console.error('Error al actualizar los datos:', error);
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Error al actualizar la lista de clientes',
-                    icon: 'error'
-                });
-            }
+        // Si hay errores, mostrar detalles
+        if (result.errors && result.errors.length > 0) {
+          result.errors.forEach((error: any) => {
+            htmlContent += `
+              <div class="mt-4">
+                <p class="text-red-500 font-bold">${error.type} (${error.count})</p>
+                ${error.cedulas ? `
+                  <div class="mt-2 max-h-40 overflow-y-auto text-left">
+                    <p class="font-semibold mb-2">Cédulas afectadas:</p>
+                    <div class="grid grid-cols-3 gap-2 text-sm">
+                      ${error.cedulas.map((cedula: any) => `
+                        <span class="bg-red-50 p-1 rounded">${cedula}</span>
+                      `).join('')}
+                    </div>
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          });
         }
-    } catch (error) {
-        console.error('Error al subir archivo:', error);
-        Swal.fire({
-            title: 'Error',
-            text: 'Hubo un error al procesar el archivo',
-            icon: 'error'
+
+        // Mostrar el modal con el resumen
+        await Swal.fire({
+          title: result.successCount > 0 ? '¡Proceso Completado!' : 'Proceso Completado con Errores',
+          html: htmlContent,
+          icon: result.successCount > 0 ? 'success' : 'warning',
+          confirmButtonText: 'Aceptar',
+          width: '800px',
+          customClass: {
+            htmlContainer: 'swal-html-container',
+          },
+          didOpen: () => {
+            // Agregar estilos personalizados al contenedor
+            const style = document.createElement('style');
+            style.textContent = `
+              .swal-html-container {
+                max-height: 70vh;
+                overflow-y: auto;
+              }
+              .swal-html-container::-webkit-scrollbar {
+                width: 8px;
+              }
+              .swal-html-container::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 10px;
+              }
+              .swal-html-container::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 10px;
+              }
+            `;
+            document.head.appendChild(style);
+          }
         });
+
+        closeModalActionUploadUser();
+        setSelectedFile(null);
+
+        // Actualizar la lista de clientes
+        try {
+          const response = await getClients();
+          if (response) {
+            setClients(response);
+          }
+        } catch (error) {
+          console.error('Error al actualizar los datos:', error);
+          Swal.fire({
+            title: 'Error',
+            text: 'Error al actualizar la lista de clientes',
+            icon: 'error'
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error al subir archivo:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un error al procesar el archivo',
+        icon: 'error'
+      });
     }
   };
 
