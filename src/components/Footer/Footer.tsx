@@ -15,12 +15,12 @@ const Footer = () => {
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
               <img src={''} alt="Logo Laboratorio" className="w-10 h-10 rounded" />
               <span className="text-xl font-bold">
-                Laboratorio <br /> Santiago Marín
+                Dev-Tronn
               </span>
             </div>
             <p className="text-sm leading-relaxed">
-              Laboratorio clínico especializado en análisis y diagnóstico médico, comprometido con
-              la calidad y la innovación en el sector salud.
+              Una empresa de desarrollo crea soluciones tecnológicas como 
+              software, apps y sitios web para optimizar procesos y resolver necesidades.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social) => (

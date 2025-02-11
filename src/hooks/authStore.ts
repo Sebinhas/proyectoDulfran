@@ -6,55 +6,102 @@ interface User {
   name: string;
   email: string;
   role: string;
+  nit?: number;
+  phone?: string;
+  documentNumber?: string;
 }
+
 
 interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  currentNit: number | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   updateUser: (user: Partial<User>) => void;
+  setCurrentNit: (nit: number) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
+
   persist(
     (set) => ({
       user: null,
       token: null,
       isAuthenticated: false,
+      currentNit: null,
 
       login: async (email: string, password: string) => {
         try {
           // Aquí iría tu lógica de autenticación con el backend
           const mockUsers = [
             {
-              id: '1',
-              name: 'Santiago Marin',
-              email: 'admin@lab.com',
-              password: 'admin',
-              role: 'admin'
+              id: '1111',
+              name: 'Sebastian Cuervo',
+              email: 'cuervo@lab.com',
+              password: 'cuervo',
+              role: 'financiero',
+              nit: 1111
+
             },
             {
-              id: '2',
+              id: '1234567891',
               name: 'Sebastian Guerra',
               email: 'sebastian@lab.com',
               password: 'sebastian',
-              role: 'admin'
+              role: 'administrador',
+              nit: 3333
+
             },
             {
-              id: '3',
-              name: 'Juanes Espinoza',
+              id: '1234567892',
+              name: 'Juanes Espinosa',
               email: 'juanes@lab.com',
               password: 'juanes',
-              role: 'admin'
+              role: 'administrador',
+              nit: 2222
+
             },
             {
-              id: '4',
-              name: 'Usuario',
-              email: 'user@lab.com',
-              password: 'user',
-              role: 'user'
+              id: '1234567893',
+              name: 'Pablo Andres',
+              email: 'pablo@lab.com',
+              password: 'pablo',
+              role: 'cliente',
+              nit: 4444,
+              phone: '1234567890',
+              documentNumber: '1234567890'
+
+
+            },
+            {
+              id: '1234567899',
+              name: 'Juan Andres',
+              email: 'juan@lab.com',
+              password: 'juan',
+              role: 'cliente',
+              nit: 5555,
+              phone: '1234567890',
+
+              documentNumber: '1234567890'
+
+            },
+            {
+              id: '1234567894',
+              name: 'financiero',
+              email: 'financiero@lab.com',
+              password: 'financiero',
+              role: 'financiero',
+              nit: 2222
+            },
+            {
+              id: '1234567895',
+              name: 'tecnico',
+              email: 'tecnico@lab.com',
+              password: 'tecnico',
+              role: 'tecnico',
+              nit: 7777
             }
           ];
 
@@ -65,13 +112,15 @@ export const useAuthStore = create<AuthState>()(
           if (!user) {
             throw new Error('Credenciales inválidas');
           }
-
+        
+          console.log(user);
           const { password: _, ...userWithoutPassword } = user;
           
           set({
             user: userWithoutPassword,
             token: 'mock-jwt-token',
-            isAuthenticated: true
+            isAuthenticated: true,
+            currentNit: userWithoutPassword.nit || null
           });
 
         } catch (error) {
@@ -85,10 +134,16 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           token: null,
           isAuthenticated: false,
+          currentNit: null,
           login: useAuthStore.getState().login,
           logout: useAuthStore.getState().logout,
-          updateUser: useAuthStore.getState().updateUser
+          updateUser: useAuthStore.getState().updateUser,
+          setCurrentNit: useAuthStore.getState().setCurrentNit
         }));
+      },
+
+      setCurrentNit: (nit) => {
+        set({ currentNit: nit });
       },
 
       updateUser: (userData) => {

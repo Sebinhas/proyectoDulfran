@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
+import { useAuthStore } from '../../hooks/authStore';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 interface ProductInfo {
   id: number;
   title: string;
   description: string;
   features: string[];
+}
+
+interface LoginFormInputs {
+  username: string;
+  password: string;
 }
 
 interface Reviews {
@@ -15,9 +24,61 @@ interface Reviews {
 }
 
 export const useHome = () => {
+  const navigate = useNavigate();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductInfo | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const { login, isAuthenticated, user } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
+
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<LoginFormInputs>();
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === "administrador") {
+        navigate("/dashboard");
+      } else if (user.role === "financiero") {
+        navigate("/dashboard/invoices");
+
+      } else if (user.role === "tecnico") {
+        navigate("/dashboard/contracts");
+
+      } else if (user.role === "cliente") {
+        navigate("/dashboard/payments");
+      }
+    } else {
+      navigate("/");
+    }
+
+  }, [isAuthenticated, user, navigate]);
+
+  const onSubmit = async (data: LoginFormInputs) => {
+    try {
+      await login(data.username, data.password);
+      reset();
+
+      const currentUser = useAuthStore.getState().user;
+
+      if (currentUser?.role === "superAdmin") {
+        navigate("/dashboard/invoices");
+
+
+        toast.success(`¡Bienvenido ${currentUser?.role}!`);
+      } else if (currentUser?.role === "user") {
+        navigate("/dashboard/invoices");
+        toast.success(`¡Bienvenido ${currentUser?.role}!`);
+      }
+    } catch (error) {
+      toast.error("Credenciales inválidas");
+    }
+  };
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -146,5 +207,12 @@ export const useHome = () => {
     scrollToHero,
     reviews,
     showScrollTop,
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    onSubmit,
+    showPassword,
+    setShowPassword,
   };
 };

@@ -13,34 +13,37 @@ const SkeletonPrivateLayout = lazy(
 const MainLayout = lazy(() => import('../layouts/MainLayout'));
 const AuthLayout = lazy(() => import('../layouts/AuthLayout'));
 const PrivateLayout = lazy(() => import('../layouts/PrivateLayout'));
-// pages auth
-const Login = lazy(() => import('../pages/Auth/Login/Login'));
 // pages dashboard
 // const Patients = lazy(() => import('../pages/Admin/Patients/Patients.tsx'));
-const Settings = lazy(() => import('../pages/Admin/Settings/Settings.tsx'));
+const Profile = lazy(() => import('../pages/Global/Profile/Profile.tsx'));
 const Loading = lazy(() => import('../components/LoadingSpinner/Loading.tsx'));
-const Dashboard = lazy(() => import('../pages/Client/Dashboard/Dashboard.tsx'));
-const Users = lazy(() => import('../pages/Admin/Users/Users.tsx'));
+const Invoices = lazy(() => import('../pages/Financial/Invoices/Invoices.tsx'));
+const Clients = lazy(() => import('../pages/Financial/Clients/Clients.tsx'));
+const Users = lazy(() => import('../pages/Administrator/Users/Users.tsx'));
+const Notifications = lazy(() => import('../pages/Global/Notifications/Notifications.tsx'));
+const Pqr = lazy(() => import('../pages/Global/Pqr/Pqr.tsx'));
+const PqrResponse = lazy(() => import('../pages/Global/PqrResponse/PqrResponse.tsx'));
 
+const Pasarela = lazy(() => import('../pages/Pasarela/Pasarela.tsx'));
 import { useAuthStore } from '../hooks/authStore.ts';
+import Reports from '../pages/Global/Reports/Reports.tsx';
+import Contracts from '../pages/Technical/Contracts/Contracts.tsx';
+import Payments from '../pages/Clients/Payments/Payments.tsx';
+import Binnacle from '../pages/Administrator/Binnacle/Binnacle.tsx';
+import Dashboard from '../pages/Global/Dashboard/Dasboard.tsx';
 
-const authLoader = async () => {
-  const isAuth = getTokenFromLocalStorage();
-  if (!isAuth) {
-    // toast.error('Debes estar autenticado para acceder')
-    console.error('Debes estar autenticado para acceder');
-  }
-  return null;
-};
 
 // Agregamos un nuevo loader para verificar el rol de admin
-const adminLoader = () => {
-  const user = useAuthStore.getState().user;
-  if (user?.role !== 'admin') {
-    return redirect('/404');
-  }
-  return null;
+const roleLoader = (allowedRoles: string[]) => {
+  return () => {
+    const user = useAuthStore.getState().user;
+    if (!allowedRoles.includes(user?.role || '')) {
+      return redirect('/404');
+    }
+    return null;
+  };
 };
+
 
 const AppRoutes = createBrowserRouter([
   {
@@ -63,25 +66,6 @@ const AppRoutes = createBrowserRouter([
     ]
   },
   {
-    path: '/auth',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <AuthLayout />
-      </Suspense>
-    ),
-    errorElement: <NotFound />,
-    children: [
-      {
-        index: true,
-        element: <Login />
-      },
-      {
-        path: '/auth/login',
-        element: <Login />
-      },
-    ]
-  },
-  {
     path: '/dashboard',
     element: (
       <Suspense fallback={<SkeletonPrivateLayout />}>
@@ -91,29 +75,85 @@ const AppRoutes = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <Suspense>
-            <Dashboard />
-          </Suspense>
-        )
+        element: <Dashboard />
       },
       // {
       //   path: '/dashboard/pacientes',
       //   element: <Patients />
       // },
 
+
       {
-        path: '/dashboard/settings',
-        element: <Settings />
+        path: '/dashboard/profile',
+        element: <Profile />
       },
+      {
+        path: '/dashboard/notifications',
+        element: <Notifications />
+      },
+      {
+        path: '/dashboard/pqr',
+        element: <Pqr />,
+        loader: roleLoader(['cliente'])
+      },              
       // Rutas protegidas solo para admin
-      
+
+
+      {
+        path: '/dashboard/invoices',
+        element: <Invoices />,
+        loader: roleLoader(['financiero'])
+      },
+
+
+      {
+        path: '/dashboard/pqrResponse',
+        element: <PqrResponse />,
+        loader: roleLoader(['financiero', 'tecnico'])
+      },
+
+
+
+      {
+        path: '/dashboard/reports',
+        element: <Reports />,
+        loader: roleLoader(['administrador', 'financiero'])
+      },
+
+
       {
         path: '/dashboard/users',
         element: <Users />,
-        loader: adminLoader
+        loader: roleLoader(['administrador'])
+      },
+      {
+        path: '/dashboard/clients',
+        element: <Clients />,
+        loader: roleLoader(['financiero'])
+      },
+
+      {
+        path: '/dashboard/contracts',
+        element: <Contracts />,
+        loader: roleLoader(['tecnico'])
+      },
+
+      {
+        path: '/dashboard/payments',
+        element: <Payments />,
+        loader: roleLoader(['cliente'])
+      },
+
+      {
+        path: '/dashboard/binnacle',
+        element: <Binnacle />,
+        loader: roleLoader(['administrador'])
       },
     ]
+  },
+  {
+    path: '/pasarela',
+    element: <Pasarela />
   },
   {
     path: '/404',

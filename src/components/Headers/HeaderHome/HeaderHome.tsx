@@ -1,16 +1,18 @@
 import { useHeaderHome } from './UseHeaderHome';
 import { IoIosMenu, IoIosClose } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-
+import logo from "../../../../public/LOGO.svg"
 const HeaderHome = () => {
   const navigate = useNavigate();
   const { isMenuOpen, handleOpenMenu, handleCloseMenu, navLinks, scrollToSection } =
     useHeaderHome();
 
   return (
-    <div id="top" className="w-full mx-auto h-[80px] items-center flex px-5 md:px-20 ">
+    <div id="top" className="w-full h-[80px] items-center flex px-5 md:px-20 sticky top-0 z-50 bg-white">
       <div className="w-full h-full flex justify-between items-center border-b-[1px] border-gray-300 ">
-        <div className="text-2xl font-bold cursor-pointer">Logo</div>
+        <div className="cursor-pointer">
+          <img src={logo} alt="" className='w-20 h-20' />
+        </div>
         <div className="flex flex-row items-center gap-10 ">
           <div className="items-center text-md gap-6 hidden lg:flex">
             {navLinks.map((link, index) => (
@@ -24,11 +26,7 @@ const HeaderHome = () => {
           </div>
 
           <div className="items-center gap-4 hidden lg:flex">
-            <div
-              onClick={() => navigate('/auth/login')}
-              className="w-[140px] h-[40px] bg-gray-600 text-white rounded-md cursor-pointer flex  justify-center items-center gap-2 hover:bg-gray-700">
-              <div className="text-md">Iniciar sesión</div>
-            </div>
+            
           </div>
           <IoIosMenu className="lg:hidden text-[40px]" onClick={handleOpenMenu} />
 
@@ -43,7 +41,9 @@ const HeaderHome = () => {
               
               <div className="flex flex-col items-center gap-8 mt-10">
                 <div className="flex flex-col items-center">
-                  <h1 className="text-2xl font-bold">Logo</h1>
+                  <div className="">
+                    <img src={logo} alt="" className='w-20 h-20' />
+                  </div>
                 </div>
 
                 {navLinks.map((link, index) => (
@@ -57,12 +57,6 @@ const HeaderHome = () => {
                     {link.name}
                   </div>
                 ))}
-
-                <div
-                  onClick={() => navigate('/auth/login')}
-                  className="w-[140px] h-[40px] bg-gray-700 text-white rounded-md cursor-pointer flex justify-center items-center hover:bg-gray-600">
-                  <div className="text-md">Iniciar sesión</div>
-                </div>
               </div>
             </div>
           </div>
