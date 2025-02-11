@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
-import { FaEdit, FaEye, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaEye, FaTrash, FaMoneyBill } from 'react-icons/fa';
 import { MdDownload } from "react-icons/md";
 
 import { FaMessage } from "react-icons/fa6";
@@ -40,6 +40,8 @@ interface TableGlobalProps {
     custom?: (row: any) => React.ReactNode;
     message?: (row: any) => void;
     download?: (row: any) => void;
+    pay?: (row: any) => void;
+
   };
 
   isLoading?: boolean;
@@ -140,15 +142,6 @@ const TableGlobal = ({
       ...(secondFilterName ? { [secondFilterName]: value } : {})
     }));
     setCurrentPage(1); // Resetear a la primera página cuando se filtra
-  };
-
-  const handleOptionsClick = (rowId: number) => {
-    setSelectedRow(rowId); // Actualiza siempre al ID de la fila seleccionada
-  };
-  
-  const handleOptionAction = (type: string, row: ClientsDTO) => {
-    activateOptions?.setOptions?.(type, row);
-    setSelectedRow(null); // Cierra el menú después de realizar una acción
   };
   
   useEffect(() => {
@@ -354,6 +347,16 @@ const TableGlobal = ({
                               <FaMessage className="text-lg" />
                             </button>
                           )}
+                          {actions?.pay && (
+                            <button
+                              onClick={() => actions?.pay?.(row)}
+                              className="p-1.5  hover:bg-purple-50 rounded-full"
+                            >
+                              <FaMoneyBill className="text-lg" />
+                            </button>
+                          )}
+                          
+
                         </div>
                         <Tooltip id="tooltip" />
                       </td>

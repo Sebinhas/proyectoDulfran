@@ -44,37 +44,34 @@ export function PersonalInfoDetails({
           <div className="flex flex-col gap-6 md:gap-8">
             <div className="w-full flex flex-col gap-6 md:flex-row">
               <div className="w-full h-14 ">
-                <div className="text-[18px] font-medium text-gray-600">Nombre completo</div>
+                <div className="text-[18px] font-medium text-gray-600">Nombres y apellidos</div>
                 <input
-                  value={'juanes espinosa rincon'}
-                  {...register("nombre", { 
-                    required: "El nombre es requerido",
-                    minLength: { value: 3, message: "Mínimo 3 caracteres" }
-                  })}
+                  value={initialData.fullName}
+                  disabled={true}
                   type="text"
-                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${errors.nombre ? 'border-red-500' : '' }`}
+                  className={`cursor-not-allowed w-full p-2 border border-gray-300 outline-none rounded-md ${
+                    errors.fullName ? 'border-red-500' : ''
+                  }`}
+
                 />
-                {errors.nombre && (
-                  <p className="mt-1 text-sm text-red-500">{errors.nombre.message}</p>
+                {errors.fullName && (
+                  <p className="mt-1 text-sm text-red-500">{errors.fullName.message}</p>
                 )}
+
               </div>
 
               <div className="w-full h-14 ">
                 <div className="text-[18px] font-medium text-gray-600">Correo electrónico</div>
                 <input
-                  value={'juanesespinosa@gmail.com'}
-                  {...register("email", { 
-                    required: "El email es requerido",
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Email inválido"
-                    }
-                  })}
+                  value={initialData.email}
+                  disabled={true}
+
                   type="email"
-                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${
+                  className={`cursor-not-allowed w-full p-2 border border-gray-300 outline-none rounded-md ${
                     errors.email ? 'border-red-500' : ''
                   }`}
                 />
+
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
                 )}
@@ -85,76 +82,35 @@ export function PersonalInfoDetails({
               <div className="w-full h-14 ">
                 <div className="text-[18px] font-medium text-gray-600">Teléfono</div>
                 <input
-                  value={'3178654321'}
-                  {...register("telefono", { 
-                    required: "El teléfono es requerido",
-                    pattern: {
-                      value: /^[0-9]{10}$/,
-                      message: "Teléfono inválido (10 dígitos)"
-                    }
-                  })}
+                  value={initialData.phone}
+                  disabled={true}
                   type="tel"
-                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${
-                    errors.telefono ? 'border-red-500' : ''
+                  className={`cursor-not-allowed w-full p-2 border border-gray-300 outline-none rounded-md ${
+                    errors.phone ? 'border-red-500' : ''
                   }`}
-                />
-              {errors.telefono && (
-                <p className="mt-1 text-sm text-red-500">{errors.telefono.message}</p>
-              )}
-              </div>
-              <div className="w-full h-14 ">
-                <div className="text-[18px] font-medium text-gray-600">Dirección</div>
-                <input
-                  value={'calle 123 # 45-67'}
-                  {...register("direccion", { 
-                    required: "La dirección es requerida" 
-                  })}
-                  type="text"
-                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${
-                    errors.direccion ? 'border-red-500' : ''
-                  }`}
-                />
-                {errors.direccion && (
-                  <p className="mt-1 text-sm text-red-500">{errors.direccion.message}</p>
-                )}
-              </div>
-            </div>
 
-            <div className="w-full flex flex-col gap-6 md:flex-row">
-              <div className="w-full h-14 ">
-                <div className="text-[18px] font-medium text-gray-600">Ciudad</div>
-                <input
-                  value={'bogota'}
-                {...register("ciudad", { 
-                  required: "La ciudad es requerida" 
-                })}
-                  type="text"
-                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${
-                    errors.ciudad ? 'border-red-500' : ''
-                  }`}
+
                 />
-              {errors.ciudad && (
-                  <p className="mt-1 text-sm text-red-500">{errors.ciudad.message}</p>
-                )}
+
+              {errors.phone && (
+                <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
+              )}
+
               </div>
               <div className="w-full h-14 ">
                 <div className="text-[18px] font-medium text-gray-600">Documento de identidad</div>
                 <input
-                  value={'1000000000'}
-                  {...register("documento", { 
-                    required: "El documento es requerido",
-                    pattern: {
-                      value: /^[0-9]{8,10}$/,
-                      message: "Documento inválido (8-10 dígitos)"
-                    }
-                  })}
+                  value={initialData.documentNumber}
+                  disabled={true}
                   type="text"
-                  className={`w-full p-2 border border-gray-300 outline-none rounded-md ${
-                    errors.documento ? 'border-red-500' : ''
+                  className={`cursor-not-allowed w-full p-2 border border-gray-300 outline-none rounded-md ${
+                    errors.documentNumber ? 'border-red-500' : ''
                   }`}
                 />
-                {errors.documento && (
-                  <p className="mt-1 text-sm text-red-500">{errors.documento.message}</p>
+
+
+                {errors.documentNumber && (
+                  <p className="mt-1 text-sm text-red-500">{errors.documentNumber.message}</p>
                 )}
               </div>
             </div>

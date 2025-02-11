@@ -7,7 +7,10 @@ interface User {
   email: string;
   role: string;
   nit?: number;
+  phone?: string;
+  documentNumber?: string;
 }
+
 
 interface AuthState {
   user: User | null;
@@ -62,19 +65,27 @@ export const useAuthStore = create<AuthState>()(
             },
             {
               id: '1234567893',
-              name: 'Cliente 1',
-              email: 'cliente1@lab.com',
-              password: 'cliente1',
+              name: 'Pablo Andres',
+              email: 'pablo@lab.com',
+              password: 'pablo',
               role: 'cliente',
-              nit: 4444
+              nit: 4444,
+              phone: '1234567890',
+              documentNumber: '1234567890'
+
+
             },
             {
               id: '1234567899',
-              name: 'Cliente 2',
-              email: 'cliente2@lab.com',
-              password: 'cliente2',
+              name: 'Juan Andres',
+              email: 'juan@lab.com',
+              password: 'juan',
               role: 'cliente',
-              nit: 5555
+              nit: 5555,
+              phone: '1234567890',
+
+              documentNumber: '1234567890'
+
             },
             {
               id: '1234567894',

@@ -3,13 +3,14 @@ import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
 
 
-export const BASE_URL = "https://0aa7-2800-e2-9c00-398-800b-d223-806-d351.ngrok-free.app/api";
+export const BASE_URL = "https://d008-2800-e2-9c00-398-19fa-744d-cf99-9ed9.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     'ngrok-skip-browser-warning': 'true',
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTYxMTM0MTI0NCIsInVzZXJuYW1lIjoiQ0FNSUxPMTI0NCIsInByb2ZpbGVfdHlwZSI6ImZpbmFuY2llcm8iLCJhZG1pbl9uaXQiOiI5MDE4NDQ0MjctMSIsImlhdCI6MTczOTIzOTk1NSwiZXhwIjoxNzM5MjQzNTU1fQ.6fb2mR_CJSBE2nEI1eYN3tYd1KP_dWAn0rw7w4xg56E'}`
   },
 });
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useAuthStore } from '../../hooks/authStore'
 
 export type StepStatus = 'complete' | 'current' | 'upcoming'
 
@@ -10,13 +11,13 @@ export interface Step {
 }
 
 export interface PersonalData {
-  nombre: string
+  fullName: string
   email: string
-  telefono: string
-  direccion: string
-  ciudad: string
-  documento: string
+  phone: string
+  documentNumber: string
 }
+
+
 
 export interface PaymentInfo {
   monto: number
@@ -26,28 +27,40 @@ export interface PaymentInfo {
 }
 
 export const usePasarela = () => {
+  const { user } = useAuthStore()
   const [currentStep, setCurrentStep] = useState(1)
   const [previousStep, setPreviousStep] = useState(1)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null)
   const [paymentStatus, setPaymentStatus] = useState<'success' | 'error' | 'pending'>('pending')
   const [personalData, setPersonalData] = useState<PersonalData>({
-    nombre: '',
+    fullName: '',
     email: '',
-    telefono: '',
-    direccion: '',
-    ciudad: '',
-    documento: ''
+    phone: '',
+    documentNumber: ''
   })
+
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
     monto: 0,
     descripcion: '',
     referencia: '',
     fecha: new Date().toISOString()
   })
-  
+
+  useEffect(() => {
+    if (user) {
+      setPersonalData({
+        fullName: user.name,
+        email: user.email,
+        phone: user.phone || '',
+        documentNumber: user.documentNumber || ''
+      })
+    }
+  }, [user])
+
   useEffect(() => {
     if (currentStep !== previousStep) {
       console.log('Cambio de paso:', {
+
         anterior: previousStep,
         actual: currentStep
       })
