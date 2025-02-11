@@ -32,6 +32,7 @@ interface TableGlobalProps {
     date?: boolean;
     cedula?: boolean;
     profile_type?: boolean;
+    status_payment?: boolean;
   };
   actions?: {
     edit?: (row: any) => void;
@@ -69,6 +70,7 @@ const TableGlobal = ({
     username: '',
     no_contract: '',
     profile_type: '',
+    status_payment: '',
   });
 
 
@@ -122,6 +124,12 @@ const TableGlobal = ({
     if (filterValues.profile_type) {
       results = results.filter(item =>
         item.profile_type?.includes(filterValues.profile_type)
+      );
+    }
+
+    if (filterValues.status_payment) {
+      results = results.filter(item =>
+        item.status?.includes(filterValues.status_payment)
       );
     }
 
@@ -251,6 +259,20 @@ const TableGlobal = ({
               <option value="inactivo">Inactivo</option>
             </select>
           </div>
+        )}
+        {filters?.status_payment && (
+          <div className="w-full h-14 ">
+          <div className="text-[18px] font-medium text-gray-600">Estado</div>
+          <select
+            value={filterValues.status_payment}
+            onChange={(e) => handleFilterChange('status_payment', e.target.value)}
+            className="w-full p-2 border border-gray-300 outline-none rounded-md">
+            <option value="">Seleccione un estado</option>
+            <option value="pagado">Pagado</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="vencido">Vencido</option>
+          </select>
+        </div>
         )}
         {filters?.createdAt && (
           <div className="w-full h-14 ">

@@ -168,7 +168,7 @@ export default function Pasarela() {
     return (
         <div className="relative min-h-screen w-full flex flex-col items-center bg-gray-50 py-8">
             <div 
-                onClick={() => navigate('/dashboard')} 
+                onClick={() => navigate('/dashboard/payments')} 
                 className="cursor-pointer absolute top-6 left-6 w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center">
                 <ArrowLeftIcon className="size-6 text-gray-500" />
             </div>
