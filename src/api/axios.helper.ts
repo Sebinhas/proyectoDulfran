@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 
 
 export const BASE_URL = "https://d008-2800-e2-9c00-398-19fa-744d-cf99-9ed9.ngrok-free.app/api";
-export const BASE_URL = "https://0aa7-2800-e2-9c00-398-800b-d223-806-d351.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,

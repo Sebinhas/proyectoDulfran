@@ -206,7 +206,7 @@ useEffect(() => {
     console.log('row',row);
     // Inicializar invoice si es null
     const invoiceData = {
-      client_cedula: user?.client_cedula || '',
+      client_cedula: user?.documentNumber || '',
       email: user?.email || '',
       name: user?.name || '',
       nit: user?.nit || '',
