@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 
-export const BASE_URL = "http://62.72.5.152:3000/api";
+export const BASE_URL = "https://d008-2800-e2-9c00-398-19fa-744d-cf99-9ed9.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     'ngrok-skip-browser-warning': 'true',
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTYxMTM0MTI0NCIsInVzZXJuYW1lIjoiQ0FNSUxPMTI0NCIsInByb2ZpbGVfdHlwZSI6ImZpbmFuY2llcm8iLCJhZG1pbl9uaXQiOiI5MDE4NDQ0MjctMSIsImlhdCI6MTczOTIzOTk1NSwiZXhwIjoxNzM5MjQzNTU1fQ.6fb2mR_CJSBE2nEI1eYN3tYd1KP_dWAn0rw7w4xg56E'}`
   },
 });
 
@@ -51,6 +52,41 @@ export const getClients = async () => {
     }));
   } catch (error) {
     console.error('Error al obtener clientes:', error);
+    return [];
+  }
+};
+
+// Obtener facturas de un cliente específico
+export const getInvoicesForClient = async () => {
+
+  try {
+    const response = await axiosInstance.get(`/invoices`);
+    const invoices = response.data?.invoice || [];
+
+    if (!Array.isArray(invoices)) {
+      console.error('La respuesta no es un array:', invoices);
+      return [];
+    }
+
+    return invoices.map((item: any) => ({
+      no_invoice: item.no_invoice || '',
+      period_start: item.period_start || '',
+      period_end: item.period_end || '',
+      amount: item.amount || '',
+      status: item.status || '',
+      createdAt: item.createdAt || '',
+      updatedAt: item.updatedAt || '',
+      client_cedula: item.client?.cedula || '',
+      client_first_name: item.client?.first_name || '',
+      client_second_name: item.client?.second_name || '',
+      client_first_lastname: item.client?.first_lastname || '',
+      client_second_lastname: item.client?.second_lastname || '',
+      client_phone: item.client?.phone || '',
+      client_email: item.client?.email || '',
+      admin_nit: item.admin?.nit || ''
+    }));
+  } catch (error) {
+    console.error('Error al obtener facturas:', error);
     return [];
   }
 };

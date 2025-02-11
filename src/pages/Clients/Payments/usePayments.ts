@@ -10,6 +10,7 @@ import { DTOPayment } from "./DTOPayment";
 import { getClients, uploadExcel, createUser, getUsers } from '../../../api/axios.helper';
 import Swal from 'sweetalert2';
 import { useAuthStore } from "../../../hooks/authStore";
+import { getInvoicesForClient } from "../../../api/axios.helper";
 import {
   NumberContractCell,
   TotalCell,
@@ -27,22 +28,19 @@ const usePayments = () => {
   const {user} = useAuthStore();
   const currentNit = useAuthStore.getState().currentNit;
   const [isLoading, setIsLoading] = useState(true);
-  const [options, setOptions] = useState('');
+  // const [options, setOptions] = useState('');
   // const [user, setUser] = useState<ClientsDTO | null>(null);
-  const [dataUsers, setDataUsers] = useState<ClientsDTO[]>([]);
+  // const [dataUsers, setDataUsers] = useState<ClientsDTO[]>([]);
   const navigate = useNavigate();
   const [invoice, setInvoice] = useState<any>(null);
-
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
+  const [invoicesData, setInvoicesData] = useState<any[]>([]);
 
 
-  const { toggleModal: toggleModalUploadUser, closeModalAction: closeModalActionUploadUser, Render: RenderUploadUser } = Modal({ title: 'Subir Usuarios' });
-  const { toggleModal: toggleModalDownloadInvoice, closeModalAction: closeModalActionDownloadInvoice, Render: RenderDownloadInvoice } = Modal({ title: 'Desacargar Factura' });
+
+
+  const { toggleModal: toggleModalDownloadInvoice, closeModalAction: closeModalActionDownloadInvoice, Render: RenderDownloadInvoice } = Modal({ title: 'Desacargar Factura', size: 'lg' });
 
   const { toggleModal: toggleModalEditInfoUser, closeModalAction: closeModalActionEditInfoUser, Render: RenderEditInfoUser } = Modal({ title: 'Editar Información' });
-
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<ClientsDTO>();
 
   const [selectedPayment, setSelectedPayment] = useState<DTOPayment | null>(null);
   const [showDetail, setShowDetail] = useState(false);
@@ -52,9 +50,10 @@ const usePayments = () => {
     const fetchData = async () => {
         if (isLoading) {
             try {
-                const response = await getUsers();
+                const response = await getInvoicesForClient();
                 if (response) {
-                    setDataUsers(response);
+                    setInvoicesData(response);
+                    console.log('invoicesData',response);
                 }
             } catch (error) {
                 console.error('Error fetching clients:', error);
@@ -72,68 +71,22 @@ const usePayments = () => {
     fetchData();
 }, [isLoading]);
 
-  const onSubmit = async (data: ClientsDTO) => {
+
+
+useEffect(() => {
+  
+  const fetchData = async () => {
     try {
-      // Mostrar loading mientras se procesa
-      Swal.fire({
-        title: 'Creando usuario',
-        text: 'Por favor espere...',
-        didOpen: () => {
-          Swal.showLoading();
-        },
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        showConfirmButton: false
-      });
-
-      const nit = currentNit || 0;
-      data.admin_nit = nit;
-      const response = await createUser(data);
-
-      // Cerrar el loading
-      Swal.close();
-
+      const response = await getInvoicesForClient();
       if (response) {
-        // Mostrar mensaje de éxito
-        await Swal.fire({
-          title: '¡Usuario Creado!',
-          text: 'El usuario ha sido creado exitosamente',
-          icon: 'success',
-          confirmButtonText: 'Aceptar'
-        });
-
-        // Cerrar el modal y limpiar el formulario
-        closeModalActionUploadUser();
-        reset();
-
-        // Actualizar la lista de usuarios
-        try {
-          const updatedUsers = await getUsers();
-          if (updatedUsers) {
-            setDataUsers(updatedUsers);
-          }
-        } catch (error) {
-          console.error('Error al actualizar la lista:', error);
-          Swal.fire({
-            title: 'Error',
-            text: 'Error al actualizar la lista de usuarios',
-            icon: 'error'
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Error al crear usuario:', error);
-      Swal.fire({
-        title: 'Error',
-        text: 'Hubo un error al crear el usuario',
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      });
+      setInvoicesData(response);
     }
+  } catch (error) {
+    console.error('Error fetching clients:', error);
+  }
   };
-
-
-
+  fetchData();
+}, []);
 
 
   const columns = [
@@ -253,7 +206,7 @@ const usePayments = () => {
     console.log('row',row);
     // Inicializar invoice si es null
     const invoiceData = {
-      client_cedula: user?.documentNumber || '',
+      client_cedula: user?.client_cedula || '',
       email: user?.email || '',
       name: user?.name || '',
       nit: user?.nit || '',
