@@ -7,196 +7,151 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#333',
   },
-  headerContainer: {
+  header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    marginBottom: 20,
     borderBottom: '1px solid #ddd',
     paddingBottom: 10,
   },
-  logoSection: {
+  logoContainer: {
     width: '20%',
   },
   logo: {
     width: 60,
     height: 'auto',
   },
-  headerInfo: {
+  companyInfo: {
+    width: '50%',
     textAlign: 'center',
-    width: '60%',
   },
   companyName: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  companySub: {
-    fontSize: 10,
-    color: '#666',
-  },
-  companyDetails: {
-    fontSize: 9,
-    marginTop: 3,
-  },
-  invoiceTitleSection: {
-    textAlign: 'right',
-    width: '25%',
-  },
-  invoiceTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  companyNit: {
+    fontSize: 10,
+    marginBottom: 2,
+  },
+  companyContact: {
+    fontSize: 9,
+    marginBottom: 2,
+  },
+  companyAddress: {
+    fontSize: 9,
+  },
+  invoiceInfo: {
+    width: '30%',
+    textAlign: 'right',
+  },
+  invoiceTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 4,
   },
   invoiceNumber: {
-    fontSize: 12,
-    color: '#555',
-    marginTop: 5,
+    fontSize: 11,
+    color: '#666',
   },
-  separator: {
-    marginVertical: 10,
-    borderBottom: '1px solid #ddd',
-  },
-  separator2: {
-    marginVertical: 8,
-    borderBottom: '1px solid #ddd',
-  },
-  clientSection: {
+  clientInfo: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   clientDetails: {
     width: '60%',
   },
-  clientText: {
-    fontSize: 10,
+  periodInfo: {
+    width: '40%',
+    backgroundColor: '#f8f8f8',
+    padding: 10,
+    borderRadius: 4,
+  },
+  sectionTitle: {
+    fontSize: 11,
     fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#444',
   },
-  clientSubText: {
+  clientName: {
+    fontSize: 11,
+    marginBottom: 4,
+  },
+  clientDetail: {
     fontSize: 9,
-    color: '#555',
-    marginTop: 3,
+    marginBottom: 2,
+    color: '#666',
   },
-  dateDetails: {
-    width: '35%',
-    textAlign: 'right',
-  },
-  dateTitle: {
+  periodDate: {
     fontSize: 10,
-    fontWeight: 'bold',
+    marginBottom: 2,
   },
-  dateContent: {
-    fontSize: 9,
-    color: '#555',
-    marginTop: 5,
-  },
-  tableContainer: {
-    marginTop: '10px',
+  serviceDetail: {
+    marginBottom: 20,
   },
   tableHeader: {
-    display: 'flex',
     flexDirection: 'row',
     backgroundColor: '#f1f1f1',
-    padding: '5px',
-    borderBottom: '1px solid #ccc',
+    padding: 8,
+    marginBottom: 4,
   },
   tableHeaderCell: {
     flex: 1,
     fontWeight: 'bold',
+    fontSize: 10,
     textAlign: 'center',
   },
   tableRow: {
-    display: 'flex',
     flexDirection: 'row',
-    padding: '5px',
+    padding: 8,
     borderBottom: '1px solid #eee',
   },
   tableCell: {
     flex: 1,
-    textAlign: 'center',
-  },
-  tableCellHeader: {
-    fontSize: 9,
-    fontWeight: 'bold',
-    width: '25%',
-    textAlign: 'center',
-  },
-  observationsSection: {
-    marginTop: 10,
-  },
-  observationsTitle: {
     fontSize: 10,
-    fontWeight: 'bold',
+    textAlign: 'center',
   },
-  observationsText: {
-    fontSize: 9,
-    color: '#555',
-    marginTop: 3,
+  paymentStatus: {
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#f8f8f8',
+    borderRadius: 4,
   },
-  footer: {
-    marginTop: 15,
+  paymentMessage: {
+    fontSize: 10,
+    color: '#444',
+    textAlign: 'center',
   },
   totalSection: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-    padding: 5,
-    backgroundColor: '#f9f9f9',
-    border: '1px solid #ddd',
+    justifyContent: 'flex-end',
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#f1f1f1',
   },
   totalLabel: {
     fontSize: 12,
     fontWeight: 'bold',
+    marginRight: 10,
   },
-  totalValue: {
+  totalAmount: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#000',
   },
-  signatureSection: {
-    marginTop: 10,
-    alignItems: 'center',
+  footer: {
+    marginTop: 20,
+    borderTop: '1px solid #ddd',
+    paddingTop: 10,
   },
-  signatureText: {
-    fontSize: 10,
-    marginBottom: 5,
-  },
-  signatureImage: {
-    width: 100,
-    height: 40,
-  },
-  legalText: {
+  footerText: {
     fontSize: 8,
-    color: '#555',
+    color: '#666',
     textAlign: 'center',
-    marginTop: 10,
+    marginBottom: 2,
   },
-  clientLabel: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    marginBottom: 3,
-  },
-  clientValue: {
-    fontSize: 10,
-    marginBottom: 5,
-  },
-  clientInfo: {
-    fontSize: 9,
-    color: '#555',
-    marginBottom: 3,
-  },
-  dateBox: {
-    width: '40%',
-    backgroundColor: '#f9f9f9',
-    padding: 8,
-    borderRadius: 4,
-  },
-  dateLabel: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  dateValue: {
-    fontSize: 9,
-    color: '#555',
+  separator: {
+    borderBottom: '1px solid #ddd',
+    marginVertical: 15,
+    width: '100%'
   },
 });
 

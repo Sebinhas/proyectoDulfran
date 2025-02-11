@@ -5,8 +5,9 @@ import logo from '../../../../../../public/standarConectionLOGO.png';
 // import electronicSignature from '../../../../../assets/images/signature.jpg';
 import { priceFormatter } from '../../../../../helpers/priceFormatter.helper';
 // import { Invoices } from '../../useInvoices';
+import { DTOPayment } from '../../DTOPayment';
 
-const GenerateInvoice = ({ invoice }: { invoice: any }) => {
+const GenerateInvoice = ({ invoice }: { invoice: DTOPayment }) => {
     const getPaymentMessage = (status: string) => {
         switch (status?.toLowerCase()) {
             case 'pagado':
@@ -20,77 +21,75 @@ const GenerateInvoice = ({ invoice }: { invoice: any }) => {
         }
     };
 
+    const fullName = `${invoice.client_first_name} ${invoice.client_second_name} ${invoice.client_first_lastname} ${invoice.client_second_lastname}`.trim();
+
     return (
         <div>
             <PDFViewer style={{ width: '100%', height: '650px' }}>
                 <Document>
                     <Page size="LETTER" style={styles.page}>
-                        <View style={styles.headerContainer}>
-                            <View style={styles.logoSection}>
+                        <View style={styles.header}>
+                            <View style={styles.logoContainer}>
                                 <Image src={logo} style={styles.logo} />
                             </View>
-                            <View style={styles.headerInfo}>
+                            <View style={styles.companyInfo}>
                                 <Text style={styles.companyName}>Standard Connection S.A.S</Text>
-                                <Text style={styles.companySub}>NIT: 901844427-1</Text>
-                                <Text style={styles.companyDetails}>Tel: (604) 444-5555</Text>
-                                <Text style={styles.companyDetails}>Medellín, Colombia</Text>
+                                <Text style={styles.companyNit}>NIT: {invoice.admin_nit}</Text>
+                                <Text style={styles.companyContact}>Tel: (604) 444-5555</Text>
+                                <Text style={styles.companyAddress}>Medellín, Colombia</Text>
                             </View>
-                            <View style={styles.invoiceTitleSection}>
-                                <Text style={styles.invoiceTitle}>Factura de Venta</Text>
-                                <Text style={styles.invoiceNumber}>N° {invoice?.numberContract}</Text>
+                            <View style={styles.invoiceInfo}>
+                                <Text style={styles.invoiceTitle}>FACTURA DE VENTA</Text>
+                                <Text style={styles.invoiceNumber}>{invoice.no_invoice}</Text>
                             </View>
                         </View>
 
                         <View style={styles.separator} />
 
-                        <View style={styles.clientSection}>
+                        <View style={styles.clientInfo}>
                             <View style={styles.clientDetails}>
-                                <Text style={styles.clientLabel}>Cliente:</Text>
-                                <Text style={styles.clientValue}>{invoice?.name}</Text>
-                                <Text style={styles.clientInfo}>NIT/CC: {invoice?.client_cedula}</Text>
-                                <Text style={styles.clientInfo}>Email: {invoice?.email}</Text>
-                                <Text style={styles.clientInfo}>Teléfono: {invoice?.phone}</Text>
-
+                                <Text style={styles.sectionTitle}>DATOS DEL CLIENTE</Text>
+                                <Text style={styles.clientName}>{fullName}</Text>
+                                <Text style={styles.clientDetail}>CC/NIT: {invoice.client_cedula}</Text>
+                                <Text style={styles.clientDetail}>Tel: {invoice.client_phone}</Text>
+                                <Text style={styles.clientDetail}>Email: {invoice.client_email}</Text>
                             </View>
-                            <View style={styles.dateBox}>
-                                <Text style={styles.dateLabel}>Período de Facturación:</Text>
-                                <Text style={styles.dateValue}>{invoice?.paymentPeriod}</Text>
+                            <View style={styles.periodInfo}>
+                                <Text style={styles.sectionTitle}>PERÍODO FACTURADO</Text>
+                                <Text style={styles.periodDate}>Del: {invoice.period_start}</Text>
+                                <Text style={styles.periodDate}>Al: {invoice.period_end}</Text>
                             </View>
                         </View>
 
                         <View style={styles.separator} />
 
-                        <View style={styles.tableContainer}>
+                        <View style={styles.serviceDetail}>
                             <View style={styles.tableHeader}>
                                 <Text style={styles.tableHeaderCell}>Descripción</Text>
                                 <Text style={styles.tableHeaderCell}>Período</Text>
                                 <Text style={styles.tableHeaderCell}>Valor</Text>
                             </View>
                             <View style={styles.tableRow}>
-                                <Text style={styles.tableCell}>Servicio de Internet Banda Ancha</Text>
-                                <Text style={styles.tableCell}>{invoice?.paymentPeriod}</Text>
-                                <Text style={styles.tableCell}>$ {priceFormatter(invoice?.total)}</Text>
+                                <Text style={styles.tableCell}>Servicio de Internet</Text>
+                                <Text style={styles.tableCell}>{`${invoice.period_start} - ${invoice.period_end}`}</Text>
+                                <Text style={styles.tableCell}>$ {priceFormatter(Number(invoice.amount))}</Text>
                             </View>
                         </View>
 
-                        <View style={styles.observationsSection}>
-                            <View style={styles.separator2} />
-                            <Text style={styles.observationsTitle}>Información de Pago:</Text>
-                            <Text style={styles.observationsText}>
-                                {getPaymentMessage(invoice?.status)}
-                                {invoice?.status !== 'pagado' && `\nEstado: ${invoice?.status}`}
-                            </Text>
+                        <View style={styles.paymentStatus}>
+                            <Text style={styles.paymentMessage}>{getPaymentMessage(invoice.status)}</Text>
                         </View>
 
-                        <View style={styles.separator} />
+                        <View style={styles.totalSection}>
+                            <Text style={styles.totalLabel}>Total a Pagar:</Text>
+                            <Text style={styles.totalAmount}>$ {priceFormatter(Number(invoice.amount))}</Text>
+                        </View>
 
                         <View style={styles.footer}>
-                            <View style={styles.totalSection}>
-                                <Text style={styles.totalLabel}>Total a Pagar:</Text>
-                                <Text style={styles.totalValue}>$ {priceFormatter(invoice?.total)}</Text>
-                            </View>
-                            <Text style={styles.legalText}>
+                            <Text style={styles.footerText}>
                                 Esta factura se asimila en sus efectos legales a una letra de cambio según el Art. 774 del Código de Comercio.
+                            </Text>
+                            <Text style={styles.footerText}>
                                 Después de vencida causará intereses de mora a la tasa máxima legal permitida.
                             </Text>
                         </View>

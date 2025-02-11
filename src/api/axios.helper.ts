@@ -62,6 +62,41 @@ export const getClients = async () => {
 };
 
 
+export const getInvoicesForClient = async () => {
+
+  try {
+    const response = await axiosInstance.get(`/invoices`);
+    const invoices = response.data?.invoice || [];
+
+    if (!Array.isArray(invoices)) {
+      console.error('La respuesta no es un array:', invoices);
+      return [];
+    }
+
+    return invoices.map((item: any) => ({
+      no_invoice: item.no_invoice || '',
+      period_start: item.period_start || '',
+      period_end: item.period_end || '',
+      amount: item.amount || '',
+      status: item.status || '',
+      createdAt: item.createdAt || '',
+      updatedAt: item.updatedAt || '',
+      client_cedula: item.client?.cedula || '',
+      client_first_name: item.client?.first_name || '',
+      client_second_name: item.client?.second_name || '',
+      client_first_lastname: item.client?.first_lastname || '',
+      client_second_lastname: item.client?.second_lastname || '',
+      client_phone: item.client?.phone || '',
+      client_email: item.client?.email || '',
+      admin_nit: item.admin?.nit || ''
+    }));
+  } catch (error) {
+    console.error('Error al obtener facturas:', error);
+    return [];
+  }
+};
+
+
 // Obtener lista de facturas de una empresa
 export const getInvoices = async () => {
   const currentNit = useAuthStore.getState().currentNit;
