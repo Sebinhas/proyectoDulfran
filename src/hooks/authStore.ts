@@ -8,6 +8,7 @@ interface Profile {
   admin_nit?: string;
 }
 
+
 interface AuthState {
   user: Profile | null;
   token: string | null;

@@ -12,6 +12,7 @@ const Invoices = () => {
         RenderUploadInvoice,
         selectedFile,
         invoices,
+        invoicesData,
         setSelectedFile,
         handleFileChange,
         handleFileUpload
@@ -33,7 +34,7 @@ const Invoices = () => {
 
             <TableGlobal
                 columns={columns}
-                data={invoices}
+                data={invoicesData}
                 itemsPerPage={4}
                 actions={{
                     view: handleView,

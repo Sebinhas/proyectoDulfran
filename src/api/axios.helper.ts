@@ -10,6 +10,7 @@ export const axiosInstance = axios.create({
   headers: {
     'ngrok-skip-browser-warning': 'true',
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTYxMTM0MTI0NCIsInVzZXJuYW1lIjoiQ0FNSUxPMTI0NCIsInByb2ZpbGVfdHlwZSI6ImZpbmFuY2llcm8iLCJhZG1pbl9uaXQiOiI5MDE4NDQ0MjctMSIsImlhdCI6MTczOTIzOTk1NSwiZXhwIjoxNzM5MjQzNTU1fQ.6fb2mR_CJSBE2nEI1eYN3tYd1KP_dWAn0rw7w4xg56E'}`
   },
 });
 
