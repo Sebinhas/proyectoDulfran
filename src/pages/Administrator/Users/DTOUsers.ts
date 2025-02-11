@@ -1,9 +1,10 @@
 export interface ClientsDTO {
     cedula: string;
-    name: string;
+    first_name: string;
+    second_name: string;
+    last_name: string;
+    second_lastname: string;
     email: string;
-    username: string;
-    password: string;
-    profile_type: string;
-    admin_nit: number;
-  }
+    phone: string;
+    profile_type: 'financiero' | 'tecnico';
+}

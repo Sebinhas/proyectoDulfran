@@ -4,7 +4,10 @@ import { priceFormatter } from '../../../../helpers/priceFormatter.helper';
 // Nuevo archivo para tipos
 export interface Users {
   cedula: string;
-  name: string;
+  first_name: string;
+  second_name: string;
+  first_lastname: string;
+  second_lastname: string;
   email: string;
   username: string;
   profile_type: string;
@@ -25,7 +28,7 @@ export const CedulaCell = (row: Users): React.ReactNode => (
 export const NameCell = (row: Users): React.ReactNode => (
 <div className="flex items-center gap-2">
   <div className="flex flex-row gap-1 items-center">
-    <div className="font-medium text-gray-900">{row.name} </div>
+    <div className="font-medium text-gray-900">{row.first_name} {row.second_name} </div>
   </div>
 </div>
 
