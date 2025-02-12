@@ -151,7 +151,7 @@ const usePayments = () => {
     };
     row.status == "pagada"
       ? toast.success("Factura pagada")
-      : navigate(`/payment`, { state: { paymentData } });
+      : navigate(`/dashboard/payments/payment_method`, { state: { paymentData } });
   };
 
   const handleEdit = (row: ClientsDTO): void => {

@@ -7,19 +7,22 @@ import { PSEConfirmation } from './components/paymentConfirmation/PSEConfirmatio
 import { BancolombiaTransferConfirmation } from './components/paymentConfirmation/BancolombiaTransferConfirmation'
 import { QRConfirmation } from './components/paymentConfirmation/QRConfirmation'
 import { CreditCardConfirmation } from './components/paymentConfirmation/CreditCardConfirmation'
-import { NequiConfirmation } from './components/paymentConfirmation/NequiConfirmation'
+// import { NequiConfirmation } from './components/paymentConfirmation/NequiConfirmation'
 import { EfectivoConfirmation } from './components/paymentConfirmation/EfectivoConfirmation'
 import { PaymentInformation } from './components/PaymentInformation'
 import { CreditCardInfo } from './components/paymentInfo/CreditCardInfo'
 import { PSEInfo } from './components/paymentInfo/PSEInfo'
 import { QRInfo } from './components/paymentInfo/QRInfo'
 import { BancolombiaTransferInfo } from './components/paymentInfo/BancolombiaTransferInfo'
-import { NequiInfo } from './components/paymentInfo/NequiInfo'
 import { EfectivoInfo } from './components/paymentInfo/EfectivoInfo'
-
+import { useLocation } from 'react-router-dom'
 
 export default function Pasarela() {
     const navigate = useNavigate()
+
+    const { state } = useLocation()
+    console.log(state)
+
     const {
         getSteps,
         currentStep,
@@ -32,6 +35,7 @@ export default function Pasarela() {
         handlePaymentInfoChange,
         paymentInfo
     } = usePasarela()
+
 
     const steps = getSteps()
 
@@ -62,11 +66,11 @@ export default function Pasarela() {
                     personalData={personalData}
                 />
             case 'nequi':
-                return <NequiInfo 
-                    onBack={handleBack}
-                    onNext={handleNext}
-                    personalData={personalData}
-                />
+                // return <NequiInfo 
+                //     onBack={handleBack}
+                //     onNext={handleNext}
+                //     personalData={personalData}
+                // />
             case 'efectivo':
                 return <EfectivoInfo 
                     onBack={handleBack}
@@ -106,12 +110,13 @@ export default function Pasarela() {
                 )
             case 'nequi':
                 return (
-                    <NequiConfirmation
-                        onNext={handleNext}
-                        onBack={handleBack}
-                        personalData={personalData}
-                        paymentInfo={paymentInfo}
-                    />
+                    <div className=""></div>
+                    // <NequiConfirmation
+                    //     onNext={handleNext}
+                    //     onBack={handleBack}
+                    //     personalData={personalData}
+                    //     paymentInfo={paymentInfo}
+                    // />
                 )
             case 'pse':
                 return (
@@ -175,7 +180,7 @@ export default function Pasarela() {
             <div className="w-full max-w-[1300px] px-4 sm:px-6 lg:px-8">
                 <div className="bg-white p-6 rounded-lg shadow">
                     <h2 className="text-2xl font-bold mb-6 text-gray-900">Proceso de Pago</h2>
-
+{/* 
                     <nav aria-label="Progress">
                         <ol role="list" className="divide-y divide-gray-300 rounded-md border border-gray-300 md:flex md:divide-y-0">
                             {steps.map((step, stepIdx) => (
@@ -224,10 +229,16 @@ export default function Pasarela() {
                                 </li>
                             ))}
                         </ol>
-                    </nav>
+                    </nav> */}
 
                     <div className="mt-8">
-                        {renderStepContent()}
+                        <PaymentMethodSection
+                            onMethodSelect={handlePaymentMethodSelect}
+                            onNext={handleNext}
+                            onBack={handleBack}
+                            isFirstStep={true}
+                            paymentData={state?.paymentData}
+                        />
                     </div>
                 </div>
             </div>

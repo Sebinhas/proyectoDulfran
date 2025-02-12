@@ -1,6 +1,9 @@
 import { FaArrowLeft, FaCheckCircle } from 'react-icons/fa'
 import { FaN } from 'react-icons/fa6'
-import type { PersonalData, PaymentInfo } from '../../usePasarela'
+import type { PaymentInfo, PersonalData } from '../../../usePasarela'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import PaymentInvoice from '../../PaymentInvoice/PaymentInvoice'
 
 interface NequiConfirmationProps {
   onBack: () => void
@@ -9,14 +12,26 @@ interface NequiConfirmationProps {
   paymentInfo: PaymentInfo
 }
 
-export function NequiConfirmation({ 
-  onBack, 
-  onNext, 
-  personalData,
-  paymentInfo 
-}: NequiConfirmationProps) {
+const NequiConfirmation = () => {
+
+  const { state } = useLocation()
+  const [paymentInfo, setPaymentInfo] = useState<any>(state?.paymentData)
+  const navigate = useNavigate()
+  const [paymentInvoice, setPaymentInvoice] = useState<any>(null)
+  const [alert, setAlert] = useState<any>(false)
+  console.log(state)
+
+  const pay = () => {
+
+    
+    navigate('/dashboard/payments')
+  }
+
   return (
-    <div className="w-full px-4 py-6">
+    <div className="w-full px-4 py-6 relative">
+      {alert && (
+        <PaymentInvoice paymentData={paymentInfo} />
+      )}
       <div className="mx-auto w-full max-w-2xl">
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="text-center mb-6">
@@ -33,15 +48,15 @@ export function NequiConfirmation({
               <dl className="grid grid-cols-1 gap-3">
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Nombre:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.nombre}</dd>
+                  <dd className="text-sm font-medium text-gray-900">{paymentInfo?.buyer_name}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Email:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.email}</dd>
+                  <dd className="text-sm font-medium text-gray-900">{paymentInfo?.buyer_email}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Teléfono Nequi:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.telefono}</dd>
+                  <dd className="text-sm font-medium text-gray-900">{paymentInfo?.buyer_phone}</dd>
                 </div>
               </dl>
             </div>
@@ -53,18 +68,12 @@ export function NequiConfirmation({
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Monto:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    ${paymentInfo.monto.toLocaleString('es-CO')}
+                    ${paymentInfo?.amount.toLocaleString('es-CO')}
                   </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Referencia:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{paymentInfo.referencia}</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-sm text-gray-600">Fecha:</dt>
-                  <dd className="text-sm font-medium text-gray-900">
-                    {new Date(paymentInfo.fecha).toLocaleDateString('es-CO')}
-                  </dd>
+                  <dd className="text-sm font-medium text-gray-900">{paymentInfo?.invoice_id}</dd>
                 </div>
               </dl>
             </div>
@@ -82,14 +91,15 @@ export function NequiConfirmation({
             <div className="mt-8 flex justify-between">
               <button
                 type="button"
-                onClick={onBack}
+                onClick={() => navigate('/dashboard/payments')}
                 className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 <FaArrowLeft className="mr-2 h-4 w-4" />
-                Revisar datos
+                {/* Revisar datos */}
+                Volver a facturas
               </button>
               <button
-                onClick={onNext}
+                onClick={()=> pay()}
                 className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-fuchsia-600 hover:bg-fuchsia-700"
               >
                 Pagar con Nequi
@@ -102,3 +112,5 @@ export function NequiConfirmation({
     </div>
   )
 } 
+
+export default NequiConfirmation

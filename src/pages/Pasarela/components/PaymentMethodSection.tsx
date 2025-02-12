@@ -1,28 +1,29 @@
 import { useState } from 'react'
 import { FaArrowRight, FaArrowLeft, FaCreditCard, FaQrcode, FaUniversity, FaMoneyBill } from 'react-icons/fa'
 import { FaN } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
 
 const paymentMethods = [
   {
-    id: 'credit-card',
+    id: 'cc',
     title: 'Paga con tus tarjetas',
     description: 'Visa, Mastercard, American Express',
     icon: FaCreditCard,
   },
   {
-    id: 'qr-bancolombia',
+    id: 'qrb',
     title: 'Paga con QR Bancolombia',
     description: 'Escanea y paga con la app',
     icon: FaQrcode,
   },
   {
-    id: 'bancolombia-transfer',
+    id: 'bt',
     title: 'Transfiere con tu cuenta',
     description: 'Ahorro o corriente Bancolombia',
     icon: FaUniversity,
   },
   {
-    id: 'nequi',
+    id: 'nq',
     title: 'Paga con tu cuenta Nequi',
     description: 'Transfiere desde Nequi',
     icon: FaN,
@@ -34,7 +35,7 @@ const paymentMethods = [
     icon: FaUniversity,
   },
   {
-    id: 'efectivo',
+    id: 'ef',
     title: 'Paga en efectivo en Corresponsal',
     description: 'Bancario',
     icon: FaMoneyBill,
@@ -46,20 +47,25 @@ interface PaymentMethodSectionProps {
   onNext: () => void
   onBack: () => void
   isFirstStep?: boolean
+  paymentData?: any
 }
 
 export function PaymentMethodSection({ 
   onMethodSelect, 
   onNext, 
   onBack,
+  paymentData,
   isFirstStep = false 
-}: PaymentMethodSectionProps) {
+  }: PaymentMethodSectionProps) {
   const [selected, setSelected] = useState<typeof paymentMethods[0] | null>(null);
+  const navigate = useNavigate();
 
   const handleSelection = (method: typeof paymentMethods[0]) => {
     setSelected(method);
     onMethodSelect(method.id);
   }
+
+  console.log(paymentData)
 
   // Dividir los métodos en dos columnas
   const leftMethods = paymentMethods.slice(0, 3)
@@ -158,7 +164,7 @@ export function PaymentMethodSection({
         )}
         <div className={isFirstStep ? 'ml-auto' : ''}>
           <button
-            onClick={onNext}
+            onClick={() => navigate(`/dashboard/payments/payment_method/${selected?.id}`, { state: { paymentData } })}
             disabled={!selected}
             className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm ${
               !selected 

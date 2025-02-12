@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
 
-export const BASE_URL = "http://localhost:3000/api";
+export const BASE_URL = "https://2ac6-2803-1800-400a-ab61-1548-3c38-1b79-629c.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
