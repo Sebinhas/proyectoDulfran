@@ -7,7 +7,6 @@ import { LuDownload, LuPrinter } from "react-icons/lu";
 import GenerateInvoice from "./components/GenerateInvoice/GenerateInvoice";
 
 const Payments = () => {
-
   const {
     columns,
     handleView,
@@ -17,11 +16,9 @@ const Payments = () => {
     showDetail,
     handleBack,
     handlePay,
-    mockPayments,
     RenderDownloadInvoice,
-    closeModalActionDownloadInvoice,
-    toggleModalDownloadInvoice,
-    invoice
+    invoice,
+    invoicesData
   } = usePayments();
 
   useEffect(() => {
@@ -43,12 +40,12 @@ const Payments = () => {
           <div className="overflow-auto ">
             <TableGlobal
               columns={columns}
-              data={mockPayments ?? []}
+              data={invoicesData}
               itemsPerPage={8}
               actions={{
                 view: (row) => handleView(row),
                 download: (row) => handleDownload(row),
-                pay: (row) => handlePay(row)
+                pay: (row) => handlePay(row),
               }}
               filters={{
                 status_payment: true,
@@ -70,12 +67,12 @@ const Payments = () => {
             <IoArrowBack className="text-xl" />
             <span>Volver a la lista</span>
           </button>
-          
+
           <ViewPaymentDetail payment={selectedPayment} />
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default Payments;

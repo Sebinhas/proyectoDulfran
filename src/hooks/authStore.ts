@@ -1,13 +1,24 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { login } from '../api/axios.helper';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { getCurrentProfile, login } from "../api/axios.helper";
 
 interface Profile {
-  username: string;
+  cedula: string;
+  first_name: string;
+  second_name: string;
+  first_lastname: string;
+  second_lastname: string;
+  address: string;
+  phone: string;
+  email: string;
+  stratum: string;
   profile_type: string;
-  admin_nit?: string;
+  nit: string;
+  name: string;
+  logo_url: string;
+  username: string;
+  status: string;
 }
-
 
 interface AuthState {
   user: Profile | null;
@@ -27,29 +38,30 @@ export const useAuthStore = create<AuthState>()(
       login: async (username: string, password: string) => {
         try {
           const response = await login({ username, password });
-          console.log(response);
-          set({
-            user: response.profile,
-            token: response.token,
-            isAuthenticated: true
-          });
-          
+          if (response) {
+            const profile = await getCurrentProfile(response.token);
+            set({
+              user: profile,
+              token: response.token,
+              isAuthenticated: true,
+            });
+          }
         } catch (error) {
           throw error;
         }
       },
 
       logout: () => {
-        localStorage.removeItem('auth-storage');
+        localStorage.removeItem("auth-storage");
         set({
           user: null,
           token: null,
-          isAuthenticated: false
+          isAuthenticated: false,
         });
-      }
+      },
     }),
     {
-      name: 'auth-storage'
+      name: "auth-storage",
     }
   )
 );
