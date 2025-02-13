@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 
 
 
-const useEditInfoUser = (setIsLoading?: (value: boolean) => void, loading?: boolean, closeModalActionEditInfoUser?: () => void) => {
+const useEditInfoUser = (setIsLoading?: (value: boolean) => void, loading?: boolean, closeModalActionEditInfoUser?: () => void, user?: any) => {
 
 
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -13,7 +13,6 @@ const useEditInfoUser = (setIsLoading?: (value: boolean) => void, loading?: bool
 
     const onSubmit = async (data: any) => {
         try {
-            // Mostrar loading mientras se procesa
             Swal.fire({
                 title: 'Actualizando usuario',
                 text: 'Por favor espere...',
@@ -25,9 +24,15 @@ const useEditInfoUser = (setIsLoading?: (value: boolean) => void, loading?: bool
                 showConfirmButton: false
             });
 
-            const response = await updateUser(data);
+            const { username, ...dataWithoutUsername } = data;
             
-            // Cerrar el loading
+            const updatedData = {
+                ...dataWithoutUsername,
+                cedula: user.cedula
+            };
+
+            const response = await updateUser(updatedData);
+            
             Swal.close();
 
             if (response) {
@@ -38,7 +43,6 @@ const useEditInfoUser = (setIsLoading?: (value: boolean) => void, loading?: bool
                     confirmButtonText: 'Aceptar'
                 });
                 
-                // Activar el loading de la tabla para refrescar los datos
                 if (setIsLoading) {
                     closeModalActionEditInfoUser?.();
                     setIsLoading(!loading);
