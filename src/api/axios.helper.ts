@@ -88,9 +88,7 @@ export const getInvoices = async () => {
     }));
   } catch (error: any) {
     if (error.response.data?.statusCode === 401) {
-      toast.error(
-        "Tu sesión ha expirado"
-      );
+      toast.error("Tu sesión ha expirado");
     }
     console.error("Error al obtener facturas:", error);
     return [];
@@ -150,20 +148,23 @@ export const getUsers = async () => {
     const response = await axiosInstance.get(`/admin/admin-users`);
     const users = response.data?.users || [];
     return users.map((item: any) => ({
-      "cedula": item.cedula || '',
-      "first_name": item.first_name || '',
-      "second_name": item.second_name || '',
-      "last_name": item.last_name || '',
-      "second_lastname": item.second_lastname || '',
-      "email": item.email || '',
-      "phone": item.phone || '',
-      "username": item.username || '',
-      "profile_type": item.profile_type || '',
-      "status": item.status || '',
-      "createdAt": item.createdAt || '',
-      "updatedAt": item.updatedAt || ''
+      cedula: item.cedula || "",
+      first_name: item.first_name || "",
+      second_name: item.second_name || "",
+      last_name: item.last_name || "",
+      second_lastname: item.second_lastname || "",
+      email: item.email || "",
+      phone: item.phone || "",
+      username: item.username || "",
+      profile_type: item.profile_type || "",
+      status: item.status || "",
+      createdAt: item.createdAt || "",
+      updatedAt: item.updatedAt || "",
     }));
-  } catch (error) {
+  } catch (error: any) {
+    if (error.response.data?.statusCode === 401) {
+      toast.error("Tu sesión ha expirado");
+    }
     console.error("Error al obtener usuarios:", error);
     return [];
   }
@@ -182,10 +183,13 @@ export const createUser = async (data: any) => {
 
 export const updateUser = async (data: any) => {
   try {
-    const response = await axiosInstance.patch(`/admin/update-admin-user/${data.cedula}`, data);
+    const response = await axiosInstance.patch(
+      `/admin/update-admin-user/${data.cedula}`,
+      data
+    );
     return response.data;
   } catch (error: any) {
-    console.error('Error al actualizar usuario:', error);
+    console.error("Error al actualizar usuario:", error);
     toast.error(error.response.data.message);
     throw error;
   }
@@ -273,31 +277,39 @@ export const login = async (data: { username: string; password: string }) => {
   return response.data;
 };
 
-
 export const getCurrentProfile = async (token: string): Promise<any> => {
-  const response = await axiosInstance.get("/auth/profile", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    const response = await axiosInstance.get("/auth/profile", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  const profile = response.data.profile;
+    const profile = response.data.profile;
 
-  return {
-    cedula: profile.cedula,
-    first_name: profile.first_name,
-    second_name: profile.second_name,
-    first_lastname: profile.first_lastname,
-    second_lastname: profile.second_lastname,
-    address: profile.address,
-    phone: profile.phone,
-    email: profile.email,
-    stratum: profile.stratum,
-    profile_type: profile.profile_type,
-    nit: profile.admin?.nit || "",
-    name: profile.admin?.name || "",
-    logo_url: profile.admin?.logo_url || "",
-    username: profile.user?.username || "",
-    status: profile.user?.status || "",
-  };
+    return {
+      cedula: profile.cedula,
+      first_name: profile.first_name,
+      second_name: profile.second_name,
+      first_lastname: profile.first_lastname,
+      second_lastname: profile.second_lastname,
+      address: profile.address,
+      phone: profile.phone,
+      email: profile.email,
+      location: profile.location || "",
+      stratum: profile.stratum || "",
+      profile_type: profile.profile_type || "",
+      nit: profile.admin?.nit || profile.nit || "",
+      name: profile.admin?.name || profile.name || "",
+      logo_url: profile.admin?.logo_url || profile.logo_url || "",
+      username: profile.user?.username || profile.username || "",
+      status: profile.user?.status || profile.status || "",
+    };
+  } catch (error: any) {
+    if (error.response.data?.statusCode === 401) {
+      toast.error("Tu sesión ha expirado");
+    }
+    console.error("Error al obtener perfil:", error);
+    return [];
+  }
 };

@@ -5,16 +5,6 @@ const EditInfoUser = ({ user, closeModalActionEditInfoUser, setIsLoading, loadin
 
 
 
-    const { register, handleSubmit, errors, onSubmit } = useEditInfoUser(setIsLoading, loading, closeModalActionEditInfoUser);
-
-
-    useEffect(() => {
-        const fetchClients = async () => {
-            const clients = await getClients();
-            // console.log('clients', clients);
-        };
-        fetchClients();
-    }, []);
     const { register, handleSubmit, errors, onSubmit } = useEditInfoUser(setIsLoading, loading, closeModalActionEditInfoUser, user);
 
     if (!user) return null;

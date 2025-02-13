@@ -5,7 +5,6 @@ import { useHeaderDashboard } from './UseHeaderDashboard.ts';
 
 export const HeaderDashboard = () => {
   const { user } = useAuthStore();
-  console.log(user)
   const { showNotifications, handleShowNotifications, unreadCount } =
     useHeaderDashboard();
 

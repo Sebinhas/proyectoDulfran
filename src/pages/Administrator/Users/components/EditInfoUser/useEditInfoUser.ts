@@ -17,7 +17,7 @@ const useEditInfoUser = (setIsLoading?: (value: boolean) => void, loading?: bool
                 title: 'Actualizando usuario',
                 text: 'Por favor espere...',
                 didOpen: () => {
-                    Swal.showLoading();
+                    Swal.showLoading(null);
                 },
                 allowOutsideClick: false,
                 allowEscapeKey: false,
@@ -72,5 +72,4 @@ const useEditInfoUser = (setIsLoading?: (value: boolean) => void, loading?: bool
 
 
 export default useEditInfoUser;
-
 

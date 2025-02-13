@@ -53,8 +53,8 @@ const useClients = () => {
         title: 'Subiendo archivo',
         text: 'Procesando usuarios...',
         didOpen: () => {
-          Swal.showLoading();
-        },
+            Swal.showLoading(null);
+          },
         allowOutsideClick: false,
         allowEscapeKey: false,
         showConfirmButton: false,

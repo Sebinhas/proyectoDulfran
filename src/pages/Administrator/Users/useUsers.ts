@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
-import { NameCell, CedulaCell, UsernameCell, StatusCell, EmailCell, date_createdAt, date_updatedAt, profile_type } from './templates/cellTemplates';
+import { NameCell, CedulaCell, UsernameCell, StatusCell, EmailCell, date_createdAt, profile_type } from './templates/cellTemplates';
 import { useForm } from 'react-hook-form';
 import Modal from "../../../components/Modal/Modal";
 import { toast } from 'react-toastify';
 import { ClientsDTO } from "./DTOUsers";
 
 
-import { getClients, uploadExcel, createUser, getUsers } from '../../../api/axios.helper';
-import Swal from 'sweetalert2';
-import { useAuthStore } from "../../../hooks/authStore";
+import { createUser, getUsers } from '../../../api/axios.helper';
+  import Swal from 'sweetalert2';
 
 
 
 const useUsers = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [options, setOptions] = useState('');
   const [user, setUser] = useState<ClientsDTO | null>(null);
   const [dataUsers, setDataUsers] = useState<ClientsDTO[]>([]);
 
@@ -27,7 +25,7 @@ const useUsers = () => {
 
   const { toggleModal: toggleModalEditInfoUser, closeModalAction: closeModalActionEditInfoUser, Render: RenderEditInfoUser } = Modal({ title: 'Editar Información' });
 
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<ClientsDTO>();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<ClientsDTO>();
 
   const onSubmit = async (data: ClientsDTO) => {
     try {
@@ -36,7 +34,7 @@ const useUsers = () => {
         title: 'Creando usuario',
         text: 'Por favor espere...',
         didOpen: () => {
-          Swal.showLoading();
+          Swal.showLoading(null);
         },
         allowOutsideClick: false,
         allowEscapeKey: false,
@@ -161,9 +159,6 @@ const useUsers = () => {
   ]
 
   const handleView = (row: ClientsDTO): void => {
-    // console.log(row);
-    return;
-    toast.success(`Orden vista, estado: ${row}`);
     setUser(row);
     toggleModalViewDetailUser();
   };
@@ -180,7 +175,6 @@ const useUsers = () => {
 
   const handleEdit = (row: ClientsDTO): void => {
     setUser(row);
-    // console.log(row);
     toggleModalEditInfoUser();
   };
 
