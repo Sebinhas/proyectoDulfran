@@ -65,7 +65,7 @@ export function PaymentMethodSection({
     onMethodSelect(method.id);
   }
 
-  console.log(paymentData)
+  // console.log(paymentData)
 
   // Dividir los métodos en dos columnas
   const leftMethods = paymentMethods.slice(0, 3)
@@ -82,10 +82,13 @@ export function PaymentMethodSection({
             <button
               key={method.id}
               onClick={() => handleSelection(method)}
+              disabled={method.id !== 'nq'}
               className={`w-full ${
                 selected?.id === method.id
                   ? 'bg-indigo-600 text-white ring-2 ring-indigo-600 ring-offset-2'
-                  : 'bg-white text-gray-900 hover:bg-gray-50'
+                  : method.id !== 'nq'
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-normal'
               } relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none`}
             >
               <div className="flex w-full items-center justify-between">
@@ -119,10 +122,13 @@ export function PaymentMethodSection({
             <button
               key={method.id}
               onClick={() => handleSelection(method)}
+              disabled={method.id !== 'nq'}
               className={`w-full ${
-                selected?.id === method.id
+                selected?.id === method.id && method.id === 'nq'
                   ? 'bg-indigo-600 text-white ring-2 ring-indigo-600 ring-offset-2'
-                  : 'bg-white text-gray-900 hover:bg-gray-50'
+                  : method.id !== 'nq'
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-gray-900 hover:bg-gray-50'
               } relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none`}
             >
               <div className="flex w-full items-center justify-between">

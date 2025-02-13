@@ -239,7 +239,7 @@ const useClients = () => {
   const handleEdit = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row.status}`);
     setUser(row);
-    console.log(row);
+    // console.log(row);
     toggleModalEditInfoUser();
     // navigate(`/dashboard/ordenes/${row.id}`);
   };

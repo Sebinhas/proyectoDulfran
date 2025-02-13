@@ -34,13 +34,8 @@ const NequiInfo = () => {
   const [paymentData, setPaymentData] = useState<PaymentData>(state?.paymentData)
 
   useEffect(() => {
-    console.log(state)
+    // console.log(state)
   }, [state])
-
-
-  useEffect(() => {
-    console.log(paymentData)
-  },[])
 
   const onSubmit = (data: any) => {
 

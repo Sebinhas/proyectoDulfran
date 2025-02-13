@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
 
-export const BASE_URL = "https://2ac6-2803-1800-400a-ab61-1548-3c38-1b79-629c.ngrok-free.app/api";
+export const BASE_URL = "http://localhost:3000/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -89,7 +89,7 @@ export const getInvoices = async () => {
   } catch (error: any) {
     if (error.response.data?.statusCode === 401) {
       toast.error(
-        "No tienes permisos para ver las facturas, o tu sesión ha expirado"
+        "Tu sesión ha expirado"
       );
     }
     console.error("Error al obtener facturas:", error);
@@ -212,7 +212,7 @@ export const uploadExcel = async (file: File) => {
     errors.forEach((error: any) => {
       toast.warning(error.type);
     });
-    console.log("Respuesta:", response.data);
+    // console.log("Respuesta:", response.data);
     return response.data;
   } catch (error: any) {
     toast.error(error.response.data.message);

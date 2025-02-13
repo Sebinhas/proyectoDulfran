@@ -161,7 +161,7 @@ const useUsers = () => {
   ]
 
   const handleView = (row: ClientsDTO): void => {
-    console.log(row);
+    // console.log(row);
     return;
     toast.success(`Orden vista, estado: ${row}`);
     setUser(row);
@@ -184,7 +184,7 @@ const useUsers = () => {
   const handleEdit = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row.first_name}`);
     setUser(row);
-    console.log(row);
+    // console.log(row);
     toggleModalEditInfoUser();
     // navigate(`/dashboard/ordenes/${row.id}`);
   };

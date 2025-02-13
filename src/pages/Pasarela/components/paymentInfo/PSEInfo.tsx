@@ -21,7 +21,7 @@ export function PSEInfo({ onBack, onNext, personalData }: PSEInfoProps) {
   const { register, handleSubmit, formState: { errors } } = useForm<DTOPSEInfoForm>()
 
   const onSubmit = (data: DTOPSEInfoForm) => {
-    console.log(data)
+    // console.log(data)
     onNext()
   }
 

@@ -30,7 +30,7 @@ export function CreditCardInfo({ onBack, onNext, personalData }: CreditCardInfoP
   }
 
   const onSubmit = (data: DTOCreditCardInfoForm) => {
-    console.log(data)
+    // console.log(data)
     onNext()
   }
 

@@ -41,15 +41,8 @@ const Users = () => {
   } = useUsers();
 
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
-
-  
-
-
-  return (
+  eturn (
     <div className="w-full flex flex-col gap-4 p-4">
       
       <div className="w-full flex flex-col gap-8">

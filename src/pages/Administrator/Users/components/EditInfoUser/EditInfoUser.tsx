@@ -14,7 +14,7 @@ const EditInfoUser = ({ user, closeModalActionEditInfoUser, setIsLoading, loadin
     useEffect(() => {
         const fetchClients = async () => {
             const clients = await getClients();
-            console.log('clients', clients);
+            // console.log('clients', clients);
         };
         fetchClients();
     }, []);

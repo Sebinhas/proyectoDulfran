@@ -2,27 +2,27 @@ import { IoArrowBack } from "react-icons/io5";
 import usePayments from "./usePayments";
 import TableGlobal from "../../../components/TableData/TableGlobal";
 import { useEffect } from "react";
-import ViewPaymentDetail from "./viewPaymentsDetail/viewPaymentsDetails";
-import { LuDownload, LuPrinter } from "react-icons/lu";
+import PaymentReceipt from "../../Pasarela/components/PaymentInvoice/PaymentInvoice";
 import GenerateInvoice from "./components/GenerateInvoice/GenerateInvoice";
+import PaymentHistoryView from './PaymentHistoryView/PaymentHistoryView';
 
 const Payments = () => {
   const {
     columns,
-    handleView,
     handleDownload,
     user,
-    selectedPayment,
     showDetail,
     handleBack,
     handlePay,
     RenderDownloadInvoice,
     invoice,
-    invoicesData
+    invoicesData,
+    handleViewInvoice,
+    selectedPayment,
   } = usePayments();
 
   useEffect(() => {
-    console.log(user);
+    // console.log(user);
   }, [user]);
 
   return (
@@ -43,7 +43,7 @@ const Payments = () => {
               data={invoicesData}
               itemsPerPage={8}
               actions={{
-                view: (row) => handleView(row),
+                view: (row) => handleViewInvoice(row),
                 download: (row) => handleDownload(row),
                 pay: (row) => handlePay(row),
               }}
@@ -59,17 +59,10 @@ const Payments = () => {
           </RenderDownloadInvoice>
         </>
       ) : (
-        <div className="w-full h-full overflow-auto">
-          <button
-            onClick={handleBack}
-            className="flex items-center gap-2 mb-6 text-gray-600 hover:text-gray-800 transition-colors"
-          >
-            <IoArrowBack className="text-xl" />
-            <span>Volver a la lista</span>
-          </button>
-
-          <ViewPaymentDetail payment={selectedPayment} />
-        </div>
+        <PaymentHistoryView 
+          paymentData={selectedPayment} 
+          onBack={handleBack}
+        />
       )}
     </div>
   );

@@ -31,8 +31,8 @@ const usePqr = () => {
   }, [user?.id]);
 
   useEffect(() => {
-    console.log(pqr);
-    console.log(user)
+    // console.log(pqr);
+    // console.log(user)
   }, [pqr]);
 
   const createNewPqr = async (data: any) => {

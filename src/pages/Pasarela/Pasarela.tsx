@@ -16,12 +16,13 @@ import { QRInfo } from './components/paymentInfo/QRInfo'
 import { BancolombiaTransferInfo } from './components/paymentInfo/BancolombiaTransferInfo'
 import { EfectivoInfo } from './components/paymentInfo/EfectivoInfo'
 import { useLocation } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 export default function Pasarela() {
     const navigate = useNavigate()
 
     const { state } = useLocation()
-    console.log(state)
+    // console.log(state)
 
     const {
         getSteps,

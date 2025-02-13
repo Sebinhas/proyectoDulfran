@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export const Sidebar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
-  console.log(user);
+  // console.log(user);
 
   const handleLogout = () => {
     logout();

@@ -1,8 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Paper, Divider, Typography, Box } from '@mui/material';
-import { CheckCircle } from '@mui/icons-material';
-import QRCode from 'react-qr-code';
+import { useNavigate } from 'react-router-dom';
+import { FaCheckCircle, FaTimesCircle, FaDownload, FaPrint } from 'react-icons/fa';
 
 interface PaymentReceiptProps {
   paymentData: {
@@ -29,26 +27,7 @@ interface PaymentReceiptProps {
 }
 
 const PaymentReceipt: React.FC<PaymentReceiptProps> = ({ paymentData }) => {
-  const containerVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        when: "beforeChildren",
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0
-    }
-  };
+  const navigate = useNavigate();
 
   const formatAmount = (amountInCents: number) => {
     return new Intl.NumberFormat('es-CO', {
@@ -67,152 +46,131 @@ const PaymentReceipt: React.FC<PaymentReceiptProps> = ({ paymentData }) => {
     });
   };
 
+  const getStatusConfig = (status: string) => {
+    switch (status.toUpperCase()) {
+      case 'APPROVED':
+        return {
+          icon: <FaCheckCircle className="mx-auto h-16 w-16 text-green-500" />,
+          title: '¡Pago Exitoso!',
+          titleColor: 'text-green-600',
+          message: 'Tu pago ha sido procesado correctamente',
+          statusText: 'Aprobado',
+          statusColor: 'text-green-600'
+        };
+      case 'DECLINED':
+        return {
+          icon: <FaTimesCircle className="mx-auto h-16 w-16 text-red-500" />,
+          title: 'Pago Declinado',
+          titleColor: 'text-red-600',
+          message: 'El pago no pudo ser procesado',
+          statusText: 'Declinado',
+          statusColor: 'text-red-600'
+        };
+      default:
+        return {
+          icon: <FaTimesCircle className="mx-auto h-16 w-16 text-yellow-500" />,
+          title: 'Estado del Pago',
+          titleColor: 'text-yellow-600',
+          message: `Estado: ${status}`,
+          statusText: status,
+          statusColor: 'text-yellow-600'
+        };
+    }
+  };
+
+  const statusConfig = getStatusConfig(paymentData.wompi_data.status);
+
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="max-w-2xl mx-auto p-4"
-    >
-      <Paper elevation={3} className="p-8 bg-white">
+    <div className="max-w-2xl mx-auto p-4">
+      <div className="bg-white shadow-lg rounded-lg p-8">
         {/* Encabezado */}
-        <motion.div variants={itemVariants} className="text-center mb-6">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200 }}
-          >
-            <CheckCircle sx={{ fontSize: 60, color: '#4CAF50' }} />
-          </motion.div>
-          <Typography variant="h4" className="mt-4 text-green-600">
-            ¡Pago Exitoso!
-          </Typography>
-        </motion.div>
+        <div className="text-center mb-8">
+          {statusConfig.icon}
+          <h2 className={`mt-4 text-3xl font-bold ${statusConfig.titleColor}`}>
+            {statusConfig.title}
+          </h2>
+          <p className="mt-2 text-gray-600">{statusConfig.message}</p>
+        </div>
 
-        <Divider className="my-6" />
+        {/* Detalles de la Transacción */}
+        <div className="space-y-6">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Detalles de la Transacción</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-500">Monto</p>
+                <p className="text-lg font-bold text-gray-900">
+                  {formatAmount(paymentData.wompi_data.amount_in_cents)}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Fecha</p>
+                <p className="text-gray-900">{formatDate(paymentData.wompi_data.created_at)}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Referencia</p>
+                <p className="text-gray-900">{paymentData.wompi_data.reference}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Estado</p>
+                <p className={`font-medium ${statusConfig.statusColor}`}>
+                  {statusConfig.statusText}
+                </p>
+              </div>
+            </div>
+          </div>
 
-        {/* Detalles del Pago */}
-        <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
-          <Box className="col-span-2 md:col-span-1">
-            <Typography variant="subtitle2" color="textSecondary">
-              Referencia de Pago
-            </Typography>
-            <Typography variant="body1" className="font-semibold">
-              {paymentData.wompi_data.reference}
-            </Typography>
-          </Box>
-
-          <Box className="col-span-2 md:col-span-1">
-            <Typography variant="subtitle2" color="textSecondary">
-              Monto
-            </Typography>
-            <Typography variant="h6" className="text-green-600 font-bold">
-              {formatAmount(paymentData.wompi_data.amount_in_cents)}
-            </Typography>
-          </Box>
-
-          <Box className="col-span-2 md:col-span-1">
-            <Typography variant="subtitle2" color="textSecondary">
-              Fecha y Hora
-            </Typography>
-            <Typography variant="body1">
-              {formatDate(paymentData.wompi_data.created_at)}
-            </Typography>
-          </Box>
-
-          <Box className="col-span-2 md:col-span-1">
-            <Typography variant="subtitle2" color="textSecondary">
-              Método de Pago
-            </Typography>
-            <Typography variant="body1">
-              {paymentData.wompi_data.payment_method.type}
-            </Typography>
-          </Box>
-        </motion.div>
-
-        <Divider className="my-6" />
-
-        {/* Información del Cliente */}
-        <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
-          <Box className="col-span-2 md:col-span-1">
-            <Typography variant="subtitle2" color="textSecondary">
-              Cliente
-            </Typography>
-            <Typography variant="body1">
-              {paymentData.wompi_data.customer_data.full_name}
-            </Typography>
-          </Box>
-
-          <Box className="col-span-2 md:col-span-1">
-            <Typography variant="subtitle2" color="textSecondary">
-              Documento
-            </Typography>
-            <Typography variant="body1">
-              {paymentData.wompi_data.customer_data.legal_id_type} {paymentData.wompi_data.customer_data.legal_id}
-            </Typography>
-          </Box>
-
-          <Box className="col-span-2 md:col-span-1">
-            <Typography variant="subtitle2" color="textSecondary">
-              Email
-            </Typography>
-            <Typography variant="body1">
-              {paymentData.wompi_data.customer_email}
-            </Typography>
-          </Box>
-
-          <Box className="col-span-2 md:col-span-1">
-            <Typography variant="subtitle2" color="textSecondary">
-              Teléfono
-            </Typography>
-            <Typography variant="body1">
-              {paymentData.wompi_data.customer_data.phone_number}
-            </Typography>
-          </Box>
-        </motion.div>
-
-        {/* QR y ID de Transacción */}
-        <motion.div 
-          variants={itemVariants} 
-          className="mt-6 text-center"
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <QRCode 
-            value={paymentData.payment_id}
-            size={128}
-            className="mx-auto mb-4"
-          />
-          <Typography variant="caption" color="textSecondary" display="block">
-            ID de Transacción: {paymentData.wompi_data.id}
-          </Typography>
-        </motion.div>
+          {/* Información del Cliente */}
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Información del Cliente</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-500">Nombre</p>
+                <p className="text-gray-900">{paymentData.wompi_data.customer_data.full_name}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Documento</p>
+                <p className="text-gray-900">
+                  {paymentData.wompi_data.customer_data.legal_id_type} {paymentData.wompi_data.customer_data.legal_id}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Email</p>
+                <p className="text-gray-900">{paymentData.wompi_data.customer_email}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Teléfono</p>
+                <p className="text-gray-900">{paymentData.wompi_data.customer_data.phone_number}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* Botones de Acción */}
-        <motion.div 
-          variants={itemVariants}
-          className="mt-6 flex justify-center gap-4"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+        <div className="mt-8 flex flex-col sm:flex-row justify-between gap-4">
+          <button
             onClick={() => window.print()}
+            className="flex items-center justify-center px-6 py-3 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50"
           >
-            Imprimir Comprobante
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-green-500 text-white px-4 py-2 rounded-lg"
-            onClick={() => {/* Función para descargar PDF */}}
+            <FaPrint className="mr-2" />
+            Imprimir
+          </button>
+          <button
+            onClick={() => {/* Lógica para descargar PDF */}}
+            className="flex items-center justify-center px-6 py-3 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50"
           >
+            <FaDownload className="mr-2" />
             Descargar PDF
-          </motion.button>
-        </motion.div>
-      </Paper>
-    </motion.div>
+          </button>
+          <button
+            onClick={() => navigate('/dashboard/payments')}
+            className="flex items-center justify-center px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          >
+            Volver a Facturas
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 
