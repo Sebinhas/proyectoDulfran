@@ -161,32 +161,23 @@ const useUsers = () => {
   ]
 
   const handleView = (row: ClientsDTO): void => {
-    console.log(row);
-    return;
-    toast.success(`Orden vista, estado: ${row}`);
     setUser(row);
     toggleModalViewDetailUser();
-    
   };
 
   const handleMessage = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row}`);
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
 
   const handleDownload = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row}`);
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
 
   const handleEdit = (row: ClientsDTO): void => {
-    toast.success(`Orden vista, estado: ${row.first_name}`);
     setUser(row);
-    console.log(row);
     toggleModalEditInfoUser();
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
 
