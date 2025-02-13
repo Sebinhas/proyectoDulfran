@@ -17,7 +17,7 @@ export function BancolombiaTransferInfo({ onBack, onNext, personalData }: Bancol
   const { register, handleSubmit, formState: { errors } } = useForm<DTOBancolombiaInfoForm>()
 
   const onSubmit = (data: DTOBancolombiaInfoForm) => {
-    console.log(data)
+    // console.log(data)
     onNext()
   }
 

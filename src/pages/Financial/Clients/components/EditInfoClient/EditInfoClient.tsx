@@ -11,7 +11,7 @@ const EditInfoUser = ({ user, closeModalActionUploadUser }: { user: ClientsDTO |
   useEffect(() => {
     const fetchClients = async () => {
       const clients = await getClients();
-      console.log('clients', clients);
+    //   console.log('clients', clients);
     };
     fetchClients();
   }, []);

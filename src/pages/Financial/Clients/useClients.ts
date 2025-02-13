@@ -5,8 +5,7 @@ import {
   EmailCell, 
   CreatedAtCell,
   FirstNameCell,
-  AddressCell,
-  PhoneCell 
+  PhoneCell
 } from './templates/cellTemplates';
 import { useForm } from 'react-hook-form';
 import Modal from "../../../components/Modal/Modal";
@@ -14,14 +13,12 @@ import { toast } from 'react-toastify';
 import { ClientsDTO } from "./DTOClients";
 import { getClients, uploadExcel } from '../../../api/axios.helper';
 import Swal from 'sweetalert2';
-import { useAuthStore } from '../../../hooks/authStore';
 
 const useClients = () => {
-  const currentNit = useAuthStore.getState().currentNit;
 
 
   const [isLoading, setIsLoading] = useState(true);
-  const [options, setOptions] = useState('');
+  // const [options, setOptions] = useState('');
   const [user, setUser] = useState<ClientsDTO | null>(null);
   const [clients, setClients] = useState<ClientsDTO[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -56,8 +53,8 @@ const useClients = () => {
         title: 'Subiendo archivo',
         text: 'Procesando usuarios...',
         didOpen: () => {
-          Swal.showLoading();
-        },
+            Swal.showLoading(null);
+          },
         allowOutsideClick: false,
         allowEscapeKey: false,
         showConfirmButton: false,
@@ -194,11 +191,11 @@ const useClients = () => {
       accessor: 'first_name',
       cell: FirstNameCell
     },
-    {
-      header: 'Dirección',
-      accessor: 'address',
-      cell: AddressCell
-    },
+    // {
+    //   header: 'Dirección',
+    //   accessor: 'address',
+    //   cell: AddressCell
+    // },
     {
       header: 'Teléfono',
       accessor: 'phone',
@@ -242,7 +239,7 @@ const useClients = () => {
   const handleEdit = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row.status}`);
     setUser(row);
-    console.log(row);
+    // console.log(row);
     toggleModalEditInfoUser();
     // navigate(`/dashboard/ordenes/${row.id}`);
   };

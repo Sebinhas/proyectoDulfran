@@ -1,37 +1,50 @@
 import { FaArrowLeft, FaMobile } from 'react-icons/fa'
-import type { PersonalData } from '../../usePasarela'
+import type { PersonalData } from '../../../usePasarela'
 import { useForm } from 'react-hook-form'
-import nequi from '../../../../../public/TypeTarget/nequi.avif'
-import { useAuthStore } from '../../../../hooks/authStore'
-import { useState } from 'react'
-import type { DTONequiInfoForm } from './DTOPaymentMethod'
+import nequi from '../../../../../../public/TypeTarget/nequi.avif'
+import { useAuthStore } from '../../../../../hooks/authStore'
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+// import type { DTONequiInfoForm } from './DTOPaymentMethod'
 
 interface NequiInfoProps {
   onBack: () => void
   onNext: () => void
   personalData: PersonalData
 }
+interface PaymentData {
+  invoice_id: string
+  amount: number
+  buyer_email: string
+  buyer_name: string
+  buyer_phone: string
+  legal_id: string
+  legal_id_type: string
+  accept_terms: boolean
+  accept_privacy: boolean
+}
 
 
-export function NequiInfo({ onBack, onNext, personalData }: NequiInfoProps) {
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<DTONequiInfoForm>()
-  const { user } = useAuthStore()
-  const [useSameNumber, setUseSameNumber] = useState(false)
+const NequiInfo = () => {
+  const { state } = useLocation()
+  const navigate = useNavigate()
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<PaymentData>()
 
-  const phoneNumber = () => {
-    if (useSameNumber) {
-      setValue('phone_number', user?.phone || '')
-      return user?.phone
-    }else{
-      return ''
-    }
-  }
+  const [paymentData, setPaymentData] = useState<PaymentData>(state?.paymentData)
 
+  useEffect(() => {
+    // console.log(state)
+  }, [state])
 
-  const onSubmit = (data: DTONequiInfoForm) => {
+  const onSubmit = (data: any) => {
 
-    console.log(data)
-    onNext()
+    paymentData.buyer_phone = data.buyer_phone.toString()
+
+    console.log(paymentData)
+
+    navigate('/dashboard/payments/payment_method/nq/confirmation', { state: { paymentData: paymentData } })
+
   }
 
 
@@ -59,36 +72,20 @@ export function NequiInfo({ onBack, onNext, personalData }: NequiInfoProps) {
                 <div className="w-full">
                   <div className="text-sm font-medium pb-0.5">Número celular de tu cuenta Nequi</div>
                   <input 
-                    {...register('phone_number', { 
+                    {...register('buyer_phone', { 
                       required: 'El número celular es requerido',
                       pattern: {
                         value: /^[0-9]{10}$/,
                         message: 'Ingresa un número celular válido de 10 dígitos'
                       }
                     })} 
-                    disabled={useSameNumber}
-                    defaultValue={phoneNumber()}
                     type="tel"
                     className="w-full border rounded-md p-2 outline-none border-gray-300"
                   />
 
-                  {errors.phone_number && <p className="text-red-500 text-sm">{errors.phone_number.message}</p>}
+                  {errors.buyer_phone && <p className="text-red-500 text-sm">{errors.buyer_phone.message}</p>}
                 </div>
 
-                <div className="flex flex-row gap-2 items-center">
-                  <div className="pt-1">
-                    <input 
-                      type="checkbox" 
-                      onClick={() => setUseSameNumber(!useSameNumber)}
-                    />
-                  </div>
-
-
-
-                  <div className="text-sm">
-                    Usar el mismo número ya diligenciado, recibirás una notificación push en tu celular.
-                  </div>
-                </div>
 
                 <div className="text-lg italic">
                   Recibirás una <span className='font-bold'> notificación push </span> en tu celular.
@@ -123,7 +120,9 @@ export function NequiInfo({ onBack, onNext, personalData }: NequiInfoProps) {
               <div className="mt-8 flex justify-between">
                 <button
                   type="button"
-                  onClick={onBack}
+                  onClick={ () => {
+                    navigate('/dashboard/payments')
+                  }}
                   className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
                   <FaArrowLeft className="mr-2 h-4 w-4" />
@@ -144,3 +143,5 @@ export function NequiInfo({ onBack, onNext, personalData }: NequiInfoProps) {
     </div>
   )
 } 
+
+export default NequiInfo

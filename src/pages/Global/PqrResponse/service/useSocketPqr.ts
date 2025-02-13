@@ -18,7 +18,7 @@ export const useSocketPqr = (ids:number[]) => {
 
     ids.forEach(prqId => {
       socketInstance.on(`pqr-${prqId}-estado`, (data) => {
-        console.log(data);
+        // console.log(data);
         setResponse(data);
       });
     });

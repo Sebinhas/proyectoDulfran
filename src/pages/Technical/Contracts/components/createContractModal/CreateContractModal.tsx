@@ -73,7 +73,7 @@ const CreateContractModal: React.FC<CreateContractModalProps> = ({ isOpen, onClo
         installationVideo: videoBase64
       };
 
-      console.log('Payload listo para enviar:', payload);
+      // console.log('Payload listo para enviar:', payload);
       
     } catch (error) {
       console.error('Error al procesar el formulario:', error);

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuthStore } from '../../hooks/authStore'
+import { toast } from 'react-toastify'
 
 export type StepStatus = 'complete' | 'current' | 'upcoming'
 
@@ -52,7 +53,7 @@ export const usePasarela = () => {
         fullName: user.name,
         email: user.email,
         phone: user.phone || '',
-        documentNumber: user.documentNumber || ''
+        documentNumber: user.cedula || ''
       })
     }
   }, [user])
