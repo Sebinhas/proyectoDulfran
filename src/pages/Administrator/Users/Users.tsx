@@ -8,6 +8,18 @@ import { uploadExcel } from "../../../api/axios.helper";
 
 import { toast } from "react-toastify";
 import EditInfoUser from "./components/EditInfoUser/EditInfoUser";
+import { useForm } from 'react-hook-form';
+
+interface FormInputs {
+  cedula: string;
+  phone: string;
+  first_name: string;
+  second_name?: string;
+  last_name: string;
+  second_lastname?: string;
+  email: string;
+  profile_type: 'financiero' | 'tecnico';
+}
 
 const Users = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -40,14 +52,11 @@ const Users = () => {
     errors,
   } = useUsers();
 
+  const { register: formRegister, handleSubmit: formHandleSubmit, formState: { errors: formErrors } } = useForm<FormInputs>();
 
   useEffect(() => {
     console.log(user);
   }, [user]);
-
-
-  
-
 
   return (
     <div className="w-full flex flex-col gap-4 p-4">
@@ -87,87 +96,114 @@ const Users = () => {
         <EditInfoUser setIsLoading={setIsLoading} loading={isLoading} user={user} closeModalActionEditInfoUser={closeModalActionEditInfoUser} />
       </RenderEditInfoUser>
 
-
-
-
       <RenderUploadUser>
         <div className="w-full flex flex-col gap-3 p-4">
           <div className="w-full flex flex-col md:flex-row gap-4">
             <div className="w-full">
-              <div className="text-sm font-medium pb-0.5">Cédula</div>
+              <div className="text-sm font-medium pb-0.5">
+                Cédula <span className="text-red-500">*</span>
+              </div>
               <input  
-                {...register('cedula')}
+                {...formRegister('cedula', { required: true })}
                 placeholder="Ej: 1234567"
-                className="w-full border rounded-md p-2 outline-none border-gray-300" 
+                className={`w-full border rounded-md p-2 outline-none ${
+                  formErrors.cedula ? 'border-red-500' : 'border-gray-300'
+                }`}
               />
             </div>
 
             <div className="w-full">
-              <div className="text-sm font-medium pb-0.5">Teléfono</div>
+              <div className="text-sm font-medium pb-0.5">
+                Teléfono <span className="text-red-500">*</span>
+              </div>
               <input  
-                {...register('phone')}
+                {...formRegister('phone', { required: true })}
                 placeholder="Ej: 3178901234"
-                className="w-full border rounded-md p-2 outline-none border-gray-300" 
+                className={`w-full border rounded-md p-2 outline-none ${
+                  formErrors.phone ? 'border-red-500' : 'border-gray-300'
+                }`}
               />
             </div>
           </div>
 
           <div className="w-full flex flex-col md:flex-row gap-4">
             <div className="w-full">
-              <div className="text-sm font-medium pb-0.5">Primer Nombre</div>
+              <div className="text-sm font-medium pb-0.5">
+                Primer Nombre <span className="text-red-500">*</span>
+              </div>
               <input  
-                {...register('first_name')}
+                {...formRegister('first_name', { required: true })}
                 placeholder="Ej: Juan"
-                className="w-full border rounded-md p-2 outline-none border-gray-300" 
+                className={`w-full border rounded-md p-2 outline-none ${
+                  formErrors.first_name ? 'border-red-500' : 'border-gray-300'
+                }`}
               />
             </div>
 
             <div className="w-full">
               <div className="text-sm font-medium pb-0.5">Segundo Nombre</div>
               <input  
-                {...register('second_name')}
+                {...formRegister('second_name')}
                 placeholder="Ej: Pérez"
-                className="w-full border rounded-md p-2 outline-none border-gray-300" 
+                className="w-full border rounded-md p-2 outline-none border-gray-300"
               />
             </div>
           </div>
 
           <div className="w-full flex flex-col md:flex-row gap-4">
             <div className="w-full">
-              <div className="text-sm font-medium pb-0.5">Primer Apellido</div>
+              <div className="text-sm font-medium pb-0.5">
+                Primer Apellido <span className="text-red-500">*</span>
+              </div>
               <input  
-                {...register('last_name')}
+                {...formRegister('last_name', { required: true })}
                 placeholder="Ej: Pérez"
-                className="w-full border rounded-md p-2 outline-none border-gray-300" 
+                className={`w-full border rounded-md p-2 outline-none ${
+                  formErrors.last_name ? 'border-red-500' : 'border-gray-300'
+                }`}
               />
             </div>
 
             <div className="w-full">
               <div className="text-sm font-medium pb-0.5">Segundo Apellido</div>
               <input  
-                {...register('second_lastname')}
+                {...formRegister('second_lastname')}
                 placeholder="Ej: Pérez"
-                className="w-full border rounded-md p-2 outline-none border-gray-300" 
+                className="w-full border rounded-md p-2 outline-none border-gray-300"
               />
             </div>
           </div>
 
           <div className="w-full flex flex-col md:flex-row gap-4">
             <div className="w-full">
-              <div className="text-sm font-medium pb-0.5">Correo Electrónico</div>
+              <div className="text-sm font-medium pb-0.5">
+                Correo Electrónico <span className="text-red-500">*</span>
+              </div>
               <input  
                 type="email"
-                {...register('email')}
+                {...formRegister('email', { 
+                  required: true,
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Correo inválido"
+                  }
+                })}
                 placeholder="Ej: email@example.com"
-                className="w-full border rounded-md p-2 outline-none border-gray-300" 
+                className={`w-full border rounded-md p-2 outline-none ${
+                  formErrors.email ? 'border-red-500' : 'border-gray-300'
+                }`}
               />
             </div>
 
             <div className="w-full">
-              <div className="text-sm font-medium pb-0.5">Tipo de Perfil</div>
+              <div className="text-sm font-medium pb-0.5">
+                Tipo de Perfil <span className="text-red-500">*</span>
+              </div>
               <select
-                {...register('profile_type')}
-                className="w-full border rounded-md p-2 outline-none border-gray-300"
+                {...formRegister('profile_type', { required: true })}
+                className={`w-full border rounded-md p-2 outline-none ${
+                  formErrors.profile_type ? 'border-red-500' : 'border-gray-300'
+                }`}
               >
                 <option value="">Seleccione un tipo</option>
                 <option value="financiero">Financiero</option>
@@ -178,13 +214,14 @@ const Users = () => {
 
           <div className="w-full flex flex-row items-center justify-end gap-4 mt-4">
             <button 
+              type="button"
               onClick={() => closeModalActionUploadUser()} 
               className="w-24 h-12 flex flex-row items-center justify-center gap-2 rounded-md cursor-pointer select-none hover:bg-gray-600 bg-gray-500"
             >
               <div className="text-[18px] text-white">Cancelar</div>
             </button>
             <button 
-              onClick={handleSubmit(onSubmit)} 
+              onClick={formHandleSubmit(onSubmit)} 
               className="w-24 h-12 flex flex-row items-center justify-center gap-2 rounded-md cursor-pointer select-none hover:bg-blue-600 bg-blue-500"
             >
               <div className="text-[18px] text-white">Guardar</div>

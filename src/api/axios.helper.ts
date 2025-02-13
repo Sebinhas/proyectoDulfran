@@ -144,9 +144,10 @@ export const getUsers = async () => {
       "cedula": item.cedula || '',
       "first_name": item.first_name || '',
       "second_name": item.second_name || '',
-      "first_lastname": item.first_lastname || '',
+      "last_name": item.last_name || '',
       "second_lastname": item.second_lastname || '',
       "email": item.email || '',
+      "phone": item.phone || '',
       "username": item.username || '',
       "profile_type": item.profile_type || '',
       "status": item.status || '',
@@ -165,8 +166,8 @@ export const createUser = async (data: any) => {
   try {
     const response = await axiosInstance.post(`/admin/create-admin-user`, data);
     return response.data;
-  } catch (error) {
-    console.error('Error al crear usuario:', error);
+  } catch (error: any) {
+    toast.error(error.response.data.message);
     throw error;
   }
 
@@ -174,10 +175,11 @@ export const createUser = async (data: any) => {
 
 export const updateUser = async (data: any) => {
   try {
-    const response = await axiosInstance.patch(`/admin/update-admin-users/${data.cedula}`, data);
+    const response = await axiosInstance.patch(`/admin/update-admin-user/${data.cedula}`, data);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error al actualizar usuario:', error);
+    toast.error(error.response.data.message);
     throw error;
   }
 
