@@ -26,18 +26,20 @@ const PqrResponse = lazy(() => import('../pages/Global/PqrResponse/PqrResponse.t
 
 const Pasarela = lazy(() => import('../pages/Pasarela/Pasarela.tsx'));
 import { useAuthStore } from '../hooks/authStore.ts';
-import Reports from '../pages/Global/Reports/Reports.tsx';
-import Contracts from '../pages/Technical/Contracts/Contracts.tsx';
-import Payments from '../pages/Clients/Payments/Payments.tsx';
-import Binnacle from '../pages/Administrator/Binnacle/Binnacle.tsx';
-import Dashboard from '../pages/Global/Dashboard/Dasboard.tsx';
+const Reports = lazy(() => import('../pages/Global/Reports/Reports.tsx'));
+const Contracts = lazy(() => import('../pages/Technical/Contracts/Contracts.tsx'));
+const Payments = lazy(() => import('../pages/Clients/Payments/Payments.tsx'));
+const Binnacle = lazy(() => import('../pages/Administrator/Binnacle/Binnacle.tsx'));
+const Dashboard = lazy(() => import('../pages/Global/Dashboard/Dasboard.tsx'));
+const NequiInfo = lazy(() => import('../pages/Pasarela/components/paymentInfo/NequiInfo/NequiInfo.tsx'));
+const NequiConfirmation = lazy(() => import('../pages/Pasarela/components/paymentConfirmation/NequiConfirmation/NequiConfirmation.tsx'));
 
 
 // Agregamos un nuevo loader para verificar el rol de admin
 const roleLoader = (allowedRoles: string[]) => {
   return () => {
     const user = useAuthStore.getState().user;
-    if (!allowedRoles.includes(user?.role || '')) {
+    if (!allowedRoles.includes(user?.profile_type || '')) {
       return redirect('/404');
     }
     return null;
@@ -77,12 +79,6 @@ const AppRoutes = createBrowserRouter([
         index: true,
         element: <Dashboard />
       },
-      // {
-      //   path: '/dashboard/pacientes',
-      //   element: <Patients />
-      // },
-
-
       {
         path: '/dashboard/profile',
         element: <Profile />
@@ -97,34 +93,25 @@ const AppRoutes = createBrowserRouter([
         loader: roleLoader(['cliente'])
       },              
       // Rutas protegidas solo para admin
-
-
       {
         path: '/dashboard/invoices',
         element: <Invoices />,
         loader: roleLoader(['financiero'])
       },
-
-
       {
         path: '/dashboard/pqrResponse',
         element: <PqrResponse />,
         loader: roleLoader(['financiero', 'tecnico'])
       },
-
-
-
       {
         path: '/dashboard/reports',
         element: <Reports />,
-        loader: roleLoader(['administrador', 'financiero'])
+        loader: roleLoader(['admin', 'financiero'])
       },
-
-
       {
         path: '/dashboard/users',
         element: <Users />,
-        loader: roleLoader(['administrador'])
+        loader: roleLoader(['admin'])
       },
       {
         path: '/dashboard/clients',
@@ -137,7 +124,6 @@ const AppRoutes = createBrowserRouter([
         element: <Contracts />,
         loader: roleLoader(['tecnico'])
       },
-
       {
         path: '/dashboard/payments',
         element: <Payments />,
@@ -147,13 +133,34 @@ const AppRoutes = createBrowserRouter([
       {
         path: '/dashboard/binnacle',
         element: <Binnacle />,
-        loader: roleLoader(['administrador'])
+        loader: roleLoader(['admin'])
       },
     ]
   },
   {
-    path: '/pasarela',
-    element: <Pasarela />
+    path: '/dashboard/payments',
+    element: (
+      <Suspense fallback={<SkeletonPrivateLayout />}>
+        <PrivateLayout />
+      </Suspense>
+    ),
+    children: [
+      {
+        path: '/dashboard/payments/payment_method',
+        element: <Pasarela />,
+        loader: roleLoader(['cliente'])
+      },
+      {
+        path: '/dashboard/payments/payment_method/nq',
+        element: <NequiInfo />,
+        loader: roleLoader(['cliente'])
+      },
+      {
+        path: '/dashboard/payments/payment_method/nq/confirmation',
+        element: <NequiConfirmation />,
+        loader: roleLoader(['cliente'])
+      }
+    ]
   },
   {
     path: '/404',

@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
-import { NameCell, CedulaCell, UsernameCell, StatusCell, EmailCell, date_createdAt, date_updatedAt, profile_type } from './templates/cellTemplates';
+import { NameCell, CedulaCell, UsernameCell, StatusCell, EmailCell, date_createdAt, profile_type } from './templates/cellTemplates';
 import { useForm } from 'react-hook-form';
 import Modal from "../../../components/Modal/Modal";
 import { toast } from 'react-toastify';
 import { ClientsDTO } from "./DTOUsers";
 
 
-import { getClients, uploadExcel, createUser, getUsers } from '../../../api/axios.helper';
-import Swal from 'sweetalert2';
-import { useAuthStore } from "../../../hooks/authStore";
+import { createUser, getUsers } from '../../../api/axios.helper';
+  import Swal from 'sweetalert2';
 
 
 
 const useUsers = () => {
-  const currentNit = useAuthStore.getState().currentNit;
   const [isLoading, setIsLoading] = useState(true);
-  const [options, setOptions] = useState('');
   const [user, setUser] = useState<ClientsDTO | null>(null);
   const [dataUsers, setDataUsers] = useState<ClientsDTO[]>([]);
 
@@ -28,7 +25,7 @@ const useUsers = () => {
 
   const { toggleModal: toggleModalEditInfoUser, closeModalAction: closeModalActionEditInfoUser, Render: RenderEditInfoUser } = Modal({ title: 'Editar Información' });
 
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<ClientsDTO>();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<ClientsDTO>();
 
   const onSubmit = async (data: ClientsDTO) => {
     try {
@@ -37,17 +34,14 @@ const useUsers = () => {
         title: 'Creando usuario',
         text: 'Por favor espere...',
         didOpen: () => {
-          Swal.showLoading();
+          Swal.showLoading(null);
         },
         allowOutsideClick: false,
         allowEscapeKey: false,
         showConfirmButton: false
       });
-
-      const nit = currentNit || 0;
-      data.admin_nit = nit;
+      
       const response = await createUser(data);
-
       // Cerrar el loading
       Swal.close();
 
@@ -165,31 +159,23 @@ const useUsers = () => {
   ]
 
   const handleView = (row: ClientsDTO): void => {
-    toast.success(`Orden vista, estado: ${row}`);
-    // console.log(row);
     setUser(row);
     toggleModalViewDetailUser();
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
   const handleMessage = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row}`);
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
 
   const handleDownload = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row}`);
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
 
   const handleEdit = (row: ClientsDTO): void => {
-    toast.success(`Orden vista, estado: ${row.name}`);
     setUser(row);
-    console.log(row);
     toggleModalEditInfoUser();
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
 

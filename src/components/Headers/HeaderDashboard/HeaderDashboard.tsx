@@ -64,9 +64,9 @@ export const HeaderDashboard = () => {
           </svg>
           <div className="flex flex-col">
             <div className="text-sm font-semibold text-gray-600">
-              {user?.name || 'Undefined'}
+              {user?.username || 'Undefined'}
             </div>
-            <div className="text-xs">{user?.role || 'Undefined'}</div>
+            <div className="text-xs">{user?.profile_type || 'Undefined'}</div>
           </div>
         </div>
       </div>

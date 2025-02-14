@@ -61,7 +61,7 @@ export const EmailCell = (row: Clients): React.ReactNode => (
 );
 
 export const CreatedAtCell = (row: Clients): React.ReactNode => (
-  <div className="flex flex-col">
+  <div className="flex flex-row gap-1">
     <span className="text-gray-900">
       {new Date(row.createdAt).toLocaleDateString()}
     </span>

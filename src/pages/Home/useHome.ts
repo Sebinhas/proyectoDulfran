@@ -28,9 +28,8 @@ export const useHome = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductInfo | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const { login, isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
-
 
   const {
     register,
@@ -39,17 +38,19 @@ export const useHome = () => {
     reset,
   } = useForm<LoginFormInputs>();
 
+  const { login: authLogin } = useAuthStore();
+
   useEffect(() => {
     if (isAuthenticated && user) {
-      if (user.role === "administrador") {
+      if (user.profile_type === "administrador") {
         navigate("/dashboard");
-      } else if (user.role === "financiero") {
+      } else if (user.profile_type === "financiero") {
         navigate("/dashboard/invoices");
 
-      } else if (user.role === "tecnico") {
+      } else if (user.profile_type === "tecnico") {
         navigate("/dashboard/contracts");
 
-      } else if (user.role === "cliente") {
+      } else if (user.profile_type === "cliente") {
         navigate("/dashboard/payments");
       }
     } else {
@@ -60,21 +61,35 @@ export const useHome = () => {
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
-      await login(data.username, data.password);
+      await authLogin(data.username, data.password);
       reset();
-
-      const currentUser = useAuthStore.getState().user;
-
-      if (currentUser?.role === "superAdmin") {
-        navigate("/dashboard/invoices");
-
-
-        toast.success(`¡Bienvenido ${currentUser?.role}!`);
-      } else if (currentUser?.role === "user") {
-        navigate("/dashboard/invoices");
-        toast.success(`¡Bienvenido ${currentUser?.role}!`);
+      
+      const user = useAuthStore.getState().user;
+      if (user) {
+        switch (user.profile_type) {
+          case 'administrador':
+            navigate("/dashboard");
+            toast.success(`¡Bienvenido Administrador!`);
+            break;
+          case 'financiero':
+            navigate("/dashboard/invoices");
+            toast.success(`¡Bienvenido!`);
+            break;
+          case 'tecnico':
+            navigate("/dashboard/contracts");
+            toast.success(`¡Bienvenido!`);
+            break;
+          case 'cliente':
+            navigate("/dashboard/payments");
+            toast.success(`¡Bienvenido!`);
+            break;
+          default:
+            navigate("/dashboard");
+            toast.success(`¡Bienvenido!`);
+        }
       }
     } catch (error) {
+      console.error('Error durante el login:', error);
       toast.error("Credenciales inválidas");
     }
   };
