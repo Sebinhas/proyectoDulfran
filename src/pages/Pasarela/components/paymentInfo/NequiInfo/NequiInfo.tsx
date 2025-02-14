@@ -6,6 +6,7 @@ import { useAuthStore } from '../../../../../hooks/authStore'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { usePaymentStore } from '../../../../../hooks/paymentStore'
 // import type { DTONequiInfoForm } from './DTOPaymentMethod'
 
 interface NequiInfoProps {
@@ -31,6 +32,13 @@ const NequiInfo = () => {
   const navigate = useNavigate()
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<PaymentData>()
 
+  const { setField } = usePaymentStore()
+  const paymentData1 = usePaymentStore()
+
+  useEffect(() => {
+    console.log("paymentData1", paymentData1)
+  }, [paymentData1])
+
   const [paymentData, setPaymentData] = useState<PaymentData>(state?.paymentData)
 
   useEffect(() => {
@@ -39,11 +47,13 @@ const NequiInfo = () => {
 
   const onSubmit = (data: any) => {
 
-    paymentData.buyer_phone = data.buyer_phone.toString()
-
+    setField("payment_method", {
+      type: "nequi",
+      phone_number: data.buyer_phone.toString()
+    })
     console.log(paymentData)
 
-    navigate('/dashboard/payments/payment_method/nq/confirmation', { state: { paymentData: paymentData } })
+    navigate('/dashboard/payments/payment_method/nq/confirmation')
 
   }
 
@@ -121,7 +131,7 @@ const NequiInfo = () => {
                 <button
                   type="button"
                   onClick={ () => {
-                    navigate('/dashboard/payments')
+                    navigate('/dashboard/payments/payment_method')
                   }}
                   className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >

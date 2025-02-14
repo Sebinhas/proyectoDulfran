@@ -17,9 +17,16 @@ import { BancolombiaTransferInfo } from './components/paymentInfo/BancolombiaTra
 import { EfectivoInfo } from './components/paymentInfo/EfectivoInfo'
 import { useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
-
+import { usePaymentStore } from '../../hooks/paymentStore'
+import { useEffect } from 'react'
 export default function Pasarela() {
     const navigate = useNavigate()
+
+    const paymentData = usePaymentStore()
+
+    useEffect(() => {
+        console.log("paymentData", paymentData)
+    }, [paymentData])
 
     const { state } = useLocation()
     // console.log(state)

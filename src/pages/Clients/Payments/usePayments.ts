@@ -17,8 +17,12 @@ import {
 } from "./templates/cellTemplates";
 import { CreatedAtCell } from "../../Financial/Invoices/templates/cellTemplates";
 import PaymentReceipt from "../../Pasarela/components/PaymentInvoice/PaymentInvoice";
+import { usePaymentStore } from "../../../hooks/paymentStore";
 
 const usePayments = () => {
+
+  const { setField, setFields } = usePaymentStore();
+
   const { user, token } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -193,12 +197,12 @@ const usePayments = () => {
       legal_id: row.client_cedula,
       legal_id_type: "CC",
       user_type: "PERSON",
-      payment_method: {
-        type: "NEQUI",
-        phone_number: row.client_phone
-      },
+      payment_method: {},
       payment_description: `Pago factura ${row.no_invoice}`
     };
+    console.log("paymentData", paymentData);
+
+    setFields(paymentData);
 
     row.status === "pagada"
       ? toast.success("Factura pagada")

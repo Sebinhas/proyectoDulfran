@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaArrowRight, FaArrowLeft, FaCreditCard, FaQrcode, FaUniversity, FaMoneyBill } from 'react-icons/fa'
 import { FaN } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
@@ -170,7 +170,7 @@ export function PaymentMethodSection({
         )}
         <div className={isFirstStep ? 'ml-auto' : ''}>
           <button
-            onClick={() => navigate(`/dashboard/payments/payment_method/${selected?.id}`, { state: { paymentData } })}
+            onClick={() => navigate(`/dashboard/payments/payment_method/${selected?.id}`)}
             disabled={!selected}
             className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm ${
               !selected 
