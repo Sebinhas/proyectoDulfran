@@ -33,7 +33,7 @@ const Binnacle = lazy(() => import('../pages/Administrator/Binnacle/Binnacle.tsx
 const Dashboard = lazy(() => import('../pages/Global/Dashboard/Dasboard.tsx'));
 const NequiInfo = lazy(() => import('../pages/Pasarela/components/paymentInfo/NequiInfo/NequiInfo.tsx'));
 const NequiConfirmation = lazy(() => import('../pages/Pasarela/components/paymentConfirmation/NequiConfirmation/NequiConfirmation.tsx'));
-const Subscribe = lazy(() => import('../pages/Global/Subscribe/Subscribe.tsx'));
+const Suscribe = lazy(() => import('../pages/Global/Suscribe/Suscribe.tsx'));
 
 // Agregamos un nuevo loader para verificar el rol de admin
 const roleLoader = (allowedRoles: string[]) => {
@@ -67,7 +67,7 @@ const AppRoutes = createBrowserRouter([
       },
       {
         path: 'subscribe',
-        element: <Subscribe />
+        element: <Suscribe />
       }
     ]
   },
