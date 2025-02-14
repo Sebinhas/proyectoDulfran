@@ -2,14 +2,14 @@ import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
 
-export const BASE_URL = "https://1605-2800-e2-9c00-398-744d-9a1d-d608-5d3d.ngrok-free.app/api";
+export const BASE_URL =
+  "https://1605-2800-e2-9c00-398-744d-9a1d-d608-5d3d.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     "ngrok-skip-browser-warning": "true",
     "Content-Type": "application/json",
-    Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTYxMTM0MTI0NCIsInVzZXJuYW1lIjoiQ0FNSUxPMTI0NCIsInByb2ZpbGVfdHlwZSI6ImZpbmFuY2llcm8iLCJhZG1pbl9uaXQiOiI5MDE4NDQ0MjctMSIsImlhdCI6MTczOTIzOTk1NSwiZXhwIjoxNzM5MjQzNTU1fQ.6fb2mR_CJSBE2nEI1eYN3tYd1KP_dWAn0rw7w4xg56E"}`,
   },
 });
 
@@ -201,15 +201,11 @@ export const uploadExcel = async (file: File) => {
   formData.append("file", file);
 
   try {
-    const response = await axiosInstance.post(
-      `/client/massive`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await axiosInstance.post(`/client/massive`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     const errors = response?.data?.errors;
     errors.forEach((error: any) => {
       toast.warning(error.type);

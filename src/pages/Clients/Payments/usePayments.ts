@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Modal from "../../../components/Modal/Modal";
 import { toast } from "react-toastify";
-import { ClientsDTO } from "../../Administrator/Users/DTOUsers";
 
 import { useNavigate } from "react-router-dom";
 import { DTOPayment } from "./DTOPayment";
@@ -16,13 +15,9 @@ import {
   numberInvoicesCell,
 } from "./templates/cellTemplates";
 import { CreatedAtCell } from "../../Financial/Invoices/templates/cellTemplates";
-import PaymentReceipt from "../../Pasarela/components/PaymentInvoice/PaymentInvoice";
-import { usePaymentStore } from "../../../hooks/paymentStore";
+import { usePaymentContext } from "../../../context/PaymentContext";
 
 const usePayments = () => {
-
-  const { setField, setFields } = usePaymentStore();
-
   const { user, token } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -30,18 +25,13 @@ const usePayments = () => {
   const [invoicesData, setInvoicesData] = useState<any[]>([]);
   const [showDetail, setShowDetail] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<any>(null);
+  const { paymentData, setPaymentData } = usePaymentContext();
 
   const {
     toggleModal: toggleModalDownloadInvoice,
     closeModalAction: closeModalActionDownloadInvoice,
     Render: RenderDownloadInvoice,
   } = Modal({ title: "Desacargar Factura", size: "lg" });
-
-  const {
-    toggleModal: toggleModalEditInfoUser,
-    closeModalAction: closeModalActionEditInfoUser,
-    Render: RenderEditInfoUser,
-  } = Modal({ title: "Editar Información" });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -121,7 +111,7 @@ const usePayments = () => {
       }
 
       const historyData = await response.json();
-      
+
       // Si hay datos, los usamos directamente ya que vienen en el formato correcto
       if (historyData) {
         setSelectedPayment(historyData);
@@ -138,18 +128,17 @@ const usePayments = () => {
         payment_history: {
           approved: [],
           pending: [],
-          failed: []
+          failed: [],
         },
-        all_payments: []
+        all_payments: [],
       };
 
       setSelectedPayment(defaultData);
       setShowDetail(true);
-
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error al obtener los detalles del pago");
-      
+
       // En caso de error, mostramos una estructura base
       const errorData = {
         invoice_id: row.no_invoice,
@@ -159,9 +148,9 @@ const usePayments = () => {
         payment_history: {
           approved: [],
           pending: [],
-          failed: []
+          failed: [],
         },
-        all_payments: []
+        all_payments: [],
       };
 
       setSelectedPayment(errorData);
@@ -174,12 +163,6 @@ const usePayments = () => {
     setSelectedPayment(null);
   };
 
-  const handleMessage = (row: ClientsDTO): void => {
-    toggleModalEditInfoUser();
-    toast.success(`Orden vista, estado: ${row}`);
-    // navigate(`/dashboard/ordenes/${row.id}`);
-  };
-
   const handleDownload = (row: DTOPayment): void => {
     toast.success(`Orden vista, estado: ${row}`);
     toggleModalDownloadInvoice();
@@ -188,7 +171,8 @@ const usePayments = () => {
   };
 
   const handlePay = (row: DTOPayment): void => {
-    const paymentData = {
+    console.log("row", row);
+    setPaymentData({
       invoice_id: row.no_invoice,
       amount_in_cents: parseInt(row.amount) * 100,
       customer_email: row.client_email,
@@ -197,18 +181,13 @@ const usePayments = () => {
       legal_id: row.client_cedula,
       legal_id_type: "CC",
       user_type: "PERSON",
-      payment_method: {},
-      payment_description: `Pago factura ${row.no_invoice}`
-    };
-    console.log("paymentData", paymentData);
-
-    setFields(paymentData);
+      payment_description: `Pago factura ${row.no_invoice}`,
+    });
+    console.log("paymentData1", paymentData);
 
     row.status === "pagada"
       ? toast.success("Factura pagada")
-      : navigate(`/dashboard/payments/payment_method`, {
-          state: { paymentData },
-        });
+      : navigate(`/dashboard/payments/payment_method`);
   };
 
   const handleView = async (payment: DTOPayment) => {
@@ -251,7 +230,7 @@ const usePayments = () => {
         payment_data: data.payment_data,
         user_type: data.user_type,
         invoice: data.invoice,
-        other_attempts: data.other_attempts
+        other_attempts: data.other_attempts,
       };
 
       setSelectedPayment(formattedData);

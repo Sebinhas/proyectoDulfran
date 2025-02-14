@@ -1,31 +1,27 @@
 import { FaArrowLeft, FaCheckCircle } from "react-icons/fa";
 import { FaN } from "react-icons/fa6";
-import type { PaymentInfo, PersonalData } from "../../../usePasarela";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import PaymentInvoice from "../../PaymentInvoice/PaymentInvoice";
 import { useAuthStore } from "../../../../../hooks/authStore";
 import Swal from "sweetalert2";
-
-interface NequiConfirmationProps {
-  onBack: () => void;
-  onNext: () => void;
-  personalData: PersonalData;
-  paymentInfo: PaymentInfo;
-}
+import { usePaymentContext } from "../../../../../context/PaymentContext";
+import { useNavigate } from "react-router-dom";
 
 const NequiConfirmation = () => {
-  const { state } = useLocation();
-  const navigate = useNavigate();
   const token = useAuthStore((state) => state.token);
+  const { paymentData } = usePaymentContext();
+  const navigate = useNavigate();
 
-  const [paymentInfo, setPaymentInfo] = useState(state?.paymentData);
+  useEffect(() => {
+    console.log("paymentDataFinal", paymentData);
+  }, [paymentData]);
   const [paymentStatus, setPaymentStatus] = useState<
     "IDLE" | "PENDING" | "APPROVED" | "DECLINED"
   >("IDLE");
   const [showInvoice, setShowInvoice] = useState(false);
   const [message, setMessage] = useState("");
   const [counter, setCounter] = useState(0);
+  const [transactionInfo, setTransactionInfo] = useState<any>(null);
 
   const messages = [
     "Enviando solicitud de pago...",
@@ -70,9 +66,6 @@ const NequiConfirmation = () => {
             },
           },
         };
-
-        setPaymentInfo(wompiResponse);
-        setPaymentStatus(data.status);
         return data.status;
       }
       return "PENDING";
@@ -85,24 +78,31 @@ const NequiConfirmation = () => {
   const createPayment = async () => {
     try {
       const amount =
-        typeof paymentInfo.amount === "string"
-          ? parseInt(paymentInfo.amount)
-          : paymentInfo.amount;
+        typeof paymentData?.amount_in_cents === "string"
+          ? parseInt(paymentData?.amount_in_cents)
+          : paymentData?.amount_in_cents;
 
-      const paymentData = {
-        invoice_id: paymentInfo.invoice_id,
+      if (
+        paymentData?.buyer_phone?.length &&
+        (paymentData?.buyer_phone?.length < 10 ||
+          paymentData?.buyer_phone?.length > 10)
+      ) {
+        paymentData.buyer_phone = "0000000000";
+      }
+      const paymentRequest = {
+        invoice_id: paymentData?.invoice_id,
         amount_in_cents: amount,
-        customer_email: paymentInfo.buyer_email,
-        buyer_name: paymentInfo.buyer_name,
-        buyer_phone: paymentInfo.buyer_phone,
-        legal_id: paymentInfo.legal_id,
-        legal_id_type: paymentInfo.legal_id_type || "CC",
+        customer_email: paymentData?.customer_email,
+        buyer_name: paymentData?.buyer_name,
+        buyer_phone: paymentData?.buyer_phone || "No disponible",
+        legal_id: paymentData?.legal_id,
+        legal_id_type: paymentData?.legal_id_type || "CC",
         user_type: "PERSON",
         payment_method: {
           type: "NEQUI",
-          phone_number: paymentInfo.buyer_phone,
+          phone_number: paymentData?.payment_method?.phone_number,
         },
-        payment_description: `Pago factura ${paymentInfo.invoice_id}`,
+        payment_description: `Pago factura ${paymentData?.invoice_id}`,
       };
 
       const response = await fetch("http://localhost:3000/api/payments", {
@@ -111,7 +111,7 @@ const NequiConfirmation = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(paymentData),
+        body: JSON.stringify(paymentRequest),
       });
 
       if (!response.ok) {
@@ -164,7 +164,7 @@ const NequiConfirmation = () => {
           clearInterval(interval);
           setPaymentStatus(data.status);
 
-          // Formatear datos para el comprobante
+          // Guardar la información de la transacción
           const formattedData = {
             payment_id: data.id,
             wompi_data: {
@@ -180,8 +180,7 @@ const NequiConfirmation = () => {
               status_message: data.status_message,
             },
           };
-
-          setPaymentInfo(formattedData);
+          setTransactionInfo(formattedData);
           setShowInvoice(true);
         }
       } catch (error) {
@@ -210,31 +209,8 @@ const NequiConfirmation = () => {
     }
   }, [counter, paymentStatus]);
 
-  // Validar que tengamos la información necesaria
-  if (!state?.paymentData) {
-    return (
-      <div className="max-w-2xl mx-auto p-4">
-        <div className="bg-white shadow-lg rounded-lg p-8 text-center">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-red-600 mb-4">
-            Información Incompleta
-          </h2>
-          <p className="text-gray-600 mb-6">
-            No se encontró la información del pago.
-          </p>
-          <button
-            onClick={() => navigate("/dashboard/payments")}
-            className="px-6 py-3 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-          >
-            Volver a Facturas
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   // Manejo del estado pendiente
-  if (paymentStatus === "PENDING" && paymentInfo?.wompi_data) {
+  if (paymentStatus === "PENDING") {
     return (
       <div className="max-w-2xl mx-auto p-4">
         <div className="bg-white shadow-lg rounded-lg p-8">
@@ -265,7 +241,7 @@ const NequiConfirmation = () => {
               aplicación móvil.
             </p>
             <p className="text-sm text-gray-500 mt-2">
-              Referencia: {paymentInfo.wompi_data.reference}
+              {/* Referencia: {paymentInfo.wompi_data.reference} */}
             </p>
           </div>
 
@@ -294,8 +270,8 @@ const NequiConfirmation = () => {
   }
 
   // Si el pago fue aprobado y terminó el polling, mostrar el comprobante
-  if (showInvoice && paymentInfo?.wompi_data) {
-    return <PaymentInvoice paymentData={paymentInfo} />;
+  if (showInvoice && transactionInfo?.wompi_data) {
+    return <PaymentInvoice paymentData={transactionInfo} />;
   }
 
   return (
@@ -319,19 +295,22 @@ const NequiConfirmation = () => {
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Nombre:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {paymentInfo?.buyer_name}
+                    {transactionInfo?.wompi_data?.customer_data?.full_name ||
+                      paymentData?.buyer_name}
                   </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Email:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {paymentInfo?.buyer_email}
+                    {transactionInfo?.wompi_data?.customer_data?.email ||
+                      paymentData?.customer_email}
                   </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Teléfono Nequi:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {paymentInfo?.buyer_phone}
+                    {transactionInfo?.wompi_data?.customer_data?.phone_number ||
+                      paymentData?.payment_method?.phone_number}
                   </dd>
                 </div>
               </dl>
@@ -346,13 +325,20 @@ const NequiConfirmation = () => {
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Monto:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    ${paymentInfo?.amount?.toLocaleString("es-CO") || "0"}
+                    $
+                    {transactionInfo?.wompi_data?.amount_in_cents
+                      ? (
+                          transactionInfo.wompi_data.amount_in_cents / 100
+                        ).toLocaleString("es-CO")
+                      : paymentData?.amount_in_cents?.toLocaleString("es-CO") ||
+                        "0"}
                   </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Referencia:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {paymentInfo?.invoice_id}
+                    {transactionInfo?.wompi_data?.reference ||
+                      paymentData?.invoice_id}
                   </dd>
                 </div>
               </dl>
@@ -368,7 +354,7 @@ const NequiConfirmation = () => {
               </ul>
             </div>
 
-            {paymentStatus === "PENDING" && (
+            {transactionInfo?.paymentStatus === "PENDING" && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 min-h-screen">
                 <div className="bg-white p-8 rounded-lg text-center max-w-md w-full mx-4">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fuchsia-600 mx-auto mb-6"></div>
@@ -390,7 +376,7 @@ const NequiConfirmation = () => {
               <button
                 type="button"
                 onClick={() => navigate("/dashboard/payments")}
-                disabled={paymentStatus === "PENDING"}
+                disabled={transactionInfo?.paymentStatus === "PENDING"}
                 className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
               >
                 <FaArrowLeft className="mr-2 h-4 w-4" />
@@ -398,7 +384,7 @@ const NequiConfirmation = () => {
               </button>
               <button
                 onClick={handlePayment}
-                disabled={paymentStatus === "PENDING"}
+                disabled={transactionInfo?.paymentStatus === "PENDING"}
                 className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-fuchsia-600 hover:bg-fuchsia-700 disabled:opacity-50"
               >
                 Pagar con Nequi
