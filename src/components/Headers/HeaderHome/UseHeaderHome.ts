@@ -16,7 +16,7 @@ export const useHeaderHome = () => {
     { name: "Inicio", path: "hero" },
     { name: "Servicios", path: "services" },
     { name: "Sobre Nosotros", path: "about" },
-    { name: "Contáctanos", path: "contact" },
+    { name: "Contáctanos", path: "contact" }
   ];
 
   const handleOpenMenu = () => setIsMenuOpen(true);
