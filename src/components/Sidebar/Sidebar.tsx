@@ -1,6 +1,7 @@
 import { Badge } from './components/Badge/Badge.tsx';
 import { useAuthStore } from '../../hooks/authStore';
 import { useNavigate } from 'react-router-dom';
+import monedix from '../../../public/monedix.png';
 
 export const Sidebar = () => {
   const navigate = useNavigate();
@@ -15,8 +16,8 @@ export const Sidebar = () => {
 
   return (
     <div className="w-full left-0 top-0 fixed max-w-[270px] h-full px-4 pt-3 flex flex-col gap-5 bg-[#101C42]">
-      <div className="w-full h-[60px] flex flex-row justify-center items-center bg-slate-400">
-        Logo
+      <div className="w-full h-[60px] flex flex-row justify-center rounded-lg items-center">
+        <img src={monedix} alt="Logo" className="w-full h-full object-contain mt-4" />
       </div>
       <div className="flex flex-col justify-between pb-1 h-full">
         <div className="flex flex-col gap-2">
