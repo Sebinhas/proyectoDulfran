@@ -1,7 +1,7 @@
 import { FaArrowLeft, FaUniversity } from 'react-icons/fa'
-import type { PersonalData } from '../../usePasarela'
+import type { PersonalData } from '../../../usePasarela'
 import { useForm } from 'react-hook-form'
-import pse from '../../../../../public/TypeTarget/pse.png'
+import pse from '../../../../../../public/TypeTarget/pse.png'
 
 interface PSEInfoProps {
   onBack: () => void
@@ -17,12 +17,12 @@ interface DTOPSEInfoForm {
   accept_privacy: boolean
 }
 
-export function PSEInfo({ onBack, onNext, personalData }: PSEInfoProps) {
+const PSEInfo = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<DTOPSEInfoForm>()
 
   const onSubmit = (data: DTOPSEInfoForm) => {
-    // console.log(data)
-    onNext()
+    console.log(data)
+    // onNext()
   }
 
   return (
@@ -117,7 +117,7 @@ export function PSEInfo({ onBack, onNext, personalData }: PSEInfoProps) {
               <div className="mt-8 flex justify-between">
                 <button
                   type="button"
-                  onClick={onBack}
+                  onClick={() => {}}
                   className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
                   <FaArrowLeft className="mr-2 h-4 w-4" />
@@ -138,3 +138,5 @@ export function PSEInfo({ onBack, onNext, personalData }: PSEInfoProps) {
     </div>
   )
 } 
+
+export default PSEInfo;
