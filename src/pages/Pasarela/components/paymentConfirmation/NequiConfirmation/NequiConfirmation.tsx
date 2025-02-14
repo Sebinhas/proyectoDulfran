@@ -20,7 +20,9 @@ const NequiConfirmation = () => {
   const token = useAuthStore((state) => state.token);
 
   const [paymentInfo, setPaymentInfo] = useState(state?.paymentData);
-  const [paymentStatus, setPaymentStatus] = useState<"IDLE" | "PENDING" | "APPROVED" | "DECLINED">("IDLE");
+  const [paymentStatus, setPaymentStatus] = useState<
+    "IDLE" | "PENDING" | "APPROVED" | "DECLINED"
+  >("IDLE");
   const [showInvoice, setShowInvoice] = useState(false);
   const [message, setMessage] = useState("");
   const [counter, setCounter] = useState(0);
@@ -84,21 +86,24 @@ const NequiConfirmation = () => {
     try {
       const amount =
         typeof paymentInfo.amount === "string"
-          ? parseFloat(paymentInfo.amount)
+          ? parseInt(paymentInfo.amount)
           : paymentInfo.amount;
 
       const paymentData = {
         invoice_id: paymentInfo.invoice_id,
-        amount: amount,
-        buyer_email: paymentInfo.buyer_email,
+        amount_in_cents: amount,
+        customer_email: paymentInfo.buyer_email,
         buyer_name: paymentInfo.buyer_name,
         buyer_phone: paymentInfo.buyer_phone,
-        legal_id: paymentInfo.legal_id || paymentInfo.buyer_document,
-        legal_id_type: "CC",
-        payment_method: "NEQUI",
+        legal_id: paymentInfo.legal_id,
+        legal_id_type: paymentInfo.legal_id_type || "CC",
+        user_type: "PERSON",
+        payment_method: {
+          type: "NEQUI",
+          phone_number: paymentInfo.buyer_phone,
+        },
+        payment_description: `Pago factura ${paymentInfo.invoice_id}`,
       };
-
-      // console.log("Sending payment data:", paymentData);
 
       const response = await fetch("http://localhost:3000/api/payments", {
         method: "POST",
@@ -111,13 +116,14 @@ const NequiConfirmation = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Server error:", errorData);
         Swal.fire({
-          title: errorData.error,
-          text: errorData.message || "Error al crear el pago",
+          title: "Error al crear el pago",
+          text: Array.isArray(errorData.message)
+            ? errorData.message.join(", ")
+            : errorData.message || "Error desconocido",
           icon: "error",
         });
-        throw new Error(errorData || "Error al crear el pago");
+        throw new Error(JSON.stringify(errorData));
       }
 
       const data = await response.json();
@@ -149,8 +155,8 @@ const NequiConfirmation = () => {
             },
           }
         );
-        const data = await response.json();
 
+        const data = await response.json();
         setCounter(attempts);
         attempts++;
 
@@ -163,33 +169,20 @@ const NequiConfirmation = () => {
             payment_id: data.id,
             wompi_data: {
               id: data.wompi_transaction_id,
-              created_at: data.created_at,
-              amount_in_cents: parseFloat(data.amount) * 100,
+              created_at: data.transaction_created_at,
+              amount_in_cents: parseInt(data.amount) * 100,
               reference: data.reference,
               customer_email: data.buyer_email,
               status: data.status,
-              payment_method: {
-                type: data.payment_method,
-                phone_number: data.buyer_phone,
-              },
-              customer_data: {
-                legal_id: data.legal_id,
-                full_name: data.buyer_name,
-                phone_number: data.buyer_phone,
-                legal_id_type: data.legal_id_type,
-              },
+              payment_method: data.payment_method_data,
+              customer_data: data.customer_data,
+              payment_data: data.payment_data,
+              status_message: data.status_message,
             },
           };
 
           setPaymentInfo(formattedData);
-
-          if (
-            data.status === "APPROVED" ||
-            data.status === "DECLINED" ||
-            data.status === "CANCELLED"
-          ) {
-            setShowInvoice(true);
-          }
+          setShowInvoice(true);
         }
       } catch (error) {
         console.error("Error checking status:", error);
@@ -247,20 +240,29 @@ const NequiConfirmation = () => {
         <div className="bg-white shadow-lg rounded-lg p-8">
           <div className="text-yellow-500 text-center mb-6">
             <div className="animate-pulse">
-              <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" 
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-16 h-16 mx-auto"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <h2 className="text-2xl font-bold text-yellow-600 mt-4">
               Pago en Proceso
             </h2>
           </div>
-          
+
           <div className="text-center mb-6">
             <p className="text-gray-600">
-              Tu pago está siendo procesado por Nequi.
-              Por favor, revisa tu aplicación móvil.
+              Tu pago está siendo procesado por Nequi. Por favor, revisa tu
+              aplicación móvil.
             </p>
             <p className="text-sm text-gray-500 mt-2">
               Referencia: {paymentInfo.wompi_data.reference}
@@ -269,7 +271,9 @@ const NequiConfirmation = () => {
 
           <div className="space-y-4">
             <div className="bg-yellow-50 p-4 rounded-lg">
-              <h3 className="text-sm font-medium text-yellow-800">Importante</h3>
+              <h3 className="text-sm font-medium text-yellow-800">
+                Importante
+              </h3>
               <ul className="mt-2 text-sm text-yellow-700">
                 <li>• Mantén esta ventana abierta</li>
                 <li>• Revisa tu aplicación Nequi</li>
@@ -290,10 +294,7 @@ const NequiConfirmation = () => {
   }
 
   // Si el pago fue aprobado y terminó el polling, mostrar el comprobante
-  if (
-    (showInvoice && paymentStatus === "APPROVED") ||
-    (paymentStatus === "DECLINED" && paymentInfo?.wompi_data)
-  ) {
+  if (showInvoice && paymentInfo?.wompi_data) {
     return <PaymentInvoice paymentData={paymentInfo} />;
   }
 

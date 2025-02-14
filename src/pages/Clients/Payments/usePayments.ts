@@ -103,10 +103,7 @@ const usePayments = () => {
 
   const handleViewInvoice = async (row: DTOPayment) => {
     try {
-      // console.log("Iniciando handleView con payment:", row);
-      
-      // Primero intentamos obtener el historial de pagos de la factura
-      const paymentsResponse = await fetch(
+      const response = await fetch(
         `http://localhost:3000/api/payments/invoice/${row.no_invoice}`,
         {
           headers: {
@@ -115,105 +112,55 @@ const usePayments = () => {
         }
       );
 
-      if (!paymentsResponse.ok) {
+      if (!response.ok) {
         throw new Error("Error al obtener el historial de pagos");
       }
 
-      const historyData = await paymentsResponse.json();
-      // console.log("Historial de pagos:", historyData);
-
-      // Si no hay historial o está vacío
-      if (!historyData || !historyData.payment_history) {
-        const formattedData = {
-          payment_id: null,
-          wompi_data: {
-            id: null,
-            created_at: new Date().toISOString(),
-            amount_in_cents: parseFloat(row.amount) * 100,
-            reference: row.no_invoice,
-            customer_email: row.client_email,
-            status: row.status.toUpperCase(),
-            payment_method: {
-              type: "PENDIENTE",
-              phone_number: row.client_phone || "",
-            },
-            customer_data: {
-              legal_id: row.client_cedula,
-              full_name: `${row.client_first_name} ${row.client_second_name}`,
-              phone_number: row.client_phone || "",
-              legal_id_type: "CC",
-            },
-            payment_history: [],
-          },
-        };
-        setSelectedPayment(formattedData);
+      const historyData = await response.json();
+      
+      // Si hay datos, los usamos directamente ya que vienen en el formato correcto
+      if (historyData) {
+        setSelectedPayment(historyData);
         setShowDetail(true);
         return;
       }
 
-      // Usar la información del último intento directamente del historyData
-      const latestAttempt = historyData.latest_attempt;
-      
-      // Formatear los datos para el comprobante
-      const formattedData = {
-        payment_id: latestAttempt?.id || null,
-        wompi_data: {
-          id: latestAttempt?.wompi_transaction_id || null,
-          created_at: latestAttempt?.created_at || new Date().toISOString(),
-          amount_in_cents: parseFloat(row.amount) * 100,
-          reference: row.no_invoice,
-          customer_email: latestAttempt?.buyer_email || row.client_email,
-          status: historyData.latest_status || row.status.toUpperCase(),
-          payment_method: {
-            type: latestAttempt?.payment_method || "NO ESPECIFICADO",
-            phone_number: latestAttempt?.buyer_phone || row.client_phone || "",
-          },
-          customer_data: {
-            legal_id: latestAttempt?.legal_id || row.client_cedula,
-            full_name: latestAttempt?.buyer_name || `${row.client_first_name} ${row.client_second_name}`,
-            phone_number: latestAttempt?.buyer_phone || row.client_phone || "",
-            legal_id_type: latestAttempt?.legal_id_type || "CC",
-          },
-          error_message: latestAttempt?.error_message,
-          payment_history: historyData.payment_history || [], // Usar el historial completo
-          total_attempts: historyData.total_attempts,
-          latest_status: historyData.latest_status,
+      // Si no hay datos, creamos una estructura base
+      const defaultData = {
+        invoice_id: row.no_invoice,
+        total_attempts: 0,
+        latest_status: row.status.toUpperCase(),
+        latest_attempt: null,
+        payment_history: {
+          approved: [],
+          pending: [],
+          failed: []
         },
+        all_payments: []
       };
 
-      // console.log("Datos formateados:", formattedData);
-      setSelectedPayment(formattedData);
+      setSelectedPayment(defaultData);
       setShowDetail(true);
+
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error al obtener los detalles del pago");
       
-      // En caso de error, mostramos la información básica de la factura
-      const formattedData = {
-        payment_id: null,
-        wompi_data: {
-          id: null,
-          created_at: new Date().toISOString(),
-          amount_in_cents: parseFloat(row.amount) * 100,
-          reference: row.no_invoice,
-          customer_email: row.client_email,
-          status: row.status.toUpperCase(),
-          payment_method: {
-            type: "PENDIENTE",
-            phone_number: row.client_phone || "",
-          },
-          customer_data: {
-            legal_id: row.client_cedula,
-            full_name: `${row.client_first_name} ${row.client_second_name}`,
-            phone_number: row.client_phone || "",
-            legal_id_type: "CC",
-          },
-          payment_history: [],
-          total_attempts: 0,
-          latest_status: row.status.toUpperCase(),
+      // En caso de error, mostramos una estructura base
+      const errorData = {
+        invoice_id: row.no_invoice,
+        total_attempts: 0,
+        latest_status: row.status.toUpperCase(),
+        latest_attempt: null,
+        payment_history: {
+          approved: [],
+          pending: [],
+          failed: []
         },
+        all_payments: []
       };
-      setSelectedPayment(formattedData);
+
+      setSelectedPayment(errorData);
       setShowDetail(true);
     }
   };
@@ -237,17 +184,23 @@ const usePayments = () => {
   };
 
   const handlePay = (row: DTOPayment): void => {
-    // toast.success(`Orden vista, estado: ${row}`);
     const paymentData = {
       invoice_id: row.no_invoice,
-      amount: row.amount,
-      buyer_email: row.client_email,
+      amount_in_cents: parseInt(row.amount) * 100,
+      customer_email: row.client_email,
       buyer_name: row.client_first_name + " " + row.client_second_name,
       buyer_phone: row.client_phone,
       legal_id: row.client_cedula,
       legal_id_type: "CC",
+      user_type: "PERSON",
+      payment_method: {
+        type: "NEQUI",
+        phone_number: row.client_phone
+      },
+      payment_description: `Pago factura ${row.no_invoice}`
     };
-    row.status == "pagada"
+
+    row.status === "pagada"
       ? toast.success("Factura pagada")
       : navigate(`/dashboard/payments/payment_method`, {
           state: { paymentData },
@@ -256,8 +209,6 @@ const usePayments = () => {
 
   const handleView = async (payment: DTOPayment) => {
     try {
-      // console.log("Iniciando handleView con payment:", payment); // Debug log
-
       const response = await fetch(
         `http://localhost:3000/api/payments/status?reference=${payment.no_invoice}`,
         {
@@ -275,31 +226,30 @@ const usePayments = () => {
       }
 
       const data = await response.json();
-      // console.log("Datos recibidos del backend:", data); // Debug log
 
       const formattedData = {
-        payment_id: data.id,
-        wompi_data: {
-          id: data.wompi_transaction_id,
-          created_at: data.created_at,
-          amount_in_cents: parseFloat(data.amount) * 100,
-          reference: data.reference,
-          customer_email: data.buyer_email,
-          status: data.status,
-          payment_method: {
-            type: data.payment_method,
-            phone_number: data.buyer_phone,
-          },
-          customer_data: {
-            legal_id: data.legal_id,
-            full_name: data.buyer_name,
-            phone_number: data.buyer_phone,
-            legal_id_type: data.legal_id_type,
-          },
-        },
+        id: data.id,
+        invoice_id: data.invoice_id,
+        wompi_transaction_id: data.wompi_transaction_id,
+        reference: data.reference,
+        amount: data.amount,
+        payment_method: data.payment_method,
+        status: data.status,
+        buyer_email: data.buyer_email,
+        buyer_name: data.buyer_name,
+        buyer_phone: data.buyer_phone,
+        currency: data.currency,
+        transaction_created_at: data.transaction_created_at,
+        transaction_finalized_at: data.transaction_finalized_at,
+        status_message: data.status_message,
+        payment_method_data: data.payment_method_data,
+        customer_data: data.customer_data,
+        payment_data: data.payment_data,
+        user_type: data.user_type,
+        invoice: data.invoice,
+        other_attempts: data.other_attempts
       };
 
-      // console.log("Datos formateados:", formattedData); // Debug log
       setSelectedPayment(formattedData);
       setShowDetail(true);
     } catch (error) {

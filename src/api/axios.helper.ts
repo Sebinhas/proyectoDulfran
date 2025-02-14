@@ -196,14 +196,13 @@ export const updateUser = async (data: any) => {
 };
 
 export const uploadExcel = async (file: File) => {
-  const currentNit = useAuthStore.getState().user?.nit;
   const formData = new FormData();
 
   formData.append("file", file);
 
   try {
     const response = await axiosInstance.post(
-      `/client/companies/${currentNit}/massive`,
+      `/client/massive`,
       formData,
       {
         headers: {
