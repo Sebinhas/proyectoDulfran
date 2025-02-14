@@ -94,13 +94,13 @@ export function PaymentMethodSection({
             <button
               key={method.id}
               onClick={() => handleSelection(method)}
-              disabled={method.id !== "nq"}
+              disabled={method.id !== 'nq' && method.id !== 'pse'}
               className={`w-full ${
                 selected?.id === method.id
-                  ? "bg-indigo-600 text-white ring-2 ring-indigo-600 ring-offset-2"
-                  : method.id !== "nq"
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-normal"
+                  ? 'bg-indigo-600 text-white ring-2 ring-indigo-600 ring-offset-2'
+                  : method.id !== 'nq' && method.id !== 'pse'
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-gray-900 hover:bg-gray-50'
               } relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none`}
             >
               <div className="flex w-full items-center justify-between">
@@ -146,13 +146,13 @@ export function PaymentMethodSection({
             <button
               key={method.id}
               onClick={() => handleSelection(method)}
-              disabled={method.id !== "nq"}
+              disabled={method.id !== 'nq' && method.id !== 'pse'}
               className={`w-full ${
-                selected?.id === method.id && method.id === "nq"
-                  ? "bg-indigo-600 text-white ring-2 ring-indigo-600 ring-offset-2"
-                  : method.id !== "nq"
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-gray-900 hover:bg-gray-50"
+                selected?.id === method.id
+                  ? 'bg-indigo-600 text-white ring-2 ring-indigo-600 ring-offset-2'
+                  : method.id !== 'nq' && method.id !== 'pse'
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-gray-900 hover:bg-gray-50'
               } relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none`}
             >
               <div className="flex w-full items-center justify-between">

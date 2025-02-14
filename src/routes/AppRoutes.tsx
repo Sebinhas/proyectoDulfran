@@ -34,6 +34,8 @@ const Dashboard = lazy(() => import('../pages/Global/Dashboard/Dasboard.tsx'));
 const NequiInfo = lazy(() => import('../pages/Pasarela/components/paymentInfo/NequiInfo/NequiInfo.tsx'));
 const NequiConfirmation = lazy(() => import('../pages/Pasarela/components/paymentConfirmation/NequiConfirmation/NequiConfirmation.tsx'));
 const Suscribe = lazy(() => import('../pages/Global/Suscribe/Suscribe.tsx'));
+const PSEInfo = lazy(() => import('../pages/Pasarela/components/paymentInfo/PSEInfo/PSEInfo.tsx'));
+const PSEConfirmation = lazy(() => import('../pages/Pasarela/components/paymentConfirmation/PSEConfirmation/PSEConfirmation.tsx'));
 
 // Agregamos un nuevo loader para verificar el rol de admin
 const roleLoader = (allowedRoles: string[]) => {
@@ -162,6 +164,16 @@ const AppRoutes = createBrowserRouter([
       {
         path: '/dashboard/payments/payment_method/nq/confirmation',
         element: <NequiConfirmation />,
+        loader: roleLoader(['cliente'])
+      },
+      {
+        path: '/dashboard/payments/payment_method/pse',
+        element: <PSEInfo />,
+        loader: roleLoader(['cliente'])
+      },
+      {
+        path: '/dashboard/payments/payment_method/pse/payment_confirmation',
+        element: <PSEConfirmation />,
         loader: roleLoader(['cliente'])
       }
     ]

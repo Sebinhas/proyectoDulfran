@@ -2,14 +2,14 @@ import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
 
-export const BASE_URL =
-  "https://1605-2800-e2-9c00-398-744d-9a1d-d608-5d3d.ngrok-free.app/api";
+export const BASE_URL = "https://1605-2800-e2-9c00-398-744d-9a1d-d608-5d3d.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     "ngrok-skip-browser-warning": "true",
     "Content-Type": "application/json",
+
   },
 });
 
@@ -271,6 +271,25 @@ export const login = async (data: { username: string; password: string }) => {
   const response = await axiosInstance.post("/auth/login", data);
   return response.data;
 };
+
+export const getBancsPse = async (): Promise<any> => {
+  try {
+    const response = await axiosInstance.get("/pse/banks",{
+      headers: {
+        Authorization: `Bearer pub_test_bLkXQsR8dmrSTeoPCJJzGLckXmAHYLIY`,
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response.data?.statusCode === 401) {
+      toast.error("Tu sesión ha expirado");
+    }
+    console.error("Error al obtener perfil:", error);
+    return [];
+  }
+};
+
 
 export const getCurrentProfile = async (token: string): Promise<any> => {
   try {
