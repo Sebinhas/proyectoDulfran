@@ -148,7 +148,7 @@ export function PaymentMethodSection({
               onClick={() => handleSelection(method)}
               disabled={method.id !== 'nq' && method.id !== 'pse'}
               className={`w-full ${
-                selected?.id === method.id && method.id === 'nq'
+                selected?.id === method.id
                   ? 'bg-indigo-600 text-white ring-2 ring-indigo-600 ring-offset-2'
                   : method.id !== 'nq' && method.id !== 'pse'
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'

@@ -9,6 +9,7 @@ export const axiosInstance = axios.create({
   headers: {
     "ngrok-skip-browser-warning": "true",
     "Content-Type": "application/json",
+
   },
 });
 
@@ -270,6 +271,25 @@ export const login = async (data: { username: string; password: string }) => {
   const response = await axiosInstance.post("/auth/login", data);
   return response.data;
 };
+
+export const getBancsPse = async (): Promise<any> => {
+  try {
+    const response = await axiosInstance.get("/pse/banks",{
+      headers: {
+        Authorization: `Bearer pub_test_bLkXQsR8dmrSTeoPCJJzGLckXmAHYLIY`,
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response.data?.statusCode === 401) {
+      toast.error("Tu sesión ha expirado");
+    }
+    console.error("Error al obtener perfil:", error);
+    return [];
+  }
+};
+
 
 export const getCurrentProfile = async (token: string): Promise<any> => {
   try {

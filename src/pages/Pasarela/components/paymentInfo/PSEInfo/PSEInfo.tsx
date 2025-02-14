@@ -1,13 +1,11 @@
 import { FaArrowLeft, FaUniversity } from 'react-icons/fa'
-import type { PersonalData } from '../../../usePasarela'
+// import type  PersonalData  from '../../../usePasarela'
 import { useForm } from 'react-hook-form'
 import pse from '../../../../../../public/TypeTarget/pse.png'
-
-interface PSEInfoProps {
-  onBack: () => void
-  onNext: () => void
-  personalData: PersonalData
-}
+import { useNavigate } from 'react-router-dom'
+import { usePaymentContext } from '../../../../../context/PaymentContext'
+import { useEffect, useState } from 'react'
+// import { getBancsPse } from '../../../../../api/axios.helper'
 
 interface DTOPSEInfoForm {
   bank: string
@@ -19,11 +17,50 @@ interface DTOPSEInfoForm {
 
 const PSEInfo = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<DTOPSEInfoForm>()
+  const navigate = useNavigate()
+  const { paymentData, updatePaymentMethod } = usePaymentContext()
+  const [bancos, setBancos] = useState<any>([])
+  // const bancos = getBancsPse()
 
-  const onSubmit = (data: DTOPSEInfoForm) => {
-    console.log(data)
+  useEffect(() => {
+    getBancos()
+  }, [])
+
+  const onSubmit = async (data: DTOPSEInfoForm) => {
+
+    await updatePaymentMethod({
+      type: paymentData?.payment_method?.type ?? "pse",
+      user_type: paymentData?.user_type ?? "PERSON",
+      user_legal_id_type: paymentData?.legal_id_type ?? "CC",
+      user_legal_id: paymentData?.legal_id ?? "1000000000",
+      financial_institution_code: data.bank,
+      payment_description: paymentData?.payment_description ?? "Pago de prueba",
+    });
+
+    navigate('/dashboard/payments/payment_method/pse/payment_confirmation')
     // onNext()
   }
+
+
+  const getBancos = async () => {
+    try {
+      const response = await fetch(
+        `https://sandbox.wompi.co/v1/pse/financial_institutions`,
+        {
+          headers: {
+            Authorization: `Bearer pub_test_bLkXQsR8dmrSTeoPCJJzGLckXmAHYLIY`,
+          },
+        }
+      );
+      const data = await response.json();
+
+      setBancos(data.data)
+      return data.data
+    } catch (error) {
+      console.error("Error checking payment status:", error);
+      return "DECLINED";
+    }
+  };
 
   return (
     <div className="w-full px-4 py-6">
@@ -51,41 +88,17 @@ const PSEInfo = () => {
                     className="w-full border rounded-md p-2 outline-none border-gray-300"
                   >
                     <option value="">- Escoge un banco -</option>
-                    <option value="bancolombia">Bancolombia</option>
-                    <option value="banco-de-bogota">Banco de Bogotá</option>
-                    <option value="davivienda">Davivienda</option>
-                    <option value="bbva">BBVA</option>
-                    <option value="banco-de-occidente">Banco de Occidente</option>
-                    <option value="scotiabank-colpatria">Scotiabank Colpatria</option>
+                    {
+                      bancos.map((banco: any) => (
+                        <option 
+                          value={banco.financial_institution_code}
+                        >
+                          {banco.financial_institution_name}
+                        </option>
+                      ))
+                    }
                   </select>
                   {errors.bank && <p className="text-red-500 text-sm">{errors.bank.message}</p>}
-                </div>
-
-                <div className="w-full">
-                    <div className="text-sm font-medium pb-0.5">Tipo de documento</div>
-                    <select {...register('document_type', { required: 'El tipo de documento es requerido' })} className=" w-full border rounded-md p-2 outline-none border-gray-300 " >
-                      <option disabled selected value="">Tipo de identificación</option>
-                      <option value="RC">RC-Registro Civil</option>
-                      <option value="TE">TE-Tarjeta de Extranjería</option>
-                      <option value="CC">CC-Cedula de Ciudadania</option>
-                      <option value="CE">CE-Cedula de Extranjería</option>
-                      <option value="NIT">NIT-Número de Identificación Tributaria</option>
-                      <option value="PP">PP-Pasaporte</option>
-                      <option value="TI">TI-Tarjeta de Identidad</option>
-                      <option value="DNI">DNI-Documento Nacional de Identidad</option>
-                      <option value="RG">RG-Carteria de identidade / Registro General</option>
-                    </select>
-                    {errors.document_type && <p className="text-red-500 text-sm">{errors.document_type.message}</p>}
-                  </div>
-
-                <div className="w-full">
-                  <div className="text-sm font-medium pb-0.5">Número de documento</div>
-                  <input 
-                    {...register('document_number', { required: 'El número de documento es requerido' })}
-                    type="text"
-                    className="w-full border rounded-md p-2 outline-none border-gray-300"
-                  />
-                  {errors.document_number && <p className="text-red-500 text-sm">{errors.document_number.message}</p>}
                 </div>
 
                 <div className="w-full flex flex-col gap-2">
@@ -117,7 +130,7 @@ const PSEInfo = () => {
               <div className="mt-8 flex justify-between">
                 <button
                   type="button"
-                  onClick={() => {}}
+                  onClick={() => navigate('/dashboard/payments/payment_method')}
                   className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
                   <FaArrowLeft className="mr-2 h-4 w-4" />
