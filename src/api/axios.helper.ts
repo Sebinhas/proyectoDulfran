@@ -218,6 +218,30 @@ export const uploadExcel = async (file: File) => {
   }
 };
 
+// Subir excel de facturas
+export const uploadInvoiceExcel = async (file: File) => {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  try {
+    const response = await axiosInstance.post(`/invoices/massive`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    const errors = response?.data?.errors;
+    errors.forEach((error: any) => {
+      toast.warning(error.type);
+    });
+    // console.log("Respuesta:", response.data);
+    return response.data;
+  } catch (error: any) {
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
 // Obtener mensajes de un chat específico
 export const getMessagesByNumber = async (number: string) => {
   try {
