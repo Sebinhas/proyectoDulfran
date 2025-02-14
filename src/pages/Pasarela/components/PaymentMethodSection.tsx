@@ -1,80 +1,92 @@
-import { useState } from 'react'
-import { FaArrowRight, FaArrowLeft, FaCreditCard, FaQrcode, FaUniversity, FaMoneyBill } from 'react-icons/fa'
+import { useState, useEffect } from "react";
+import {
+  FaArrowRight,
+  FaArrowLeft,
+  FaCreditCard,
+  FaQrcode,
+  FaUniversity,
+  FaMoneyBill,
+} from "react-icons/fa";
 import { FaN } from "react-icons/fa6";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const paymentMethods = [
   {
-    id: 'cc',
-    title: 'Paga con tus tarjetas',
-    description: 'Visa, Mastercard, American Express',
+    id: "cc",
+    title: "Paga con tus tarjetas",
+    description: "Visa, Mastercard, American Express",
     icon: FaCreditCard,
   },
   {
-    id: 'qrb',
-    title: 'Paga con QR Bancolombia',
-    description: 'Escanea y paga con la app',
+    id: "qrb",
+    title: "Paga con QR Bancolombia",
+    description: "Escanea y paga con la app",
     icon: FaQrcode,
   },
   {
-    id: 'bt',
-    title: 'Transfiere con tu cuenta',
-    description: 'Ahorro o corriente Bancolombia',
+    id: "bt",
+    title: "Transfiere con tu cuenta",
+    description: "Ahorro o corriente Bancolombia",
     icon: FaUniversity,
   },
   {
-    id: 'nq',
-    title: 'Paga con tu cuenta Nequi',
-    description: 'Transfiere desde Nequi',
+    id: "nq",
+    title: "Paga con tu cuenta Nequi",
+    description: "Transfiere desde Nequi",
     icon: FaN,
   },
   {
-    id: 'pse',
-    title: 'Paga con tu cuenta PSE',
-    description: 'Débito bancario PSE',
+    id: "pse",
+    title: "Paga con tu cuenta PSE",
+    description: "Débito bancario PSE",
     icon: FaUniversity,
   },
   {
-    id: 'ef',
-    title: 'Paga en efectivo en Corresponsal',
-    description: 'Bancario',
+    id: "ef",
+    title: "Paga en efectivo en Corresponsal",
+    description: "Bancario",
     icon: FaMoneyBill,
   },
-]
+];
 
 interface PaymentMethodSectionProps {
-  onMethodSelect: (method: string) => void
-  onNext: () => void
-  onBack: () => void
-  isFirstStep?: boolean
-  paymentData?: any
+  onMethodSelect: (method: string) => void;
+  onNext: () => void;
+  onBack: () => void;
+  isFirstStep?: boolean;
+  paymentData?: any;
 }
 
-export function PaymentMethodSection({ 
-  onMethodSelect, 
-  onNext, 
-  onBack,
-  paymentData,
-  isFirstStep = false 
-  }: PaymentMethodSectionProps) {
-  const [selected, setSelected] = useState<typeof paymentMethods[0] | null>(null);
+export function PaymentMethodSection({
+  onMethodSelect,
+  isFirstStep = false,
+}: PaymentMethodSectionProps) {
+  const [selected, setSelected] = useState<(typeof paymentMethods)[0] | null>(
+    null
+  );
   const navigate = useNavigate();
 
-  const handleSelection = (method: typeof paymentMethods[0]) => {
+  useEffect(() => {
+    selected;
+  }, [selected]);
+
+  const handleSelection = (method: (typeof paymentMethods)[0]) => {
     setSelected(method);
     onMethodSelect(method.id);
-  }
+  };
 
   // console.log(paymentData)
 
   // Dividir los métodos en dos columnas
-  const leftMethods = paymentMethods.slice(0, 3)
-  const rightMethods = paymentMethods.slice(3)
+  const leftMethods = paymentMethods.slice(0, 3);
+  const rightMethods = paymentMethods.slice(3);
 
   return (
     <div className="w-full px-4 py-6">
-      <h3 className="text-lg font-medium pb-4 text-gray-900">Selecciona un método de pago</h3>
-      
+      <h3 className="text-lg font-medium pb-4 text-gray-900">
+        Selecciona un método de pago
+      </h3>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Columna izquierda */}
         <div className="space-y-4">
@@ -94,21 +106,33 @@ export function PaymentMethodSection({
               <div className="flex w-full items-center justify-between">
                 <div className="flex items-center">
                   <div className="text-sm">
-                    <p className={`font-medium ${
-                      selected?.id === method.id ? 'text-white' : 'text-gray-900'
-                    }`}>
+                    <p
+                      className={`font-medium ${
+                        selected?.id === method.id
+                          ? "text-white"
+                          : "text-gray-900"
+                      }`}
+                    >
                       {method.title}
                     </p>
-                    <span className={`inline ${
-                      selected?.id === method.id ? 'text-indigo-100' : 'text-gray-500'
-                    }`}>
+                    <span
+                      className={`inline ${
+                        selected?.id === method.id
+                          ? "text-indigo-100"
+                          : "text-gray-500"
+                      }`}
+                    >
                       {method.description}
                     </span>
                   </div>
                 </div>
-                <div className={`shrink-0 ${
-                  selected?.id === method.id ? 'text-white' : 'text-indigo-600'
-                }`}>
+                <div
+                  className={`shrink-0 ${
+                    selected?.id === method.id
+                      ? "text-white"
+                      : "text-indigo-600"
+                  }`}
+                >
                   <method.icon className="h-6 w-6" />
                 </div>
               </div>
@@ -124,7 +148,7 @@ export function PaymentMethodSection({
               onClick={() => handleSelection(method)}
               disabled={method.id !== 'nq' && method.id !== 'pse'}
               className={`w-full ${
-                selected?.id === method.id
+                selected?.id === method.id && method.id === 'nq'
                   ? 'bg-indigo-600 text-white ring-2 ring-indigo-600 ring-offset-2'
                   : method.id !== 'nq' && method.id !== 'pse'
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
@@ -134,21 +158,33 @@ export function PaymentMethodSection({
               <div className="flex w-full items-center justify-between">
                 <div className="flex items-center">
                   <div className="text-sm">
-                    <p className={`font-medium ${
-                      selected?.id === method.id ? 'text-white' : 'text-gray-900'
-                    }`}>
+                    <p
+                      className={`font-medium ${
+                        selected?.id === method.id
+                          ? "text-white"
+                          : "text-gray-900"
+                      }`}
+                    >
                       {method.title}
                     </p>
-                    <span className={`inline ${
-                      selected?.id === method.id ? 'text-indigo-100' : 'text-gray-500'
-                    }`}>
+                    <span
+                      className={`inline ${
+                        selected?.id === method.id
+                          ? "text-indigo-100"
+                          : "text-gray-500"
+                      }`}
+                    >
                       {method.description}
                     </span>
                   </div>
                 </div>
-                <div className={`shrink-0 ${
-                  selected?.id === method.id ? 'text-white' : 'text-indigo-600'
-                }`}>
+                <div
+                  className={`shrink-0 ${
+                    selected?.id === method.id
+                      ? "text-white"
+                      : "text-indigo-600"
+                  }`}
+                >
                   <method.icon className="h-6 w-6" />
                 </div>
               </div>
@@ -161,21 +197,23 @@ export function PaymentMethodSection({
       <div className="mt-8 flex justify-between">
         {!isFirstStep && (
           <button
-            onClick={onBack}
+            onClick={() => navigate("/dashboard/payments")}
             className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <FaArrowLeft className="mr-2 h-4 w-4" />
             Atrás
           </button>
         )}
-        <div className={isFirstStep ? 'ml-auto' : ''}>
+        <div className={isFirstStep ? "ml-auto" : ""}>
           <button
-            onClick={() => navigate(`/dashboard/payments/payment_method/${selected?.id}`, { state: { paymentData } })}
+            onClick={() =>
+              navigate(`/dashboard/payments/payment_method/${selected?.id}`)
+            }
             disabled={!selected}
             className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm ${
-              !selected 
-                ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                : 'text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              !selected
+                ? "bg-gray-300 cursor-not-allowed text-gray-500"
+                : "text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             }`}
           >
             Siguiente
@@ -184,5 +222,5 @@ export function PaymentMethodSection({
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

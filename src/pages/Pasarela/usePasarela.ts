@@ -1,150 +1,24 @@
-import { useState, useEffect } from 'react'
-import { useAuthStore } from '../../hooks/authStore'
-import { toast } from 'react-toastify'
-
-export type StepStatus = 'complete' | 'current' | 'upcoming'
-
-export interface Step {
-  id: string
-  name: string
-  href: string
-  status: StepStatus
-}
-
-export interface PersonalData {
-  fullName: string
-  email: string
-  phone: string
-  documentNumber: string
-}
-
-
-
-export interface PaymentInfo {
-  monto: number
-  descripcion: string
-  referencia: string
-  fecha: string
-}
+import { usePaymentContext } from "../../context/PaymentContext";
 
 export const usePasarela = () => {
-  const { user } = useAuthStore()
-  const [currentStep, setCurrentStep] = useState(1)
-  const [previousStep, setPreviousStep] = useState(1)
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null)
-  const [paymentStatus, setPaymentStatus] = useState<'success' | 'error' | 'pending'>('pending')
-  const [personalData, setPersonalData] = useState<PersonalData>({
-    fullName: '',
-    email: '',
-    phone: '',
-    documentNumber: ''
-  })
-
-  const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
-    monto: 0,
-    descripcion: '',
-    referencia: '',
-    fecha: new Date().toISOString()
-  })
-
-  useEffect(() => {
-    if (user) {
-      setPersonalData({
-        fullName: user.name,
-        email: user.email,
-        phone: user.phone || '',
-        documentNumber: user.cedula || ''
-      })
-    }
-  }, [user])
-
-  useEffect(() => {
-    if (currentStep !== previousStep) {
-      console.log('Cambio de paso:', {
-
-        anterior: previousStep,
-        actual: currentStep
-      })
-      setPreviousStep(currentStep)
-    }
-  }, [currentStep, previousStep])
-
-  const updateStep = (stepNumber: number) => {
-    if (stepNumber >= 1 && stepNumber <= 5) {
-      setCurrentStep(stepNumber)
-    }
-  }
+  const { paymentData, updatePaymentMethod } = usePaymentContext();
 
   const handlePaymentMethodSelect = (method: string) => {
-    setSelectedPaymentMethod(method)
-  }
-
-  const handlePersonalDataChange = (data: PersonalData) => {
-    setPersonalData(data)
-  }
-
-  const handlePaymentInfoChange = (info: PaymentInfo) => {
-    setPaymentInfo(info)
-  }
-
-  const handleNext = () => {
-    if (currentStep === 1 && !selectedPaymentMethod) {
-      return;
+    if (method === "nq") {
+      updatePaymentMethod({
+        type: "NEQUI",
+      });
+    } else if (method === "pse") {
+      updatePaymentMethod({
+        type: "PSE",
+      });
+      console.log("paymentData2", paymentData);
     }
-    if (currentStep < 6) {
-      setCurrentStep(prev => prev + 1)
-    }
-  }
 
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1)
-    }
-  }
-
-  const getSteps = (): Step[] => {
-    return [
-      {
-        id: '01',
-        name: 'Método de Pago',
-        href: '#',
-        status: currentStep > 1 ? 'complete' : currentStep === 1 ? 'current' : 'upcoming',
-      },
-      {
-        id: '02',
-        name: 'Información Personal',
-        href: '#',
-        status: currentStep > 2 ? 'complete' : currentStep === 2 ? 'current' : 'upcoming',
-      },
-      {
-        id: '03',
-        name: 'Información del Pago',
-        href: '#',
-        status: currentStep > 3 ? 'complete' : currentStep === 3 ? 'current' : 'upcoming',
-      },
-      {
-        id: '04',
-        name: 'Confirmación',
-        href: '#',
-        status: currentStep === 4 ? 'current' : 'upcoming',
-      },
-    ]
-  }
+    console.log("paymentData2", paymentData);
+  };
 
   return {
-    currentStep,
-    previousStep,
-    updateStep,
-    getSteps,
-    selectedPaymentMethod,
     handlePaymentMethodSelect,
-    handleNext,
-    handleBack,
-    personalData,
-    handlePersonalDataChange,
-    paymentStatus,
-    setPaymentStatus,
-    paymentInfo,
-    handlePaymentInfoChange,
-  }
-} 
+  };
+};
