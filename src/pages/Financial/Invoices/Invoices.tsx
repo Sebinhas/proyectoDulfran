@@ -11,7 +11,6 @@ const Invoices = () => {
     columns,
     handleView,
     toggleModalUploadInvoice,
-    closeModalActionUploadInvoice,
     RenderUploadInvoice,
     selectedFile,
     invoices,

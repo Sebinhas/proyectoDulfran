@@ -4,7 +4,6 @@ import useEditInfoUser from "./useEditInfoUser";
 const EditInfoUser = ({ user, closeModalActionEditInfoUser, setIsLoading, loading }: { user: any | null, closeModalActionEditInfoUser: () => void, setIsLoading: (value: boolean) => void, loading: boolean }) => {
 
 
-
     const { register, handleSubmit, errors, onSubmit } = useEditInfoUser(setIsLoading, loading, closeModalActionEditInfoUser, user);
 
     if (!user) return null;

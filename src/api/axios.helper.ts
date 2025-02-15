@@ -203,11 +203,12 @@ export const createUser = async (data: any) => {
   }
 };
 
-
-
-export const updateUser = async (data: any,cedula:string) => {
+export const updateUser = async (data: any, cedula: string) => {
   try {
-    const response = await axiosInstance.patch(`/admin/update-admin-user/${cedula}`,data);
+    const response = await axiosInstance.patch(
+      `/admin/update-admin-user/${cedula}`,
+      data
+    );
     return response.data;
   } catch (error: any) {
     console.error("Error al actualizar usuario:", error);
@@ -218,7 +219,10 @@ export const updateUser = async (data: any,cedula:string) => {
 
 export const updateUserProfileAdmin = async (data: any) => {
   try {
-    const response = await axiosInstance.patch(`/admin/update-profile-admin-user`,data);
+    const response = await axiosInstance.patch(
+      `/admin/update-profile-admin-user`,
+      data
+    );
     return response.data;
   } catch (error: any) {
     console.error("Error al actualizar usuario:", error);
@@ -229,7 +233,10 @@ export const updateUserProfileAdmin = async (data: any) => {
 
 export const updateUserProfileClient = async (data: any) => {
   try {
-    const response = await axiosInstance.patch(`/client/update-profile-client`,data);
+    const response = await axiosInstance.patch(
+      `/client/update-profile-client`,
+      data
+    );
     return response.data;
   } catch (error: any) {
     console.error("Error al actualizar usuario:", error);
@@ -240,7 +247,6 @@ export const updateUserProfileClient = async (data: any) => {
 
 export const uploadExcel = async (file: File) => {
   const formData = new FormData();
-
   formData.append("file", file);
 
   try {
@@ -249,15 +255,30 @@ export const uploadExcel = async (file: File) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    const errors = response?.data?.errors;
-    errors.forEach((error: any) => {
-      toast.warning(error.type);
-    });
-    console.log("Respuesta:", response.data);
-    return response.data;
+    // Agrupar errores por cédula solo si existen errores
+    const errorsByClient =
+      response.data.details?.errors?.reduce((acc: any, curr: any) => {
+        if (!acc[curr.client_cedula]) {
+          acc[curr.client_cedula] = [];
+        }
+        acc[curr.client_cedula].push(curr.error);
+        return acc;
+      }, {}) || {};
+
+    return {
+      message: response.data.message,
+      createdClients: response.data.details?.createdClients || [],
+      successCount: response.data.details?.createdClients > 0 ? 1 : 0,
+      errorCount: response.data.details?.errors?.length || 0,
+      errors: errorsByClient,
+    };
   } catch (error: any) {
-    toast.error(error.response.data.message);
-    throw error;
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Error al subir el archivo";
+    toast.error(errorMessage);
+    throw new Error(errorMessage);
   }
 };
 
