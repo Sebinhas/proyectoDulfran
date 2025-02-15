@@ -2,14 +2,13 @@ import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
 
-export const BASE_URL = "https://1605-2800-e2-9c00-398-744d-9a1d-d608-5d3d.ngrok-free.app/api";
+export const BASE_URL = "http://localhost:3000/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     "ngrok-skip-browser-warning": "true",
     "Content-Type": "application/json",
-
   },
 });
 
@@ -20,6 +19,34 @@ axiosInstance.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Agregar el interceptor de respuesta
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error.code === "ECONNREFUSED" ||
+      error.message.includes("Network Error")
+    ) {
+      toast.error(
+        "No se pudo conectar con el servidor. Por favor, verifica que esté activo."
+      );
+    }
+
+    if (error.response?.data?.statusCode === 400) {
+      toast.error(error.response.data.message);
+    }
+
+    if (error.response?.status === 401) {
+      // Limpiar el estado de autenticación
+      toast.error("Tu sesión ha expirado");
+      useAuthStore.getState().logout();
+      // Redirigir al login
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Obtener lista de clientes de una empresa
 export const getClients = async () => {
@@ -54,7 +81,7 @@ export const getClients = async () => {
     }));
   } catch (error: any) {
     console.error("Error al obtener clientes:", error);
-    toast.error(error.response.data.message);
+    toast.error("Hubo un error al obtener clientes");
     return [];
   }
 };
@@ -87,11 +114,8 @@ export const getInvoices = async () => {
       admin_nit: item.admin?.nit || "",
     }));
   } catch (error: any) {
-    if (error.response.data?.statusCode === 401) {
-      toast.error("Tu sesión ha expirado");
-    }
-    console.error("Error al obtener facturas:", error);
-    return [];
+    toast.error("Hubo un error al obtener las facturas");
+    throw error;
   }
 };
 
@@ -162,9 +186,7 @@ export const getUsers = async () => {
       updatedAt: item.updatedAt || "",
     }));
   } catch (error: any) {
-    if (error.response.data?.statusCode === 401) {
-      toast.error("Tu sesión ha expirado");
-    }
+    toast.error("Hubo un error al obtener usuarios");
     console.error("Error al obtener usuarios:", error);
     return [];
   }
@@ -210,7 +232,7 @@ export const uploadExcel = async (file: File) => {
     errors.forEach((error: any) => {
       toast.warning(error.type);
     });
-    // console.log("Respuesta:", response.data);
+    console.log("Respuesta:", response.data);
     return response.data;
   } catch (error: any) {
     toast.error(error.response.data.message);
@@ -221,7 +243,6 @@ export const uploadExcel = async (file: File) => {
 // Subir excel de facturas
 export const uploadInvoiceExcel = async (file: File) => {
   const formData = new FormData();
-
   formData.append("file", file);
 
   try {
@@ -230,15 +251,31 @@ export const uploadInvoiceExcel = async (file: File) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    const errors = response?.data?.errors;
-    errors.forEach((error: any) => {
-      toast.warning(error.type);
-    });
-    // console.log("Respuesta:", response.data);
-    return response.data;
+
+    // Agrupar errores por cédula solo si existen errores
+    const errorsByClient =
+      response.data.details?.errors?.reduce((acc: any, curr: any) => {
+        if (!acc[curr.client_cedula]) {
+          acc[curr.client_cedula] = [];
+        }
+        acc[curr.client_cedula].push(curr.error);
+        return acc;
+      }, {}) || {};
+
+    return {
+      message: response.data.message,
+      createdInvoices: response.data.details?.createdInvoices || [],
+      successCount: response.data.details?.createdInvoices > 0 ? 1 : 0,
+      errorCount: response.data.details?.errors?.length || 0,
+      errors: errorsByClient,
+    };
   } catch (error: any) {
-    toast.error(error.response.data.message);
-    throw error;
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Error al subir el archivo";
+    toast.error(errorMessage);
+    throw new Error(errorMessage);
   }
 };
 
@@ -298,7 +335,7 @@ export const login = async (data: { username: string; password: string }) => {
 
 export const getBancsPse = async (): Promise<any> => {
   try {
-    const response = await axiosInstance.get("/pse/banks",{
+    const response = await axiosInstance.get("/pse/banks", {
       headers: {
         Authorization: `Bearer pub_test_bLkXQsR8dmrSTeoPCJJzGLckXmAHYLIY`,
       },
@@ -313,7 +350,6 @@ export const getBancsPse = async (): Promise<any> => {
     return [];
   }
 };
-
 
 export const getCurrentProfile = async (token: string): Promise<any> => {
   try {

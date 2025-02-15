@@ -18,6 +18,7 @@ const Invoices = () => {
     setSelectedFile,
     handleFileChange,
     handleFileUpload,
+    isLoading,
   } = useOrders();
 
   return (
@@ -35,20 +36,27 @@ const Invoices = () => {
         </div>
       </div>
 
-      <TableGlobal
-        columns={columns}
-        data={invoices}
-        itemsPerPage={8}
-        actions={{
-          view: handleView,
-          // edit: handleView,
-        }}
-        filters={{
-          username: true,
-          no_contract: true,
-          status: true,
-        }}
-      />
+      {isLoading ? (
+        <div className="w-full h-64 flex flex-col items-center justify-center">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mb-4"></div>
+          <p className="text-lg text-gray-600 font-medium">Cargando datos...</p>
+          <p className="text-sm text-gray-500">Por favor, espere un momento</p>
+        </div>
+      ) : (
+        <TableGlobal
+          columns={columns}
+          data={invoices}
+          itemsPerPage={6}
+          actions={{
+            view: handleView,
+          }}
+          filters={{
+            username: true,
+            no_contract: true,
+            status: true,
+          }}
+        />
+      )}
 
       <RenderUploadInvoice>
         <div className="w-full h-96 flex justify-center items-center gap-4">
