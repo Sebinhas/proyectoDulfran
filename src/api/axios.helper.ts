@@ -9,7 +9,7 @@ export const axiosInstance = axios.create({
   headers: {
     "ngrok-skip-browser-warning": "true",
     "Content-Type": "application/json",
-    Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTYxMTM0MTI0NCIsInVzZXJuYW1lIjoiQ0FNSUxPMTI0NCIsInByb2ZpbGVfdHlwZSI6ImZpbmFuY2llcm8iLCJhZG1pbl9uaXQiOiI5MDE4NDQ0MjctMSIsImlhdCI6MTczOTIzOTk1NSwiZXhwIjoxNzM5MjQzNTU1fQ.6fb2mR_CJSBE2nEI1eYN3tYd1KP_dWAn0rw7w4xg56E"}`,
+
   },
 });
 
@@ -217,21 +217,40 @@ export const updateUserProfileClient = async (data: any) => {
 };
 
 export const uploadExcel = async (file: File) => {
-  const currentNit = useAuthStore.getState().user?.nit;
   const formData = new FormData();
 
   formData.append("file", file);
 
   try {
-    const response = await axiosInstance.post(
-      `/client/companies/${currentNit}/massive`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await axiosInstance.post(`/client/massive`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    const errors = response?.data?.errors;
+    errors.forEach((error: any) => {
+      toast.warning(error.type);
+    });
+    // console.log("Respuesta:", response.data);
+    return response.data;
+  } catch (error: any) {
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
+// Subir excel de facturas
+export const uploadInvoiceExcel = async (file: File) => {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  try {
+    const response = await axiosInstance.post(`/invoices/massive`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     const errors = response?.data?.errors;
     errors.forEach((error: any) => {
       toast.warning(error.type);
@@ -297,6 +316,25 @@ export const login = async (data: { username: string; password: string }) => {
   const response = await axiosInstance.post("/auth/login", data);
   return response.data;
 };
+
+export const getBancsPse = async (): Promise<any> => {
+  try {
+    const response = await axiosInstance.get("/pse/banks",{
+      headers: {
+        Authorization: `Bearer pub_test_bLkXQsR8dmrSTeoPCJJzGLckXmAHYLIY`,
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response.data?.statusCode === 401) {
+      toast.error("Tu sesión ha expirado");
+    }
+    console.error("Error al obtener perfil:", error);
+    return [];
+  }
+};
+
 
 export const getCurrentProfile = async (token: string): Promise<any> => {
   try {

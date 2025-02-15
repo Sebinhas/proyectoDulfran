@@ -3,7 +3,7 @@ import { CreatedAtCell, StatusCell, TotalCell } from "./templates/cellTemplates"
 import { toast } from "react-toastify";
 import Modal from "../../../components/Modal/Modal";
 import Swal from "sweetalert2";
-import { uploadExcel, getInvoices } from "../../../api/axios.helper";
+import { uploadInvoiceExcel, getInvoices } from "../../../api/axios.helper";
 import { numberInvoicesCell, PaymentPeriodCell } from "./templates/cellTemplates";
 export interface InvoiceData {
   numberInvoice: number;
@@ -114,7 +114,7 @@ const useInvoices = () => {
       });
 
       // Realizar el post
-      const result = await uploadExcel(file);
+      const result = await uploadInvoiceExcel(file);
 
       // Cerrar el loading inicial
       Swal.close();
