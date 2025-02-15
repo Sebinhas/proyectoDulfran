@@ -1,6 +1,8 @@
 // Nuevo archivo para los templates JSX
 import React from "react";
 import { priceFormatter } from "../../../../helpers/priceFormatter.helper";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 // Nuevo archivo para tipos
 export interface DTOPayment {
   no_invoice: string;
@@ -42,10 +44,14 @@ export const TotalCell = (row: DTOPayment): React.ReactNode => (
   </div>
 );
 
+const formatDate = (dateString: string) => {
+  return format(new Date(dateString), "d 'de' MMMM, yyyy", { locale: es });
+};
+
 export const PaymentPeriodCell = (row: DTOPayment): React.ReactNode => (
   <div className="">
     <div className="font-medium text-gray-700">
-      {row.period_start} - {row.period_end}
+      {formatDate(row.period_start)} - {formatDate(row.period_end)}
     </div>
   </div>
 );

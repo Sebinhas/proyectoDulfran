@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   CreatedAtCell,
+  FirstNameCell,
   StatusCell,
   TotalCell,
 } from "./templates/cellTemplates";
@@ -59,6 +60,11 @@ const useInvoices = () => {
     //   accessor: 'numberContract',
     //   cell: NumberContractCell
     // },
+    {
+      header: "Cliente",
+      accessor: "client_first_name",
+      cell: FirstNameCell,
+    },
     {
       header: "Estado",
       accessor: "status",

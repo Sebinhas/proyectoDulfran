@@ -111,6 +111,7 @@ const useClients = () => {
       });
 
       const result = await uploadExcel(file);
+      console.log(result);
       Swal.close();
 
       const errorsHtml = Object.entries(result.errors)
@@ -136,20 +137,17 @@ const useClients = () => {
         title: "Proceso Completado",
         html: `
           <div class="text-left">
-            <div class="mb-4">
-              <p class="text-lg font-semibold text-gray-700">${
-                result.message
-              }</p>
+              <div class="mb-4">
               <div class="grid grid-cols-2 gap-4 mt-3">
                 <div class="p-3 bg-green-50 rounded-lg">
                   <p class="text-green-700">Clientes creados: ${
-                    result.createdClients
+                    result.createdClients.length > 0
+                      ? result.createdClients.length
+                      : "0"
                   }</p>
                 </div>
                 <div class="p-3 bg-red-50 rounded-lg">
-                  <p class="text-red-700">Errores encontrados: ${
-                    result.errorCount
-                  }</p>
+                  <p class="text-red-700">Errores: ${result.errorCount}</p>
                 </div>
               </div>
             </div>

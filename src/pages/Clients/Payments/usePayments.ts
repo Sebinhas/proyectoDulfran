@@ -79,7 +79,7 @@ const usePayments = () => {
       cell: StatusCell,
     },
     {
-      header: "Periodo",
+      header: "Periodo de Pago",
       accessor: "period_start",
       cell: PaymentPeriodCell,
     },
@@ -174,7 +174,7 @@ const usePayments = () => {
     console.log("row", row);
     setPaymentData({
       invoice_id: row.no_invoice,
-      amount_in_cents: parseInt(row.amount) * 100,
+      amount_in_cents: parseInt(row.amount),
       customer_email: row.client_email,
       buyer_name: row.client_first_name + " " + row.client_second_name,
       buyer_phone: row.client_phone,
