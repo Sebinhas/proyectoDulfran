@@ -25,7 +25,7 @@ const Payments = () => {
   }, [user]);
 
   return (
-    <div className="w-full h-full flex flex-col gap-4 p-4 overflow-hidden">
+    <div className="w-ful h-full flex flex-col gap-4 p-4 overflow-hidden">
       {!showDetail ? (
         <>
           <div className="w-full flex flex-col gap-8">
