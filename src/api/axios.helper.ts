@@ -181,12 +181,33 @@ export const createUser = async (data: any) => {
   }
 };
 
-export const updateUser = async (data: any) => {
+
+
+export const updateUser = async (data: any,cedula:string) => {
   try {
-    const response = await axiosInstance.patch(
-      `/admin/update-admin-user/${data.cedula}`,
-      data
-    );
+    const response = await axiosInstance.patch(`/admin/update-admin-user/${cedula}`,data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al actualizar usuario:", error);
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
+export const updateUserProfileAdmin = async (data: any) => {
+  try {
+    const response = await axiosInstance.patch(`/admin/update-profile-admin-user`,data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al actualizar usuario:", error);
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
+export const updateUserProfileClient = async (data: any) => {
+  try {
+    const response = await axiosInstance.patch(`/client/update-profile-client`,data);
     return response.data;
   } catch (error: any) {
     console.error("Error al actualizar usuario:", error);
