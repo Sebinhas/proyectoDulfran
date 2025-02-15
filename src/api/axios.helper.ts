@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
 
-export const BASE_URL = "http://localhost:3000/api";
+export const BASE_URL = "https://1605-2800-e2-9c00-398-744d-9a1d-d608-5d3d.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -181,12 +181,33 @@ export const createUser = async (data: any) => {
   }
 };
 
-export const updateUser = async (data: any) => {
+
+
+export const updateUser = async (data: any,cedula:string) => {
   try {
-    const response = await axiosInstance.patch(
-      `/admin/update-admin-user/${data.cedula}`,
-      data
-    );
+    const response = await axiosInstance.patch(`/admin/update-admin-user/${cedula}`,data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al actualizar usuario:", error);
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
+export const updateUserProfileAdmin = async (data: any) => {
+  try {
+    const response = await axiosInstance.patch(`/admin/update-profile-admin-user`,data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al actualizar usuario:", error);
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
+export const updateUserProfileClient = async (data: any) => {
+  try {
+    const response = await axiosInstance.patch(`/client/update-profile-client`,data);
     return response.data;
   } catch (error: any) {
     console.error("Error al actualizar usuario:", error);
