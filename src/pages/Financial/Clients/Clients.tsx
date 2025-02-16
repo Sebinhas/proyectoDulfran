@@ -7,7 +7,7 @@ import useClients from "./useClients";
 import TableGlobal from "../../../components/TableData/TableGlobal";
 import { useEffect } from "react";
 import ViewDetailUser from "./components/ViewDetailClient/ViewDetailClient";
-import EditInfoUser from "./components/EditInfoClient/EditInfoClient";
+import EditInfoClient from "./components/EditInfoClient/EditInfoClient";
 
 const Clients = () => {
   const {
@@ -16,12 +16,11 @@ const Clients = () => {
     handleView,
     handleEdit,
     handleMessage,
-    handleDownload,
-    toggleModalUploadUser,
-    closeModalActionUploadUser,
-    RenderUploadUser,
-    RenderViewDetailUser,
-    RenderEditInfoUser,
+    toggleModalUploadClient,
+    closeModalActionEditInfoClient,
+    RenderUploadClient,
+    RenderViewDetailClient,
+    RenderEditInfoClient,
     user,
     handleFileChange,
     isLoading,
@@ -38,7 +37,7 @@ const Clients = () => {
             Lista de Clientes
           </div>
           <div
-            onClick={() => toggleModalUploadUser()}
+            onClick={() => toggleModalUploadClient()}
             className="w-52 h-12 flex flex-row items-center justify-center gap-2 rounded-md cursor-pointer select-none hover:bg-gray-600 bg-gray-500"
           >
             <IoAddSharp className="text-3xl text-white" />
@@ -59,7 +58,6 @@ const Clients = () => {
           itemsPerPage={6}
           actions={{
             view: (row) => handleView(row),
-            download: (row) => handleDownload(row),
             edit: (row) => handleEdit(row),
             message: (row) => handleMessage(row),
           }}
@@ -70,18 +68,18 @@ const Clients = () => {
         />
       )}
 
-      <RenderViewDetailUser>
+      <RenderViewDetailClient>
         <ViewDetailUser user={user} />
-      </RenderViewDetailUser>
+      </RenderViewDetailClient>
 
-      <RenderEditInfoUser>
-        <EditInfoUser
+      <RenderEditInfoClient>
+        <EditInfoClient
           user={user}
-          closeModalActionUploadUser={closeModalActionUploadUser}
+          closeModalActionUploadClient={closeModalActionEditInfoClient}
         />
-      </RenderEditInfoUser>
+      </RenderEditInfoClient>
 
-      <RenderUploadUser>
+      <RenderUploadClient>
         <div className="w-full h-96 flex justify-center items-center gap-4">
           <div className="w-full flex flex-col justify-center items-center gap-4">
             <div className="font-medium text-gray-600">
@@ -149,7 +147,7 @@ const Clients = () => {
             )}
           </div>
         </div>
-      </RenderUploadUser>
+      </RenderUploadClient>
     </div>
   );
 };

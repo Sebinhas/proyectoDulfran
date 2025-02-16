@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
 
-export const BASE_URL = "http://localhost:3000/api";
+export const BASE_URL = "https://7dca-2800-e2-9c00-398-5592-146a-4321-6eb0.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -429,3 +429,18 @@ export const getCurrentProfile = async (token: string): Promise<any> => {
     return [];
   }
 };
+
+
+export const updateClient = async (data: any) => {
+  
+  try {
+    const response = await axiosInstance.patch(`/client/update-client/${data.cedula}`, data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al actualizar cliente:", error);
+    throw error;
+  }
+};
+
+
+
