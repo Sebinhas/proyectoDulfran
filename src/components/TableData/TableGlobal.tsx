@@ -373,6 +373,8 @@ const TableGlobal = ({
                             <button
                               onClick={() => actions?.pay?.(row)}
                               className="p-1.5  hover:bg-gray-200 rounded-full text-gray-500"
+                              data-tooltip-id="tooltip"
+                              data-tooltip-content="Pagar"
                             >
                               <FaMoneyBill className="text-lg" />
                             </button>

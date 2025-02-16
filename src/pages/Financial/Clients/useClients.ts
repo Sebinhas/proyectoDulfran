@@ -7,7 +7,6 @@ import {
   FirstNameCell,
   PhoneCell,
 } from "./templates/cellTemplates";
-import { useForm } from "react-hook-form";
 import Modal from "../../../components/Modal/Modal";
 import { toast } from "react-toastify";
 import { ClientsDTO } from "./DTOClients";
@@ -22,23 +21,22 @@ const useClients = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const {
-    toggleModal: toggleModalUploadUser,
-    closeModalAction: closeModalActionUploadUser,
-    Render: RenderUploadUser,
+    toggleModal: toggleModalUploadClient,
+    closeModalAction: closeModalActionUploadClient,
+    Render: RenderUploadClient,
   } = Modal({ title: "Subir Usuarios" });
   const {
-    toggleModal: toggleModalViewDetailUser,
-    closeModalAction: closeModalActionViewDetailUser,
-    Render: RenderViewDetailUser,
+    toggleModal: toggleModalViewDetailClient,
+    closeModalAction: closeModalActionViewDetailClient,
+    Render: RenderViewDetailClient,
   } = Modal({ title: "Datos Personales" });
 
   const {
-    toggleModal: toggleModalEditInfoUser,
-    closeModalAction: closeModalActionEditInfoUser,
-    Render: RenderEditInfoUser,
+    toggleModal: toggleModalEditInfoClient,
+    closeModalAction: closeModalActionEditInfoClient,
+    Render: RenderEditInfoClient,
   } = Modal({ title: "Editar Información" });
 
-  const { register, handleSubmit, reset } = useForm<ClientsDTO>();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -172,7 +170,7 @@ const useClients = () => {
         },
       });
 
-      closeModalActionUploadUser();
+      closeModalActionUploadClient();
       setSelectedFile(null);
 
       // Actualizar la lista de clientes
@@ -254,46 +252,37 @@ const useClients = () => {
   const handleView = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row.status}`);
     setUser(row);
-    toggleModalViewDetailUser();
+    toggleModalViewDetailClient();
+    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
   const handleMessage = (row: ClientsDTO): void => {
-    toast.success(`Orden vista, estado: ${row.status}`);
-  };
-
-  const handleDownload = (row: ClientsDTO): void => {
-    toast.success(`Orden vista, estado: ${row.status}`);
+    toast.success(`No habilitado al momento, estado: ${row.status}`);
+    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
   const handleEdit = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row.status}`);
     setUser(row);
-    toggleModalEditInfoUser();
+    // console.log(row);
+    toggleModalEditInfoClient();
+    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
   return {
-    columns,
     clients,
-    isLoading,
-    setIsLoading,
+    columns,
     handleView,
-    handleMessage,
-    handleDownload,
     handleEdit,
-    toggleModalUploadUser,
-    closeModalActionUploadUser,
-    RenderUploadUser,
-    register,
-    handleSubmit,
-    reset,
-    toggleModalViewDetailUser,
-    closeModalActionViewDetailUser,
-    RenderViewDetailUser,
-    toggleModalEditInfoUser,
-    closeModalActionEditInfoUser,
-    RenderEditInfoUser,
+    handleMessage,
+    toggleModalUploadClient,
+    closeModalActionEditInfoClient,
+    RenderUploadClient,
+    RenderViewDetailClient,
+    RenderEditInfoClient,
     user,
     handleFileChange,
+    isLoading,
     handleFileUpload,
     selectedFile,
     setSelectedFile,

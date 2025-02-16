@@ -16,79 +16,104 @@ const ViewDetailUser = ({ user }: { user: ClientsDTO | null }) => {
   if (!user) return null;
 
   return (
-    <div className="w-full flex flex-col gap-3 p-4">
-      <div className="w-full flex flex-col md:flex-row gap-4">
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Nombre de Usuario</div>
-          <input disabled value={user.username} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Contraseña</div>
-          <input disabled value={user.password} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
+
+    <div className="w-full max-w-2xl mx-auto p-4 bg-white rounded-lg shadow-sm">
+          {/* Encabezado */}
+          <div className="mb-4">
+              <h2 className="text-xl font-semibold text-gray-800">Información del Cliente</h2>
+              <div className="mt-1 text-sm text-gray-500">Detalles completos del perfil</div>
+          </div>
+
+          {/* Contenedor principal de la información */}
+          <div className="bg-gray-50 rounded-lg p-4 shadow-inner space-y-4">
+              {/* Datos Personales */}
+              <div className="bg-gray-100 rounded-lg p-3">
+                  <h3 className="text-base font-medium text-gray-700 mb-2">Datos Personales</h3>
+                  <div className="bg-white rounded-lg p-3 shadow-sm">
+                      <div className="grid grid-cols-2 gap-5">
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Primer Nombre:</span>
+                              <span className="ml-1 text-gray-900">{user.first_name}</span>
+                          </div>
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Segundo Nombre:</span>
+                              <span className="ml-1 text-gray-900">{user.second_name || '-'}</span>
+                          </div>
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Primer Apellido:</span>
+                              <span className="ml-1 text-gray-900">{user.first_lastname}</span>
+                          </div>
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Segundo Apellido:</span>
+                              <span className="ml-1 text-gray-900">{user.second_lastname || '-'}</span>
+                          </div>
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Direccion:</span>
+                              <span className="ml-1 text-gray-900">{user.address}</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              {/* Información de Contacto */}
+              <div className="bg-gray-100 rounded-lg p-3">
+                  <h3 className="text-base font-medium text-gray-700 mb-2">Información de Contacto</h3>
+                  <div className="bg-white rounded-lg p-3 shadow-sm">
+                      <div className="grid grid-cols-2 gap-5">
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Correo:</span>
+                              <span className="ml-1 text-gray-900">{user.email}</span>
+                          </div>
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Teléfono:</span>
+                              <span className="ml-1 text-gray-900">{user.phone || '-'}</span>
+                          </div>
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Cédula:</span>
+                              <span className="ml-1 text-gray-900">{user.cedula}</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              {/* Detalles de la Cuenta */}
+              <div className="bg-gray-100 rounded-lg p-3">
+                  <h3 className="text-base font-medium text-gray-700 mb-2">Detalles de la Cuenta</h3>
+                  <div className="bg-white rounded-lg p-3 shadow-sm">
+                      <div className="grid grid-cols-2 gap-5">
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Usuario:</span>
+                              <span className="ml-1 text-gray-900">{user.username}</span>
+                          </div>
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Estado:</span>
+                              <span className="ml-1">
+                                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                      user.status === 'activo' 
+                                          ? 'bg-green-100 text-green-800' 
+                                          : 'bg-red-100 text-red-800'
+                                  }`}>
+                                      {user.status}
+                                  </span>
+                              </span>
+                          </div>
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">No. Contrato:</span>
+                              <span className="ml-1 text-gray-900">{user.no_contract || '-'}</span>
+                          </div>
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Fecha Contrato:</span>
+                              <span className="ml-1 text-gray-900">{user.date_contract || '-'}</span>
+                          </div>
+                          <div className="text-sm">
+                              <span className="font-medium text-gray-500">Fecha Creacion:</span>
+                              <span className="ml-1 text-gray-900">{new Date(user.createdAt).toLocaleDateString()}</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
       </div>
-      <div className="w-full flex flex-col md:flex-row gap-4">
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Primer Nombre</div>
-          <input disabled value={user.first_name} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Segundo Nombre</div>
-          <input disabled value={user.second_name} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-      </div>
-      <div className="w-full flex flex-col md:flex-row gap-4">
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Primer Apellido</div>
-          <input disabled value={user.first_lastname} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Segundo Apellido</div>
-          <input disabled value={user.second_lastname} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-      </div>
-      <div className="w-full flex flex-col md:flex-row gap-4">
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Cedula</div>
-          <input disabled value={user.cedula} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Telefono</div>
-          <input disabled value={user.phone} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-      </div>
-      <div className="w-full flex flex-col md:flex-row gap-4">
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Correo</div>
-          <input disabled value={user.email} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">No. Contrato</div>
-          <input disabled value={user.no_contract} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-      </div>
-      <div className="w-full flex flex-col md:flex-row gap-4">
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Fecha Contrato</div>
-          <input disabled value={user.date_contract} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Estado</div>
-          <input disabled value={user.status} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-      </div>
-      <div className="w-full flex flex-col md:flex-row gap-4">
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Direccion</div>
-          <input disabled value={user.address} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-        <div className="w-full">
-          <div className="text-sm font-medium pb-0.5">Fecha Creacion</div>
-          <input disabled value={user.createdAt} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
-        </div>
-      </div>
-  
-    </div>
   );
 };
 
