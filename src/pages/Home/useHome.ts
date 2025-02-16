@@ -99,7 +99,7 @@ export const useHome = () => {
       const user = useAuthStore.getState().user;
       if (user) {
         // Validar si la contraseña es igual a la cédula
-        if (data.password === user.cedula) {
+        if (data.password === user.cedula || data.password === user.nit) {
           await Swal.fire({
             title: "¡Atención!",
             html: `

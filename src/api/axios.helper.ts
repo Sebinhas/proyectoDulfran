@@ -3,7 +3,8 @@ import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-export const BASE_URL = "https://7dca-2800-e2-9c00-398-5592-146a-4321-6eb0.ngrok-free.app/api";
+export const BASE_URL =
+  "https://7dca-2800-e2-9c00-398-5592-146a-4321-6eb0.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -431,18 +432,6 @@ export const getCurrentProfile = async (token: string): Promise<any> => {
   }
 };
 
-
-export const updateClient = async (data: any) => {
-  
-  try {
-    const response = await axiosInstance.patch(`/client/update-client/${data.cedula}`, data);
-    return response.data;
-  } catch (error: any) {
-    console.error("Error al actualizar cliente:", error);
-    throw error;
-  }
-};
-
 interface PaymentStatusResponse {
   id: string;
   wompi_transaction_id: string;
@@ -549,12 +538,9 @@ export const createNequiPayment = async (
   }
 };
 
-
 export const getPaymentsHistory = async (invoice_id: string) => {
   try {
-    const response = await axiosInstance.get(
-      `/payments/invoice/${invoice_id}`
-    );
+    const response = await axiosInstance.get(`/payments/invoice/${invoice_id}`);
     return response.data;
   } catch (error: any) {
     console.error("Error al obtener el historial de pagos:", error);
@@ -563,13 +549,36 @@ export const getPaymentsHistory = async (invoice_id: string) => {
   }
 };
 
+export const createCompany = async (data: any) => {
+  try {
+    const response = await axiosInstance.post("/admin/create-company", data);
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    if (error.response.data.message.length > 0) {
+      error.response.data.message.forEach((message: any) => {
+        toast.error(message);
+      });
+    } else {
+      toast.error("Ocurrió un error al crear la empresa");
+    }
+    throw error;
+  }
+};
 
+export const getCompany = async () => {
+  try {
+    const response = await axiosInstance.get("/admin/company");
+    return response.data;
+  } catch (error: any) {
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
 
 export const getInvoiceFinancial = async (invoice_id: string) => {
   try {
-    const response = await axiosInstance.get(
-      `/payments/invoiceFinancial/${invoice_id}`
-    );
+    const response = await axiosInstance.get(`/payments/invoice/${invoice_id}`);
     return response.data;
   } catch (error: any) {
     console.error("Error al obtener el historial de pagos:", error);
