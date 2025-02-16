@@ -1,5 +1,4 @@
 import { FaArrowLeft, FaCheckCircle, FaUniversity } from 'react-icons/fa'
-import { usePaymentContext } from '../../../../../context/PaymentContext'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -9,7 +8,6 @@ import { useNavigate } from 'react-router-dom'
 const PSEConfirmation = () => {
 
 
-  const { paymentData } = usePaymentContext()
   const navigate = useNavigate()
 
   return (

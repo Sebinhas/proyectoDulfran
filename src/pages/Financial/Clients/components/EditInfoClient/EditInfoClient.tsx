@@ -1,19 +1,11 @@
-import { useEffect } from "react";
 import { ClientsDTO } from "../../DTOClients"; 
-import { getClients } from "../../../../../api/axios.helper";
 import useEditInfoUser from "./useEditInfoClient";
 
 const EditInfoClient = ({ user, closeModalActionUploadClient }: { user: ClientsDTO | null, closeModalActionUploadClient: () => void }) => {
 
 
-    const { register, handleSubmit, errors, onSubmit } = useEditInfoUser();
+    const { register, handleSubmit, onSubmit } = useEditInfoUser();
 
-  useEffect(() => {
-    const fetchClients = async () => {
-      const clients = await getClients();
-    };
-    fetchClients();
-  }, []);
 
   if (!user) return null;
 

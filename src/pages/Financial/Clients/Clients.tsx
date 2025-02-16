@@ -5,7 +5,6 @@ import {
 } from "react-icons/io5";
 import useClients from "./useClients";
 import TableGlobal from "../../../components/TableData/TableGlobal";
-import { useEffect } from "react";
 import ViewDetailUser from "./components/ViewDetailClient/ViewDetailClient";
 import EditInfoClient from "./components/EditInfoClient/EditInfoClient";
 

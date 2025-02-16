@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
-import { FaEdit, FaEye, FaTrash, FaMoneyBill } from 'react-icons/fa';
+import { FaEdit, FaEye, FaMoneyBill } from 'react-icons/fa';
 import { MdDownload } from "react-icons/md";
 
 import { FaMessage } from "react-icons/fa6";
 import { Tooltip } from 'react-tooltip';
-import { SlOptions } from 'react-icons/sl';
 import { ClientsDTO } from '../../pages/Financial/Clients/DTOClients';
 
 interface Column {
@@ -54,12 +53,12 @@ const TableGlobal = ({
   data,
   itemsPerPage = 4,
   actions,
-  activateOptions,
   filters,
-  isLoading = false,
   emptyMessage = 'No hay datos disponibles',
 }: TableGlobalProps) => {
   const [currentPage, setCurrentPage] = useState(1);
+  // const [selectedRow, setSelectedRow] = useState<number | null>(null);
+  
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const [filterValues, setFilterValues] = useState({
     name: '',
@@ -161,8 +160,8 @@ const TableGlobal = ({
     };
   
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
   
 
   return (

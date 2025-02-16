@@ -62,8 +62,8 @@ const Contracts = () => {
         data={contracts || []}
         itemsPerPage={8}
         actions={{
-          view: (row) => ()=>{},
-          download: (row) => ()=>{},
+          // view: (row) => ()=>{},
+          // download: (row) => ()=>{},
         }}
         filters={{
           

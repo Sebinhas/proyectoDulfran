@@ -1,17 +1,9 @@
-import { useEffect } from "react";
 import { ClientsDTO } from "../../DTOClients"; 
-import { getClients } from "../../../../../api/axios.helper";
 
 
 const ViewDetailUser = ({ user }: { user: ClientsDTO | null }) => {
 
 
-  useEffect(() => {
-    const fetchClients = async () => {
-      const clients = await getClients();
-    };
-    fetchClients();
-  }, []);
 
   if (!user) return null;
 

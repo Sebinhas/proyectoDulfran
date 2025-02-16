@@ -1,34 +1,29 @@
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { useForm } from 'react-hook-form'
-import type { PersonalData } from '../usePasarela'
-import { useEffect } from 'react'
 
 interface PersonalDetailsProps {
   onNext: () => void
   onBack: () => void
-  selectedMethod: string
-  onPersonalDataChange: (data: PersonalData) => void
-  initialData: PersonalData
+  onPersonalDataChange: (data: any) => void
+  initialData: any
 }
 
 export function PersonalInfoDetails({ 
   onNext, 
   onBack, 
-  selectedMethod,
   onPersonalDataChange,
   initialData 
 }: PersonalDetailsProps) {
   const { 
-    register, 
     handleSubmit, 
     formState: { errors },
-  } = useForm<PersonalData>({
+  } = useForm({
     defaultValues: initialData
   })
 
 
 
-  const onSubmit = (data: PersonalData) => {
+  const onSubmit = (data: any) => {
     onPersonalDataChange(data)
     onNext()
   }
@@ -55,7 +50,7 @@ export function PersonalInfoDetails({
 
                 />
                 {errors.fullName && (
-                  <p className="mt-1 text-sm text-red-500">{errors.fullName.message}</p>
+                  <p className="mt-1 text-sm text-red-500">{errors.fullName.message as string}</p>
                 )}
 
               </div>
@@ -73,7 +68,7 @@ export function PersonalInfoDetails({
                 />
 
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+                  <p className="mt-1 text-sm text-red-500">{errors.email.message as string}</p>
                 )}
               </div>
             </div>
@@ -93,7 +88,7 @@ export function PersonalInfoDetails({
                 />
 
               {errors.phone && (
-                <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
+                <p className="mt-1 text-sm text-red-500">{errors.phone.message as string}</p>
               )}
 
               </div>
@@ -110,7 +105,7 @@ export function PersonalInfoDetails({
 
 
                 {errors.documentNumber && (
-                  <p className="mt-1 text-sm text-red-500">{errors.documentNumber.message}</p>
+                  <p className="mt-1 text-sm text-red-500">{errors.documentNumber.message as string}</p>
                 )}
               </div>
             </div>

@@ -11,9 +11,9 @@ import logo from "../../../../../../public/standarConectionLOGO.png";
 // import electronicSignature from '../../../../../assets/images/signature.jpg';
 import { priceFormatter } from "../../../../../helpers/priceFormatter.helper";
 // import { Invoices } from '../../useInvoices';
-import { DTOPayment } from "../../DTOPayment";
+import { DTOInvoices } from "../../DTOInvoices";
 
-const GenerateInvoice = ({ invoice }: { invoice: DTOPayment }) => {
+const GenerateInvoice = ({ invoice }: { invoice: DTOInvoices }) => {
   const getPaymentMessage = (status: string) => {
     switch (status?.toLowerCase()) {
       case "pagada":

@@ -2,20 +2,15 @@
 // Se enfoca en confirmar la transferencia 
 
 import { FaArrowLeft, FaCheckCircle, FaUniversity } from 'react-icons/fa'
-import type { PersonalData, PaymentInfo } from '../../usePasarela'
 
 interface BancolombiaTransferConfirmationProps {
   onBack: () => void
   onNext: () => void
-  personalData: PersonalData
-  paymentInfo: PaymentInfo
 }
 
 export function BancolombiaTransferConfirmation({ 
   onBack, 
   onNext, 
-  personalData,
-  paymentInfo 
 }: BancolombiaTransferConfirmationProps) {
   return (
     <div className="w-full px-4 py-6">
@@ -35,19 +30,19 @@ export function BancolombiaTransferConfirmation({
               <dl className="grid grid-cols-1 gap-3">
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Nombre:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.nombre}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Nombre</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Email:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.email}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Email</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Teléfono:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.telefono}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Telefono</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Documento:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.documento}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Documento</dd>
                 </div>
               </dl>
             </div>
@@ -59,7 +54,7 @@ export function BancolombiaTransferConfirmation({
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Monto a transferir:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    ${paymentInfo.monto.toLocaleString('es-CO')}
+                    $100.000
                   </dd>
                 </div>
                 <div className="flex justify-between">
@@ -72,7 +67,7 @@ export function BancolombiaTransferConfirmation({
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Referencia:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{paymentInfo.referencia}</dd>
+                  <dd className="text-sm font-medium text-gray-900">1234567890</dd>
                 </div>
               </dl>
             </div>

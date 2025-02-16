@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import { ClientsDTO } from "../../DTOClients";
 import { updateClient } from "../../../../../api/axios.helper";
 import Swal from "sweetalert2";
 
@@ -7,7 +6,6 @@ const useEditInfoUser = (
     setIsLoading?: (value: boolean) => void,
     loading?: boolean,
     closeModalActionEditInfoClient?: () => void,
-    client?: any
 ) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 

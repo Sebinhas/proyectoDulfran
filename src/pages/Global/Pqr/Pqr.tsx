@@ -1,5 +1,4 @@
 import { useState } from "react";
-import usePqr from "./usePqr.ts";
 import PqrCard from "./Components/PqrCard/PqrCard.tsx";
 import PqrDetail from "./Components/PqrDetails/PqrDetails.tsx";
 import NewPqrModal from "./Components/NewPqrModal/NewPqrModal.tsx";
@@ -93,7 +92,6 @@ export const mockPqrs = [
 ];
 
 const Pqr = () => {
-  const { pqr } = usePqr();
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [isNewPqrModalOpen, setIsNewPqrModalOpen] = useState(false);
 

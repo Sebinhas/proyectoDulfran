@@ -27,7 +27,7 @@ const useClients = () => {
   } = Modal({ title: "Subir Usuarios" });
   const {
     toggleModal: toggleModalViewDetailClient,
-    closeModalAction: closeModalActionViewDetailClient,
+    // closeModalAction: closeModalActionViewDetailClient,
     Render: RenderViewDetailClient,
   } = Modal({ title: "Datos Personales" });
 
