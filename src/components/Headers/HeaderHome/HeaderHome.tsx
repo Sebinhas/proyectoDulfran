@@ -23,6 +23,9 @@ const HeaderHome = () => {
                 {link.name}
               </div>
             ))}
+            <div onClick={() => navigate("/subscribe")} className="text-lg hover:text-gray-700 cursor-pointer">
+              Subscribirse
+            </div>
           </div>
 
           <div className="items-center gap-4 hidden lg:flex">

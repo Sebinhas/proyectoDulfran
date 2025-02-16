@@ -1,15 +1,16 @@
 import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
-export const BASE_URL = "http://localhost:3000/api";
+export const BASE_URL =
+  "https://7dca-2800-e2-9c00-398-5592-146a-4321-6eb0.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     "ngrok-skip-browser-warning": "true",
     "Content-Type": "application/json",
-    Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTYxMTM0MTI0NCIsInVzZXJuYW1lIjoiQ0FNSUxPMTI0NCIsInByb2ZpbGVfdHlwZSI6ImZpbmFuY2llcm8iLCJhZG1pbl9uaXQiOiI5MDE4NDQ0MjctMSIsImlhdCI6MTczOTIzOTk1NSwiZXhwIjoxNzM5MjQzNTU1fQ.6fb2mR_CJSBE2nEI1eYN3tYd1KP_dWAn0rw7w4xg56E"}`,
   },
 });
 
@@ -20,6 +21,34 @@ axiosInstance.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Agregar el interceptor de respuesta
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error.code === "ECONNREFUSED" ||
+      error.message.includes("Network Error")
+    ) {
+      toast.error(
+        "No se pudo conectar con el servidor. Por favor, verifica que esté activo."
+      );
+    }
+
+    if (error.response?.data?.statusCode === 400) {
+      toast.error(error.response.data.message);
+    }
+
+    if (error.response?.status === 401) {
+      // Limpiar el estado de autenticación
+      toast.error("Tu sesión ha expirado");
+      useAuthStore.getState().logout();
+      // Redirigir al login
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Obtener lista de clientes de una empresa
 export const getClients = async () => {
@@ -54,7 +83,7 @@ export const getClients = async () => {
     }));
   } catch (error: any) {
     console.error("Error al obtener clientes:", error);
-    toast.error(error.response.data.message);
+    toast.error("Hubo un error al obtener clientes");
     return [];
   }
 };
@@ -87,11 +116,8 @@ export const getInvoices = async () => {
       admin_nit: item.admin?.nit || "",
     }));
   } catch (error: any) {
-    if (error.response.data?.statusCode === 401) {
-      toast.error("Tu sesión ha expirado");
-    }
-    console.error("Error al obtener facturas:", error);
-    return [];
+    toast.error("Hubo un error al obtener las facturas");
+    throw error;
   }
 };
 
@@ -162,9 +188,7 @@ export const getUsers = async () => {
       updatedAt: item.updatedAt || "",
     }));
   } catch (error: any) {
-    if (error.response.data?.statusCode === 401) {
-      toast.error("Tu sesión ha expirado");
-    }
+    toast.error("Hubo un error al obtener usuarios");
     console.error("Error al obtener usuarios:", error);
     return [];
   }
@@ -181,10 +205,38 @@ export const createUser = async (data: any) => {
   }
 };
 
-export const updateUser = async (data: any) => {
+export const updateUser = async (data: any, cedula: string) => {
   try {
     const response = await axiosInstance.patch(
-      `/admin/update-admin-user/${data.cedula}`,
+      `/admin/update-admin-user/${cedula}`,
+      data
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al actualizar usuario:", error);
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
+export const updateUserProfileAdmin = async (data: any) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/admin/update-profile-admin-user`,
+      data
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al actualizar usuario:", error);
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
+export const updateUserProfileClient = async (data: any) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/client/update-profile-client`,
       data
     );
     return response.data;
@@ -196,30 +248,78 @@ export const updateUser = async (data: any) => {
 };
 
 export const uploadExcel = async (file: File) => {
-  const currentNit = useAuthStore.getState().user?.nit;
   const formData = new FormData();
-
   formData.append("file", file);
 
   try {
-    const response = await axiosInstance.post(
-      `/client/companies/${currentNit}/massive`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    const errors = response?.data?.errors;
-    errors.forEach((error: any) => {
-      toast.warning(error.type);
+    const response = await axiosInstance.post(`/client/massive`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
-    // console.log("Respuesta:", response.data);
-    return response.data;
+    // Agrupar errores por cédula solo si existen errores
+    const errorsByClient =
+      response.data.details?.errors?.reduce((acc: any, curr: any) => {
+        if (!acc[curr.client_cedula]) {
+          acc[curr.client_cedula] = [];
+        }
+        acc[curr.client_cedula].push(curr.error);
+        return acc;
+      }, {}) || {};
+
+    return {
+      message: response.data.message,
+      createdClients: response.data.details?.createdClients || [],
+      successCount: response.data.details?.createdClients > 0 ? 1 : 0,
+      errorCount: response.data.details?.errors?.length || 0,
+      errors: errorsByClient,
+    };
   } catch (error: any) {
-    toast.error(error.response.data.message);
-    throw error;
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Error al subir el archivo";
+    toast.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+
+// Subir excel de facturas
+export const uploadInvoiceExcel = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await axiosInstance.post(`/invoices/massive`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    // Agrupar errores por cédula solo si existen errores
+    const errorsByClient =
+      response.data.details?.errors?.reduce((acc: any, curr: any) => {
+        if (!acc[curr.client_cedula]) {
+          acc[curr.client_cedula] = [];
+        }
+        acc[curr.client_cedula].push(curr.error);
+        return acc;
+      }, {}) || {};
+
+    return {
+      message: response.data.message,
+      createdInvoices: response.data.details?.createdInvoices || [],
+      successCount: response.data.details?.createdInvoices > 0 ? 1 : 0,
+      errorCount: response.data.details?.errors?.length || 0,
+      errors: errorsByClient,
+    };
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "Error al subir el archivo";
+    toast.error(errorMessage);
+    throw new Error(errorMessage);
   }
 };
 
@@ -277,6 +377,24 @@ export const login = async (data: { username: string; password: string }) => {
   return response.data;
 };
 
+export const getBancsPse = async (): Promise<any> => {
+  try {
+    const response = await axiosInstance.get("/pse/banks", {
+      headers: {
+        Authorization: `Bearer pub_test_bLkXQsR8dmrSTeoPCJJzGLckXmAHYLIY`,
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    if (error.response.data?.statusCode === 401) {
+      toast.error("Tu sesión ha expirado");
+    }
+    console.error("Error al obtener perfil:", error);
+    return [];
+  }
+};
+
 export const getCurrentProfile = async (token: string): Promise<any> => {
   try {
     const response = await axiosInstance.get("/auth/profile", {
@@ -311,5 +429,160 @@ export const getCurrentProfile = async (token: string): Promise<any> => {
     }
     console.error("Error al obtener perfil:", error);
     return [];
+  }
+};
+
+interface PaymentStatusResponse {
+  id: string;
+  wompi_transaction_id: string;
+  created_at: string;
+  amount: string;
+  reference: string;
+  buyer_email: string;
+  customer_email: string;
+  status: string;
+  buyer_phone: string;
+  phone_number: string;
+  legal_id: string;
+  buyer_name: string;
+  customer_name: string;
+  legal_id_type: string;
+  payment_method: {
+    type: string;
+    phone_number: string;
+    payment_description: string;
+  };
+}
+
+// Funciones de API
+export const paymentAPI = {
+  checkStatus: async (reference: string) => {
+    try {
+      const { data } = await axiosInstance.get<PaymentStatusResponse>(
+        `/payments/status/${reference}`
+      );
+
+      if (data.status !== "PENDING") {
+        const formattedData = {
+          payment_id: data.id,
+          wompi_data: {
+            id: data.wompi_transaction_id || data.reference,
+            created_at: data.created_at || new Date().toISOString(),
+            amount_in_cents: parseFloat(data.amount || "0") * 100,
+            reference: data.reference,
+            customer_email: data.buyer_email || data.customer_email,
+            status: data.status,
+            payment_method: {
+              type: "NEQUI",
+              phone_number:
+                data.buyer_phone || data.phone_number || "0000000000",
+              payment_description:
+                data.payment_method?.payment_description || "Pago Nequi",
+            },
+            customer_data: {
+              legal_id: data.legal_id || "No disponible",
+              full_name:
+                data.buyer_name || data.customer_name || "No disponible",
+              phone_number:
+                data.buyer_phone || data.phone_number || "0000000000",
+              legal_id_type: data.legal_id_type || "CC",
+            },
+          },
+        };
+        return { status: data.status, data: formattedData };
+      }
+      return { status: "PENDING", data: null };
+    } catch (error) {
+      console.error("Error checking payment status:", error);
+      return { status: "ERROR", data: null };
+    }
+  },
+};
+
+interface NequiPaymentRequest {
+  invoice_id: string;
+  amount_in_cents: number;
+  customer_email: string;
+  buyer_name: string;
+  buyer_phone: string;
+  legal_id: string;
+  legal_id_type: string;
+  user_type: string;
+  payment_method: {
+    type: string;
+    phone_number: string;
+  };
+  payment_description: string;
+}
+
+export const createNequiPayment = async (
+  paymentRequest: NequiPaymentRequest
+) => {
+  try {
+    const response = await axiosInstance.post("/payments", paymentRequest);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message
+      ? Array.isArray(error.response.data.message)
+        ? error.response.data.message.join(", ")
+        : error.response.data.message
+      : "Error desconocido";
+
+    Swal.fire({
+      title: "Error al crear el pago",
+      text: errorMessage,
+      icon: "error",
+    });
+
+    throw error;
+  }
+};
+
+export const getPaymentsHistory = async (invoice_id: string) => {
+  try {
+    const response = await axiosInstance.get(`/payments/invoice/${invoice_id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al obtener el historial de pagos:", error);
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
+export const createCompany = async (data: any) => {
+  try {
+    const response = await axiosInstance.post("/admin/create-company", data);
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    if (error.response.data.message.length > 0) {
+      error.response.data.message.forEach((message: any) => {
+        toast.error(message);
+      });
+    } else {
+      toast.error("Ocurrió un error al crear la empresa");
+    }
+    throw error;
+  }
+};
+
+export const getCompany = async () => {
+  try {
+    const response = await axiosInstance.get("/admin/company");
+    return response.data;
+  } catch (error: any) {
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
+export const getInvoiceFinancial = async (invoice_id: string) => {
+  try {
+    const response = await axiosInstance.get(`/payments/invoice/${invoice_id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al obtener el historial de pagos:", error);
+    toast.error(error.response.data.message);
+    throw error;
   }
 };

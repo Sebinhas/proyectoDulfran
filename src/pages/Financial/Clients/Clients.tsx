@@ -5,9 +5,8 @@ import {
 } from "react-icons/io5";
 import useClients from "./useClients";
 import TableGlobal from "../../../components/TableData/TableGlobal";
-import { useEffect } from "react";
 import ViewDetailUser from "./components/ViewDetailClient/ViewDetailClient";
-import EditInfoUser from "./components/EditInfoClient/EditInfoClient";
+import EditInfoClient from "./components/EditInfoClient/EditInfoClient";
 
 const Clients = () => {
   const {
@@ -16,14 +15,14 @@ const Clients = () => {
     handleView,
     handleEdit,
     handleMessage,
-    handleDownload,
-    toggleModalUploadUser,
-    closeModalActionUploadUser,
-    RenderUploadUser,
-    RenderViewDetailUser,
-    RenderEditInfoUser,
+    toggleModalUploadClient,
+    closeModalActionEditInfoClient,
+    RenderUploadClient,
+    RenderViewDetailClient,
+    RenderEditInfoClient,
     user,
     handleFileChange,
+    isLoading,
     handleFileUpload,
     selectedFile,
     setSelectedFile,
@@ -37,7 +36,7 @@ const Clients = () => {
             Lista de Clientes
           </div>
           <div
-            onClick={() => toggleModalUploadUser()}
+            onClick={() => toggleModalUploadClient()}
             className="w-52 h-12 flex flex-row items-center justify-center gap-2 rounded-md cursor-pointer select-none hover:bg-gray-600 bg-gray-500"
           >
             <IoAddSharp className="text-3xl text-white" />
@@ -45,35 +44,41 @@ const Clients = () => {
           </div>
         </div>
       </div>
-
-      <TableGlobal
-        columns={columns}
-        data={clients ?? []}
-        itemsPerPage={8}
-        actions={{
-          view: (row) => handleView(row),
-          download: (row) => handleDownload(row),
-          edit: (row) => handleEdit(row),
-          message: (row) => handleMessage(row),
-        }}
-        filters={{
-          username: true,
-          status: true,
-        }}
-      />
-
-      <RenderViewDetailUser>
-        <ViewDetailUser user={user} />
-      </RenderViewDetailUser>
-
-      <RenderEditInfoUser>
-        <EditInfoUser
-          user={user}
-          closeModalActionUploadUser={closeModalActionUploadUser}
+      {isLoading ? (
+        <div className="w-full h-64 flex flex-col items-center justify-center">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mb-4"></div>
+          <p className="text-lg text-gray-600 font-medium">Cargando datos...</p>
+          <p className="text-sm text-gray-500">Por favor, espere un momento</p>
+        </div>
+      ) : (
+        <TableGlobal
+          columns={columns}
+          data={clients ?? []}
+          itemsPerPage={6}
+          actions={{
+            view: (row) => handleView(row),
+            edit: (row) => handleEdit(row),
+            message: (row) => handleMessage(row),
+          }}
+          filters={{
+            username: true,
+            status: true,
+          }}
         />
-      </RenderEditInfoUser>
+      )}
 
-      <RenderUploadUser>
+      <RenderViewDetailClient>
+        <ViewDetailUser user={user} />
+      </RenderViewDetailClient>
+
+      <RenderEditInfoClient>
+        <EditInfoClient
+          user={user}
+          closeModalActionUploadClient={closeModalActionEditInfoClient}
+        />
+      </RenderEditInfoClient>
+
+      <RenderUploadClient>
         <div className="w-full h-96 flex justify-center items-center gap-4">
           <div className="w-full flex flex-col justify-center items-center gap-4">
             <div className="font-medium text-gray-600">
@@ -130,8 +135,6 @@ const Clients = () => {
                 <button
                   className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
                   onClick={() => {
-                    // Aquí puedes agregar la lógica para procesar el archivo
-                    // console.log('Procesando archivo:', selectedFile);
                     handleFileUpload(selectedFile);
                   }}
                 >
@@ -141,7 +144,7 @@ const Clients = () => {
             )}
           </div>
         </div>
-      </RenderUploadUser>
+      </RenderUploadClient>
     </div>
   );
 };

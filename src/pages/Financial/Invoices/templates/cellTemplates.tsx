@@ -9,12 +9,19 @@ export const numberInvoicesCell = (row: DTOInvoices): React.ReactNode => (
   </div>
 );
 
+export const FirstNameCell = (row: DTOInvoices): React.ReactNode => (
+  <div className="flex items-center">
+    <span className="text-gray-900">
+      {row.client_first_name} {row.client_second_name}
+    </span>
+  </div>
+);
+
 export const NumberContractCell = (row: DTOInvoices): React.ReactNode => (
   <div className="flex items-center gap-2">
     <div className="font-medium text-gray-900">{row.period_start}</div>
   </div>
 );
-
 
 export const TotalCell = (row: DTOInvoices): React.ReactNode => (
   <div className="flex items-center gap-2">

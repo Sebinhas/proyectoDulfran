@@ -59,22 +59,30 @@ const Users = () => {
           </div>
         </div>
       </div>
-      <TableGlobal
-        columns={columns}
-        data={dataUsers ?? []}
-        itemsPerPage={8}
-        actions={{
-          view: (row) => handleView(row),
-          download: (row) => handleDownload(row),
-          edit: (row) => handleEdit(row),
-          // message: (row) => handleMessage(row)
-        }}
-        filters={{
-          username: true,
-          profile_type: true,
-          status: true,
-        }}
-      />
+      {isLoading ? (
+        <div className="w-full h-64 flex flex-col items-center justify-center">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mb-4"></div>
+          <p className="text-lg text-gray-600 font-medium">Cargando datos...</p>
+          <p className="text-sm text-gray-500">Por favor, espere un momento</p>
+        </div>
+      ) : (
+        <TableGlobal
+          columns={columns}
+          data={dataUsers ?? []}
+          itemsPerPage={8}
+          actions={{
+            view: (row) => handleView(row),
+            download: (row) => handleDownload(row),
+            edit: (row) => handleEdit(row),
+            // message: (row) => handleMessage(row)
+          }}
+          filters={{
+            username: true,
+            profile_type: true,
+            status: true,
+          }}
+        />
+      )}
 
       <RenderViewDetailUser>
         <ViewDetailUser user={user} />

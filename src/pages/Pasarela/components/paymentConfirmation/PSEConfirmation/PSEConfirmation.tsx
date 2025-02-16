@@ -1,13 +1,15 @@
 import { FaArrowLeft, FaCheckCircle, FaUniversity } from 'react-icons/fa'
-import type { PersonalData } from '../../usePasarela'
+import { useNavigate } from 'react-router-dom'
 
-interface PSEConfirmationProps {
-  onBack: () => void
-  onNext: () => void
-  personalData: PersonalData
-}
 
-export function PSEConfirmation({ onBack, onNext, personalData }: PSEConfirmationProps) {
+
+
+
+const PSEConfirmation = () => {
+
+
+  const navigate = useNavigate()
+
   return (
     <div className="w-full px-4 py-6">
       <div className="mx-auto w-full max-w-2xl">
@@ -47,14 +49,16 @@ export function PSEConfirmation({ onBack, onNext, personalData }: PSEConfirmatio
             <div className="mt-8 flex justify-between">
               <button
                 type="button"
-                onClick={onBack}
+                onClick={() => navigate('/dashboard/payments/payment_method')}
                 className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               >
                 <FaArrowLeft className="mr-2 h-4 w-4" />
                 Atrás
               </button>
               <button
-                onClick={onNext}
+                onClick={() => {
+                  
+                }}
                 className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
                 Ir al banco
@@ -67,3 +71,5 @@ export function PSEConfirmation({ onBack, onNext, personalData }: PSEConfirmatio
     </div>
   )
 } 
+
+export default PSEConfirmation

@@ -27,6 +27,7 @@ interface AuthState {
   isAuthenticated: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  updateUser: (userData: Partial<Profile>) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -39,10 +40,8 @@ export const useAuthStore = create<AuthState>()(
       login: async (username: string, password: string) => {
         try {
           const response = await login({ username, password });
-          // console.log(response)
           if (response) {
             const profile = await getCurrentProfile(response.token);
-            // console.log(profile)
             set({
               user: profile,
               token: response.token,
@@ -62,6 +61,12 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
         });
       },
+
+      updateUser: (userData: Partial<Profile>) => 
+        set((state) => ({
+            ...state,
+            user: state.user ? { ...state.user, ...userData } : null
+        })),
     }),
     {
       name: "auth-storage",

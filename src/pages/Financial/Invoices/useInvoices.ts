@@ -1,10 +1,19 @@
 import { useEffect, useState } from "react";
-import { CreatedAtCell, StatusCell, TotalCell } from "./templates/cellTemplates";
+import {
+  CreatedAtCell,
+  FirstNameCell,
+  StatusCell,
+  TotalCell,
+} from "./templates/cellTemplates";
 import { toast } from "react-toastify";
 import Modal from "../../../components/Modal/Modal";
 import Swal from "sweetalert2";
-import { uploadExcel, getInvoices } from "../../../api/axios.helper";
-import { numberInvoicesCell, PaymentPeriodCell } from "./templates/cellTemplates";
+import { uploadInvoiceExcel, getInvoices, getInvoiceFinancial } from "../../../api/axios.helper";
+import {
+  numberInvoicesCell,
+  PaymentPeriodCell,
+} from "./templates/cellTemplates";
+import { DTOInvoices } from "./DTOInvoices";
 export interface InvoiceData {
   numberInvoice: number;
   user: string;
@@ -15,15 +24,26 @@ export interface InvoiceData {
 
 const useInvoices = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [invoices, setInvoices] = useState<any[]>([]);  
+  const [selectedPayment, setSelectedPayment] = useState<any>(null);
+  const [invoiceDetail, setInvoiceDetail] = useState<any>(null);
+  const [showDetail, setShowDetail] = useState(false);
+  
+  
   const {
     toggleModal: toggleModalUploadInvoice,
     closeModalAction: closeModalActionUploadInvoice,
     Render: RenderUploadInvoice,
   } = Modal({ title: "Subir Facturas" });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [invoices, setInvoices] = useState<any[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const {
+    toggleModal: toggleModalDownloadInvoice,
+    closeModalAction: closeModalActionDownloadInvoice,
+    Render: RenderDownloadInvoice,
+  } = Modal({ title: "Descargar Factura" });
+
+
+
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -32,13 +52,8 @@ const useInvoices = () => {
         if (response) {
           setInvoices(response);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching invoices:", error);
-        Swal.fire({
-          title: "Error",
-          text: "Hubo un error al cargar los datos",
-          icon: "error",
-        });
       } finally {
         setIsLoading(false);
       }
@@ -58,6 +73,11 @@ const useInvoices = () => {
     //   accessor: 'numberContract',
     //   cell: NumberContractCell
     // },
+    {
+      header: "Cliente",
+      accessor: "client_first_name",
+      cell: FirstNameCell,
+    },
     {
       header: "Estado",
       accessor: "status",
@@ -99,66 +119,191 @@ const useInvoices = () => {
 
   const handleFileUpload = async (file: File) => {
     try {
-      // Mostrar loading inicial
+      const fileSizeInMB = file.size / (1024 * 1024);
+      const estimatedMinutes = Math.ceil(fileSizeInMB * 0.5);
+      let timeLeft = estimatedMinutes * 60; // Convertir a segundos
+
       Swal.fire({
-        title: "Subiendo archivo",
-        text: "Procesando usuarios...",
+        title: "Procesando Facturas",
+        html: `
+          <div class="flex flex-col items-center gap-4">
+            <div class="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+            <div class="text-sm text-gray-500">
+              Tiempo estimado: ${estimatedMinutes} ${
+          estimatedMinutes === 1 ? "minuto" : "minutos"
+        }
+            <div class="text-sm text-gray-600" id="timeLeft">
+              Tiempo restante: ${estimatedMinutes} ${
+          estimatedMinutes === 1 ? "minuto" : "minutos"
+        } y 0 segundos
+            </div>
+          </div>
+        `,
         didOpen: () => {
-          Swal.showLoading();
+          const timeLeftText = document.getElementById("timeLeft");
+
+          const timer = setInterval(() => {
+            timeLeft -= 1;
+            if (timeLeft > 0) {
+              if (timeLeftText) {
+                timeLeftText.textContent = `Tiempo restante: ${Math.floor(
+                  timeLeft / 60
+                )} ${
+                  Math.floor(timeLeft / 60) === 1 ? "minuto" : "minutos"
+                } y ${timeLeft % 60} segundos`;
+              }
+            } else {
+              clearInterval(timer);
+            }
+          }, 1000);
         },
         allowOutsideClick: false,
         allowEscapeKey: false,
         showConfirmButton: false,
         showCancelButton: true,
         cancelButtonText: "Cancelar",
+        customClass: {
+          popup: "rounded-lg",
+          container: "p-4",
+          cancelButton:
+            "px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300",
+        },
       });
 
-      // Realizar el post
-      const result = await uploadExcel(file);
-
-      // Cerrar el loading inicial
+      const result = await uploadInvoiceExcel(file);
       Swal.close();
 
-      if (result) {
-        // Mostrar resumen del proceso
-        await Swal.fire({
-          title: "¡Proceso Completado!",
-          html: `
-                      <p>${result.message}</p>
-                      <p>Total procesados: ${result.totalProcessed}</p>
-                      <p>Exitosos: ${result.successCount}</p>
-                      <p>Errores: ${result.errorCount}</p>
-                  `,
-          icon: "success",
-          confirmButtonText: "Aceptar",
-        });
+      const errorsHtml = Object.entries(result.errors)
+        .map(
+          ([cedula, errors]) => `
+          <div class="mt-2 p-3 bg-red-50 rounded-lg">
+            <p class="font-semibold text-red-700">Cliente ${cedula}:</p>
+            <ul class="list-disc list-inside mt-1">
+              ${(errors as string[])
+                .map(
+                  (error: string) => `
+                <li class="text-red-600 text-sm">${error}</li>
+              `
+                )
+                .join("")}
+            </ul>
+          </div>
+        `
+        )
+        .join("");
 
-        closeModalActionUploadInvoice();
-        setSelectedFile(null);
+      await Swal.fire({
+        title: "Proceso Completado",
+        html: `
+          <div class="text-left">
+            <div class="mb-4">
+              <div class="grid grid-cols-2 gap-4 mt-3">
+                <div class="p-3 bg-green-50 rounded-lg">
+                  <p class="text-green-700">Facturas creadas: ${
+                    result.createdInvoices > 0 ? result.createdInvoices : "0"
+                  }</p>
+                </div>
+                <div class="p-3 bg-red-50 rounded-lg">
+                  <p class="text-red-700">Errores: ${result.errorCount}</p>
+                </div>
+              </div>
+            </div>
+            ${
+              result.errorCount > 0
+                ? `
+              <div class="mt-4">
+                <h4 class="text-lg font-semibold text-red-600 mb-2">Detalles de errores:</h4>
+                ${errorsHtml}
+              </div>
+            `
+                : ""
+            }
+          </div>
+        `,
+        icon: result.errorCount > 0 ? "warning" : "success",
+        confirmButtonText: "Aceptar",
+        customClass: {
+          container: "p-4",
+          popup: "rounded-lg",
+          confirmButton:
+            "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded",
+        },
+      });
 
-        // Actualizar la lista de clientes
-        try {
-          const response = await getInvoices();
-          if (response) {
-            setInvoices(response);
-          }
-        } catch (error) {
-          console.error("Error al actualizar los datos:", error);
-          Swal.fire({
-            title: "Error",
-            text: "Error al actualizar la lista de clientes",
-            icon: "error",
-          });
-        }
+      closeModalActionUploadInvoice();
+      setSelectedFile(null);
+
+      // Actualizar la lista
+      const response = await getInvoices();
+      if (response) {
+        setInvoices(response);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error al subir archivo:", error);
       Swal.fire({
         title: "Error",
-        text: "Hubo un error al procesar el archivo",
+        text: error.message || "Hubo un error al procesar el archivo",
         icon: "error",
       });
     }
+  };
+
+  const handleViewInvoice = async (row: DTOInvoices) => {
+    
+    try {
+      const response = await getInvoiceFinancial(row.no_invoice);
+      const historyData = response;
+      // Si hay datos, los usamos directamente ya que vienen en el formato correcto
+      if (historyData) {
+        setSelectedPayment(historyData);
+        setShowDetail(true);
+        return;
+      }
+
+      // Si no hay datos, creamos una estructura base
+      const defaultData = {
+        invoice_id: row.no_invoice,
+        total_attempts: 0,
+        latest_status: row.status.toUpperCase(),
+        latest_attempt: null,
+        payment_history: {
+          approved: [],
+          pending: [],
+          failed: [],
+        },
+        all_payments: [],
+      };
+
+      setSelectedPayment(defaultData);
+      setShowDetail(true);
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error al obtener los detalles del pago");
+
+      // En caso de error, mostramos una estructura base
+      const errorData = {
+        invoice_id: row.no_invoice,
+        total_attempts: 0,
+        latest_status: row.status.toUpperCase(),
+        latest_attempt: null,
+        payment_history: {
+          approved: [],
+          pending: [],
+          failed: [],
+        },
+        all_payments: [],
+      };
+
+      setSelectedPayment(errorData);
+      setShowDetail(true);
+    }
+  };
+
+
+
+  const handleBack = () => {
+    setShowDetail(false);
+    setSelectedPayment(null);
   };
 
   const handleView = (row: InvoiceData): void => {
@@ -166,7 +311,17 @@ const useInvoices = () => {
     // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
-  
+  const handleDownload = (row: InvoiceData): void => {
+    toast.success(`Orden vista, estado: ${row.status}`);
+    toggleModalDownloadInvoice();
+    setInvoiceDetail(row);
+  };
+
+  const handleEdit = (row: InvoiceData): void => {
+    toast.success(`Orden vista, estado: ${row.status}`);
+    // navigate(`/dashboard/ordenes/${row.id}`);
+  };
+
   return {
     columns,
     isLoading,
@@ -179,6 +334,16 @@ const useInvoices = () => {
     handleFileChange,
     handleFileUpload,
     invoices,
+    handleDownload,
+    handleEdit,
+    showDetail,
+    handleViewInvoice,
+    selectedPayment,
+    handleBack,
+    toggleModalDownloadInvoice,
+    closeModalActionDownloadInvoice,
+    RenderDownloadInvoice,
+    invoiceDetail,
   };
 };
 

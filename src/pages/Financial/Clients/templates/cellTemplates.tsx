@@ -1,6 +1,5 @@
 // Nuevo archivo para los templates JSX
 import React from 'react';
-import { priceFormatter } from '../../../../helpers/priceFormatter.helper';
 // Nuevo archivo para tipos
 export interface Clients {
   userName: string;

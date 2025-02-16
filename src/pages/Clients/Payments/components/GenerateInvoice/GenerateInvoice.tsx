@@ -1,4 +1,3 @@
-import React from "react";
 import {
   PDFViewer,
   Document,
@@ -107,10 +106,7 @@ const GenerateInvoice = ({ invoice }: { invoice: DTOPayment }) => {
             <View style={styles.totalSection}>
               <Text style={styles.totalLabel}>Total a Pagar:</Text>
               <Text style={styles.totalAmount}>
-                ${" "}
-                {invoice.status !== "pagada"
-                  ? priceFormatter(Number(invoice.amount))
-                  : "0,00"}
+                $ {priceFormatter(Number(invoice.amount))}
               </Text>
             </View>
 

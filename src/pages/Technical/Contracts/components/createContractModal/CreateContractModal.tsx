@@ -29,14 +29,14 @@ const CreateContractModal: React.FC<CreateContractModalProps> = ({ isOpen, onClo
     }));
   };
 
-  const convertToBase64 = async (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
-    });
-  };
+  // const convertToBase64 = async (file: File): Promise<string> => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result as string);
+  //     reader.onerror = error => reject(error);
+  //   });
+  // };
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -59,21 +59,19 @@ const CreateContractModal: React.FC<CreateContractModalProps> = ({ isOpen, onClo
     try {
       setIsSubmitting(true);
 
-      const imagesBase64 = await Promise.all(
-        installationImages.map(image => convertToBase64(image))
-      );
+      // const imagesBase64 = await Promise.all(
+      //   installationImages.map(image => convertToBase64(image))
+      // );
 
-      const videoBase64 = await convertToBase64(installationVideo!);
+      // const videoBase64 = await convertToBase64(installationVideo!);
 
-      const payload = {
-        cedula: formData.cedula,
-        planId: formData.planId,
-        signature: signatureData,
-        installationImages: imagesBase64,
-        installationVideo: videoBase64
-      };
-
-      // console.log('Payload listo para enviar:', payload);
+      // const payload = {
+      //   cedula: formData.cedula,
+      //   planId: formData.planId,
+      //   signature: signatureData,
+      //   installationImages: imagesBase64,
+      //   installationVideo: videoBase64
+      // };
       
     } catch (error) {
       console.error('Error al procesar el formulario:', error);

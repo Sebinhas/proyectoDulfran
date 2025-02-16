@@ -1,6 +1,12 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaCheckCircle, FaTimesCircle, FaDownload, FaPrint } from 'react-icons/fa';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  FaCheckCircle,
+  FaTimesCircle,
+  FaDownload,
+  FaPrint,
+} from "react-icons/fa";
+import { motion } from "framer-motion";
 
 interface PaymentReceiptProps {
   paymentData: {
@@ -15,6 +21,7 @@ interface PaymentReceiptProps {
       payment_method: {
         type: string;
         phone_number: string;
+        payment_description: string;
       };
       customer_data: {
         legal_id: string;
@@ -30,50 +37,44 @@ const PaymentReceipt: React.FC<PaymentReceiptProps> = ({ paymentData }) => {
   const navigate = useNavigate();
 
   const formatAmount = (amountInCents: number) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP'
+    return new Intl.NumberFormat("es-CO", {
+      style: "currency",
+      currency: "COP",
     }).format(amountInCents / 100);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-CO', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("es-CO", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const getStatusConfig = (status: string) => {
     switch (status.toUpperCase()) {
-      case 'APPROVED':
+      case "APPROVED":
         return {
-          icon: <FaCheckCircle className="mx-auto h-16 w-16 text-green-500" />,
-          title: '¡Pago Exitoso!',
-          titleColor: 'text-green-600',
-          message: 'Tu pago ha sido procesado correctamente',
-          statusText: 'Aprobado',
-          statusColor: 'text-green-600'
+          icon: <FaCheckCircle className="w-12 h-12 text-white" />,
+          title: "¡Pago exitoso!",
+          bgColor: "bg-emerald-400",
+          textColor: "text-emerald-600",
         };
-      case 'DECLINED':
+      case "DECLINED":
         return {
-          icon: <FaTimesCircle className="mx-auto h-16 w-16 text-red-500" />,
-          title: 'Pago Declinado',
-          titleColor: 'text-red-600',
-          message: 'El pago no pudo ser procesado',
-          statusText: 'Declinado',
-          statusColor: 'text-red-600'
+          icon: <FaTimesCircle className="w-12 h-12 text-white" />,
+          title: "Pago Declinado",
+          bgColor: "bg-red-400",
+          textColor: "text-red-600",
         };
       default:
         return {
-          icon: <FaTimesCircle className="mx-auto h-16 w-16 text-yellow-500" />,
-          title: 'Estado del Pago',
-          titleColor: 'text-yellow-600',
-          message: `Estado: ${status}`,
-          statusText: status,
-          statusColor: 'text-yellow-600'
+          icon: <FaTimesCircle className="w-12 h-12 text-white" />,
+          title: "Estado del Pago",
+          bgColor: "bg-yellow-400",
+          textColor: "text-yellow-600",
         };
     }
   };
@@ -81,95 +82,120 @@ const PaymentReceipt: React.FC<PaymentReceiptProps> = ({ paymentData }) => {
   const statusConfig = getStatusConfig(paymentData.wompi_data.status);
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <div className="bg-white shadow-lg rounded-lg p-8">
-        {/* Encabezado */}
-        <div className="text-center mb-8">
-          {statusConfig.icon}
-          <h2 className={`mt-4 text-3xl font-bold ${statusConfig.titleColor}`}>
-            {statusConfig.title}
-          </h2>
-          <p className="mt-2 text-gray-600">{statusConfig.message}</p>
-        </div>
+    <div className="max-w-[550px] mx-auto p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative bg-white rounded-2xl shadow-lg"
+      >
+        {/* Borde superior dentado */}
+        <div
+          className="absolute top-0 left-0 right-0 h-4 bg-[#f3f4f6]"
+          style={{
+            clipPath:
+              "polygon(0% 0%, 5% 100%, 10% 0%, 15% 100%, 20% 0%, 25% 100%, 30% 0%, 35% 100%, 40% 0%, 45% 100%, 50% 0%, 55% 100%, 60% 0%, 65% 100%, 70% 0%, 75% 100%, 80% 0%, 85% 100%, 90% 0%, 95% 100%, 100% 0%)",
+          }}
+        />
 
-        {/* Detalles de la Transacción */}
-        <div className="space-y-6">
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Detalles de la Transacción</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">Monto</p>
-                <p className="text-lg font-bold text-gray-900">
-                  {formatAmount(paymentData.wompi_data.amount_in_cents)}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Fecha</p>
-                <p className="text-gray-900">{formatDate(paymentData.wompi_data.created_at)}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Referencia</p>
-                <p className="text-gray-900">{paymentData.wompi_data.reference}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Estado</p>
-                <p className={`font-medium ${statusConfig.statusColor}`}>
-                  {statusConfig.statusText}
-                </p>
-              </div>
+        {/* Círculos laterales */}
+        <div className="absolute -left-4 top-1/3 w-8 h-8 bg-[#f3f4f6] rounded-full" />
+        <div className="absolute -right-4 top-1/3 w-8 h-8 bg-[#f3f4f6] rounded-full" />
+        <div className="absolute -left-4 top-2/3 w-8 h-8 bg-[#f3f4f6] rounded-full" />
+        <div className="absolute -right-4 top-2/3 w-8 h-8 bg-[#f3f4f6] rounded-full" />
+
+        {/* Contenido principal */}
+        <div className="pt-8 px-8 pb-6 bg-white">
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              {statusConfig.title}
+            </h1>
+            <div
+              className={`w-20 h-20 ${statusConfig.bgColor} rounded-2xl mx-auto flex items-center justify-center shadow-lg`}
+            >
+              {statusConfig.icon}
             </div>
           </div>
 
-          {/* Información del Cliente */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Información del Cliente</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">Nombre</p>
-                <p className="text-gray-900">{paymentData.wompi_data.customer_data.full_name}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Documento</p>
-                <p className="text-gray-900">
-                  {paymentData.wompi_data.customer_data.legal_id_type} {paymentData.wompi_data.customer_data.legal_id}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Email</p>
-                <p className="text-gray-900">{paymentData.wompi_data.customer_email}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Teléfono</p>
-                <p className="text-gray-900">{paymentData.wompi_data.customer_data.phone_number}</p>
-              </div>
+          <div className="space-y-4">
+            <div className="flex justify-between items-baseline border-b border-gray-100 pb-3">
+              <h2 className="text-gray-600 font-medium">¿Cuánto pagaste?</h2>
+              <p className="text-2xl font-bold text-gray-900">
+                {formatAmount(paymentData.wompi_data.amount_in_cents)}
+              </p>
+            </div>
+
+            <div className="flex justify-between items-baseline border-b border-gray-100 pb-3">
+              <h2 className="text-gray-600 font-medium">Descripción</h2>
+              <p className="text-base text-gray-900 text-right">
+                {paymentData.wompi_data.payment_method.payment_description}
+              </p>
+            </div>
+
+            <div className="flex justify-between items-baseline border-b border-gray-100 pb-3">
+              <h2 className="text-gray-600 font-medium">Fecha</h2>
+              <p className="text-base text-gray-900">
+                {formatDate(paymentData.wompi_data.created_at)}
+              </p>
+            </div>
+
+            <div className="flex justify-between items-baseline border-b border-gray-100 pb-3">
+              <h2 className="text-gray-600 font-medium min-w-[100px]">Referencia</h2>
+              <p className="text-base text-gray-900 font-mono text-right pl-4">
+                {paymentData.wompi_data.reference}
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Botones de Acción */}
-        <div className="mt-8 flex flex-col sm:flex-row justify-between gap-4">
-          <button
-            onClick={() => window.print()}
-            className="flex items-center justify-center px-6 py-3 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50"
-          >
-            <FaPrint className="mr-2" />
-            Imprimir
-          </button>
-          <button
-            onClick={() => {/* Lógica para descargar PDF */}}
-            className="flex items-center justify-center px-6 py-3 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50"
-          >
-            <FaDownload className="mr-2" />
-            Descargar PDF
-          </button>
-          <button
-            onClick={() => navigate('/dashboard/payments')}
-            className="flex items-center justify-center px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-          >
-            Volver a Facturas
-          </button>
+        {/* Mensaje adicional y botones */}
+        <div className="px-8 pt-4 pb-6">
+          <div className="bg-gray-50 p-4 rounded-xl mb-6 border border-gray-100">
+            <h3 className="text-sm font-semibold text-gray-900 mb-2">
+              Información importante:
+            </h3>
+            <ul className="text-sm text-gray-600 space-y-1.5">
+              <li className="flex items-center">
+                <span className="mr-2 w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
+                Guarda este comprobante para cualquier reclamo
+              </li>
+              <li className="flex items-center">
+                <span className="mr-2 w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
+                El tiempo de aplicación puede tardar hasta 24 horas
+              </li>
+              <li className="flex items-center">
+                <span className="mr-2 w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
+                Para dudas o reclamos, contacta a soporte
+              </li>
+            </ul>
+          </div>
+
+          {/* Botones integrados */}
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => window.print()}
+              className="flex items-center justify-center px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium"
+            >
+              <FaPrint className="mr-2" />
+              Imprimir
+            </button>
+            <button
+              onClick={() => {
+                /* Lógica para descargar PDF */
+              }}
+              className="flex items-center justify-center px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium"
+            >
+              <FaDownload className="mr-2" />
+              Descargar
+            </button>
+            <button
+              onClick={() => navigate("/dashboard/payments") || window.location.reload()}
+              className="col-span-2 flex items-center justify-center px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium"
+            >
+              Volver a Facturas
+            </button>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

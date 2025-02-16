@@ -12,8 +12,6 @@ const Home = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    reset,
     onSubmit,
     showPassword,
     setShowPassword,

@@ -1,18 +1,13 @@
 import { FaArrowLeft, FaCheckCircle, FaMoneyBill } from 'react-icons/fa'
-import type { PersonalData, PaymentInfo } from '../../usePasarela'
 
 interface EfectivoConfirmationProps {
   onBack: () => void
   onNext: () => void
-  personalData: PersonalData
-  paymentInfo: PaymentInfo
 }
 
 export function EfectivoConfirmation({ 
   onBack, 
   onNext, 
-  personalData,
-  paymentInfo 
 }: EfectivoConfirmationProps) {
   return (
     <div className="w-full px-4 py-6">
@@ -32,15 +27,15 @@ export function EfectivoConfirmation({
               <dl className="grid grid-cols-1 gap-3">
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Nombre:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.nombre}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Nombre</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Email:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.email}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Email</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Documento:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.documento}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Documento</dd>
                 </div>
               </dl>
             </div>
@@ -52,17 +47,17 @@ export function EfectivoConfirmation({
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Monto:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    ${paymentInfo.monto.toLocaleString('es-CO')}
+                    $100.000
                   </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Código de pago:</dt>
-                  <dd className="text-sm font-medium text-gray-900 font-mono">{paymentInfo.referencia}</dd>
+                  <dd className="text-sm font-medium text-gray-900 font-mono">1234567890</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Válido hasta:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {new Date(paymentInfo.fecha).toLocaleDateString('es-CO')}
+                    12/12/2024
                   </dd>
                 </div>
               </dl>

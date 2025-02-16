@@ -1,15 +1,11 @@
 import { useState } from "react";
-
-interface Reviews {
-    average: number;
-    totalCount: number;
-    counts: { rating: number; count: number }[];
-  }
+import { useAuthStore } from "../../../hooks/authStore";
 
 
 const useProfile = () => {
     const [trustValue, setTrustValue] = useState(95);
     const [currentOption, setCurrentOption] = useState(4);    
+    const { user } = useAuthStore();
     const reviews = {
         average: 4
     };
@@ -23,7 +19,8 @@ const useProfile = () => {
         trustValue,
         handleTrustChange,
         currentOption,
-        setCurrentOption
+        setCurrentOption,
+        user
     };
 };
 
