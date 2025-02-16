@@ -111,7 +111,6 @@ const useClients = () => {
       });
 
       const result = await uploadExcel(file);
-      console.log(result);
       Swal.close();
 
       const errorsHtml = Object.entries(result.errors)
@@ -230,11 +229,6 @@ const useClients = () => {
       accessor: "first_name",
       cell: FirstNameCell,
     },
-    // {
-    //   header: 'Dirección',
-    //   accessor: 'address',
-    //   cell: AddressCell
-    // },
     {
       header: "Teléfono",
       accessor: "phone",
@@ -259,28 +253,22 @@ const useClients = () => {
 
   const handleView = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row.status}`);
-    // console.log(row);
     setUser(row);
     toggleModalViewDetailUser();
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
   const handleMessage = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row.status}`);
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
   const handleDownload = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row.status}`);
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
   const handleEdit = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row.status}`);
     setUser(row);
-    // console.log(row);
     toggleModalEditInfoUser();
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
   return {

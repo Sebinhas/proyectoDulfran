@@ -9,7 +9,6 @@ const useEditInfoUser = () => {
 
 
     const onSubmit = (data: any) => {
-        // console.log(data);
     }
 
 

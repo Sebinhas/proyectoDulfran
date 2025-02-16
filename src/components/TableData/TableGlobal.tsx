@@ -372,7 +372,7 @@ const TableGlobal = ({
                           {actions?.pay && (
                             <button
                               onClick={() => actions?.pay?.(row)}
-                              className="p-1.5  hover:bg-purple-50 rounded-full"
+                              className="p-1.5  hover:bg-gray-200 rounded-full text-gray-500"
                             >
                               <FaMoneyBill className="text-lg" />
                             </button>

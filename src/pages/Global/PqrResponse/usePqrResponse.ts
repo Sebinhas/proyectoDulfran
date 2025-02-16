@@ -44,7 +44,6 @@ const usePqrResponse = () => {
   });
 
   useEffect(() => {
-    // console.log('selectedPqr',selectedPqr);
   }, [selectedPqr]);
 
    useEffect(() => {
@@ -52,7 +51,6 @@ const usePqrResponse = () => {
         const response = await getPqrById(user?.id || '');
         if(response.status === 'success'){
           setPqr(response.pqrs);
-          // console.log(response.pqrs);
         }
       };
       response();

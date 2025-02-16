@@ -1,7 +1,7 @@
 import { usePaymentContext } from "../../context/PaymentContext";
 
 export const usePasarela = () => {
-  const { paymentData, updatePaymentMethod } = usePaymentContext();
+  const { updatePaymentMethod } = usePaymentContext();
 
   const handlePaymentMethodSelect = (method: string) => {
     if (method === "nq") {
@@ -12,10 +12,7 @@ export const usePasarela = () => {
       updatePaymentMethod({
         type: "PSE",
       });
-      console.log("paymentData2", paymentData);
     }
-
-    console.log("paymentData2", paymentData);
   };
 
   return {

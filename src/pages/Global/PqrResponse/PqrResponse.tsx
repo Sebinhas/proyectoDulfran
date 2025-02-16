@@ -143,8 +143,6 @@ const PqrResponse = () => {
   const { columns, pqr, handleEdit, RenderResponsePqr, selectedPqr, handleSubmitResponse, register, handleSubmit, closeModalActionResponsePqr } = usePqrResponse();
   const { response } = useSocketPqr([1,2]);
 
-  // console.log(pqr)
-
   return (
     <div className="w-full flex flex-col p-4">
       <TableGlobal

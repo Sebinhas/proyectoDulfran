@@ -82,110 +82,89 @@ const PaymentReceipt: React.FC<PaymentReceiptProps> = ({ paymentData }) => {
   const statusConfig = getStatusConfig(paymentData.wompi_data.status);
 
   return (
-    <div className="max-w-[550px] mx-auto p-6">
+    <div className="max-w-[550px] mx-auto p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative bg-white"
+        className="relative bg-white rounded-2xl shadow-lg"
       >
         {/* Borde superior dentado */}
         <div
-          className="absolute top-0 left-0 right-0 h-4 bg-gray-100"
+          className="absolute top-0 left-0 right-0 h-4 bg-[#f3f4f6]"
           style={{
             clipPath:
-              "polygon(0% 0%, 4% 100%, 8% 0%, 12% 100%, 16% 0%, 20% 100%, 24% 0%, 28% 100%, 32% 0%, 36% 100%, 40% 0%, 44% 100%, 48% 0%, 52% 100%, 56% 0%, 60% 100%, 64% 0%, 68% 100%, 72% 0%, 76% 100%, 80% 0%, 84% 100%, 88% 0%, 92% 100%, 96% 0%, 100% 100%, 100% 0%)",
+              "polygon(0% 0%, 5% 100%, 10% 0%, 15% 100%, 20% 0%, 25% 100%, 30% 0%, 35% 100%, 40% 0%, 45% 100%, 50% 0%, 55% 100%, 60% 0%, 65% 100%, 70% 0%, 75% 100%, 80% 0%, 85% 100%, 90% 0%, 95% 100%, 100% 0%)",
           }}
         />
 
-        {/* Círculos laterales
-        <div className="absolute -left-4 top-12 w-8 h-8 bg-gray-100 rounded-full" />
-        <div className="absolute -right-4 top-12 w-8 h-8 bg-gray-100 rounded-full" /> */}
+        {/* Círculos laterales */}
+        <div className="absolute -left-4 top-1/3 w-8 h-8 bg-[#f3f4f6] rounded-full" />
+        <div className="absolute -right-4 top-1/3 w-8 h-8 bg-[#f3f4f6] rounded-full" />
+        <div className="absolute -left-4 top-2/3 w-8 h-8 bg-[#f3f4f6] rounded-full" />
+        <div className="absolute -right-4 top-2/3 w-8 h-8 bg-[#f3f4f6] rounded-full" />
 
         {/* Contenido principal */}
-        <div className="pt-8 px-8 pb-8 bg-white">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">
+        <div className="pt-8 px-8 pb-6 bg-white">
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
               {statusConfig.title}
             </h1>
             <div
-              className={`w-20 h-20 ${statusConfig.bgColor} rounded-2xl mx-auto flex items-center justify-center`}
+              className={`w-20 h-20 ${statusConfig.bgColor} rounded-2xl mx-auto flex items-center justify-center shadow-lg`}
             >
               {statusConfig.icon}
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="flex justify-between items-baseline">
-              <h2 className="text-gray-600">¿Cuánto pagaste?</h2>
+          <div className="space-y-4">
+            <div className="flex justify-between items-baseline border-b border-gray-100 pb-3">
+              <h2 className="text-gray-600 font-medium">¿Cuánto pagaste?</h2>
               <p className="text-2xl font-bold text-gray-900">
                 {formatAmount(paymentData.wompi_data.amount_in_cents)}
               </p>
             </div>
 
-            <div className="flex justify-between">
-              <h2 className="text-gray-600">Descripción</h2>
-              <p className="text-xl text-gray-900">
+            <div className="flex justify-between items-baseline border-b border-gray-100 pb-3">
+              <h2 className="text-gray-600 font-medium">Descripción</h2>
+              <p className="text-base text-gray-900 text-right">
                 {paymentData.wompi_data.payment_method.payment_description}
               </p>
             </div>
 
-            <div className="flex justify-between">
-              <h2 className="text-gray-600">Fecha</h2>
-              <p className="text-xl text-gray-900">
+            <div className="flex justify-between items-baseline border-b border-gray-100 pb-3">
+              <h2 className="text-gray-600 font-medium">Fecha</h2>
+              <p className="text-base text-gray-900">
                 {formatDate(paymentData.wompi_data.created_at)}
               </p>
             </div>
 
-            <div className="flex justify-between">
-              <h2 className="text-gray-600">Referencia</h2>
-              <p className="text-[18px] text-gray-900">
-                {paymentData.wompi_data.reference.slice(0, 30)}...
+            <div className="flex justify-between items-baseline border-b border-gray-100 pb-3">
+              <h2 className="text-gray-600 font-medium min-w-[100px]">Referencia</h2>
+              <p className="text-base text-gray-900 font-mono text-right pl-4">
+                {paymentData.wompi_data.reference}
               </p>
             </div>
-
-            {/* <div className="pt-4 border-t">
-              <h2 className="text-gray-600 mb-2">Información del Cliente</h2>
-              <div className="space-y-2">
-                <p className="text-gray-900">
-                  <span className="text-gray-600">Nombre:</span>{" "}
-                  {paymentData.wompi_data.customer_data.full_name}
-                </p>
-                <p className="text-gray-900">
-                  <span className="text-gray-600">Documento:</span>{" "}
-                  {paymentData.wompi_data.customer_data.legal_id_type}{" "}
-                  {paymentData.wompi_data.customer_data.legal_id}
-                </p>
-                <p className="text-gray-900">
-                  <span className="text-gray-600">Email:</span>{" "}
-                  {paymentData.wompi_data.customer_email}
-                </p>
-                <p className="text-gray-900">
-                  <span className="text-gray-600">Teléfono:</span>{" "}
-                  {paymentData.wompi_data.customer_data.phone_number}
-                </p>
-              </div>
-            </div> */}
           </div>
         </div>
 
         {/* Mensaje adicional y botones */}
-        <div className="pt-4 border-t mt-6">
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <h3 className="text-sm font-medium text-gray-900 mb-2">
+        <div className="px-8 pt-4 pb-6">
+          <div className="bg-gray-50 p-4 rounded-xl mb-6 border border-gray-100">
+            <h3 className="text-sm font-semibold text-gray-900 mb-2">
               Información importante:
             </h3>
-            <ul className="text-sm text-gray-600 space-y-2">
+            <ul className="text-sm text-gray-600 space-y-1.5">
               <li className="flex items-center">
-                <span className="mr-2">•</span> Guarda este comprobante para
-                cualquier reclamo
+                <span className="mr-2 w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
+                Guarda este comprobante para cualquier reclamo
               </li>
               <li className="flex items-center">
-                <span className="mr-2">•</span> El tiempo de aplicación puede
-                tardar hasta 24 horas
+                <span className="mr-2 w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
+                El tiempo de aplicación puede tardar hasta 24 horas
               </li>
               <li className="flex items-center">
-                <span className="mr-2">•</span> Para dudas o reclamos, contacta
-                a soporte
+                <span className="mr-2 w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
+                Para dudas o reclamos, contacta a soporte
               </li>
             </ul>
           </div>
@@ -194,7 +173,7 @@ const PaymentReceipt: React.FC<PaymentReceiptProps> = ({ paymentData }) => {
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => window.print()}
-              className="flex items-center justify-center px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium"
             >
               <FaPrint className="mr-2" />
               Imprimir
@@ -203,23 +182,19 @@ const PaymentReceipt: React.FC<PaymentReceiptProps> = ({ paymentData }) => {
               onClick={() => {
                 /* Lógica para descargar PDF */
               }}
-              className="flex items-center justify-center px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium"
             >
               <FaDownload className="mr-2" />
               Descargar
             </button>
             <button
-              onClick={() =>
-                navigate("/dashboard/payments") || window.location.reload()
-              }
-              className="col-span-2 flex items-center justify-center px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors"
+              onClick={() => navigate("/dashboard/payments") || window.location.reload()}
+              className="col-span-2 flex items-center justify-center px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium"
             >
               Volver a Facturas
             </button>
           </div>
         </div>
-
-        {/* Borde inferior dentado */}
       </motion.div>
     </div>
   );
