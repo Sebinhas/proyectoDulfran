@@ -540,12 +540,37 @@ export const createNequiPayment = async (
 
 export const getPaymentsHistory = async (invoice_id: string) => {
   try {
-    const response = await axiosInstance.get(
-      `/payments/invoice/${invoice_id}`
-    );
+    const response = await axiosInstance.get(`/payments/invoice/${invoice_id}`);
     return response.data;
   } catch (error: any) {
     console.error("Error al obtener el historial de pagos:", error);
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
+
+export const createCompany = async (data: any) => {
+  try {
+    const response = await axiosInstance.post("/admin/create-company", data);
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    if (error.response.data.message.length > 0) {
+      error.response.data.message.forEach((message: any) => {
+        toast.error(message);
+      });
+    } else {
+      toast.error("Ocurrió un error al crear la empresa");
+    }
+    throw error;
+  }
+};
+
+export const getCompany = async () => {
+  try {
+    const response = await axiosInstance.get("/admin/company");
+    return response.data;
+  } catch (error: any) {
     toast.error(error.response.data.message);
     throw error;
   }
