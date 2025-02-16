@@ -6,7 +6,6 @@ import monedix from '../../../public/monedix.png';
 export const Sidebar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
-  // console.log(user);
 
   const handleLogout = () => {
     logout();

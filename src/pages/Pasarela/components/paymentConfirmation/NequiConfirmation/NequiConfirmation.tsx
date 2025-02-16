@@ -1,5 +1,5 @@
 import { FaArrowLeft, FaCheckCircle, FaFileInvoice } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import PaymentInvoice from "../../PaymentInvoice/PaymentInvoice";
 import { usePaymentContext } from "../../../../../context/PaymentContext";
 import { useNavigate } from "react-router-dom";
@@ -12,10 +12,6 @@ import { createNequiPayment } from "../../../../../api/axios.helper";
 const NequiConfirmation = () => {
   const { paymentData } = usePaymentContext();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log("paymentDataFinal", paymentData);
-  }, [paymentData]);
   const [paymentStatus, setPaymentStatus] = useState<
     "IDLE" | "PENDING" | "APPROVED" | "DECLINED"
   >("IDLE");

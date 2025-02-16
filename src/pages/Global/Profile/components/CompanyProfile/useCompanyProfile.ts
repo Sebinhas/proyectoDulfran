@@ -32,13 +32,9 @@ export const useCompanyProfile = (company: CompanyData) => {
 
     const handleSave = async () => {
         try {
-            // Aquí iría la llamada a la API para actualizar los datos
-            // await updateCompanyProfile(editForm);
-            console.log('Guardando cambios de empresa:', editForm);
             setIsEditing(false);
         } catch (error) {
             console.error('Error al guardar los cambios:', error);
-            // Aquí podrías manejar el error, mostrar una notificación, etc.
         }
     };
 

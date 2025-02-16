@@ -138,8 +138,6 @@ const Clients = () => {
                 <button
                   className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
                   onClick={() => {
-                    // Aquí puedes agregar la lógica para procesar el archivo
-                    // console.log('Procesando archivo:', selectedFile);
                     handleFileUpload(selectedFile);
                   }}
                 >
