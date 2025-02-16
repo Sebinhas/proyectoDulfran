@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { DTOPayment } from "./DTOPayment";
 
-import { getInvoices } from "../../../api/axios.helper";
+import { getInvoices, getPaymentsHistory } from "../../../api/axios.helper";
 import Swal from "sweetalert2";
 import { useAuthStore } from "../../../hooks/authStore";
 import {
@@ -96,22 +96,10 @@ const usePayments = () => {
   ];
 
   const handleViewInvoice = async (row: DTOPayment) => {
+    
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/payments/invoice/${row.no_invoice}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Error al obtener el historial de pagos");
-      }
-
-      const historyData = await response.json();
-
+      const response = await getPaymentsHistory(row.no_invoice);
+      const historyData = response;
       // Si hay datos, los usamos directamente ya que vienen en el formato correcto
       if (historyData) {
         setSelectedPayment(historyData);

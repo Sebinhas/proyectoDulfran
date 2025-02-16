@@ -1,17 +1,15 @@
 import { FaArrowLeft, FaCheckCircle, FaFileInvoice } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import PaymentInvoice from "../../PaymentInvoice/PaymentInvoice";
-import { useAuthStore } from "../../../../../hooks/authStore";
-import Swal from "sweetalert2";
 import { usePaymentContext } from "../../../../../context/PaymentContext";
 import { useNavigate } from "react-router-dom";
 import logoNequi from "../../../../../../public/nequi-icon.png";
 import { priceFormatter } from "../../../../../helpers/priceFormatter.helper";
 import { usePaymentPolling } from "../../../../../hooks/usePaymentPolling";
 import PaymentLoadingModal from "../../../../../components/PaymentLoading/PaymentLoadingModal";
+import { createNequiPayment } from "../../../../../api/axios.helper";
 
 const NequiConfirmation = () => {
-  const token = useAuthStore((state) => state.token);
   const { paymentData } = usePaymentContext();
   const navigate = useNavigate();
 
@@ -68,8 +66,8 @@ const NequiConfirmation = () => {
   } = usePaymentPolling({ onSuccess: handlePollingSuccess });
 
   const amountInCents = paymentData?.amount_in_cents
-    ? paymentData?.amount_in_cents * 10
-    : 0
+    ? paymentData?.amount_in_cents * 100
+    : 0;
 
   const createPayment = async () => {
     try {
@@ -80,43 +78,25 @@ const NequiConfirmation = () => {
       ) {
         paymentData.buyer_phone = "0000000000";
       }
+
       const paymentRequest = {
-        invoice_id: paymentData?.invoice_id,
-        amount_in_cents: amountInCents * 100,
-        customer_email: paymentData?.customer_email,
-        buyer_name: paymentData?.buyer_name,
+        invoice_id: paymentData?.invoice_id || "",
+        amount_in_cents: amountInCents,
+        customer_email: paymentData?.customer_email || "",
+        buyer_name: paymentData?.buyer_name || "",
         buyer_phone: paymentData?.buyer_phone || "No disponible",
-        legal_id: paymentData?.legal_id,
+        legal_id: paymentData?.legal_id || "",
         legal_id_type: paymentData?.legal_id_type || "CC",
         user_type: "PERSON",
         payment_method: {
           type: "NEQUI",
-          phone_number: paymentData?.payment_method?.phone_number,
+          phone_number: paymentData?.payment_method?.phone_number || "",
         },
-        payment_description: `Pago factura ${paymentData?.invoice_id}`,
+        payment_description: `Pago factura ${paymentData?.invoice_id || ""}`,
       };
 
-      const response = await fetch("http://localhost:3000/api/payments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(paymentRequest),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        Swal.fire({
-          title: "Error al crear el pago",
-          text: Array.isArray(errorData.message)
-            ? errorData.message.join(", ")
-            : errorData.message || "Error desconocido",
-          icon: "error",
-        });
-        throw new Error(JSON.stringify(errorData));
-      }
-      return await response.json();
+      const response = await createNequiPayment(paymentRequest);
+      return response;
     } catch (error) {
       console.error("Error creating payment:", error);
       setPaymentStatus("DECLINED");

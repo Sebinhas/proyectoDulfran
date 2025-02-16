@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useAuthStore } from "../hooks/authStore";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
-export const BASE_URL = "http://localhost:3000/api";
+export const BASE_URL =
+  "https://7dca-2800-e2-9c00-398-5592-146a-4321-6eb0.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -427,5 +429,124 @@ export const getCurrentProfile = async (token: string): Promise<any> => {
     }
     console.error("Error al obtener perfil:", error);
     return [];
+  }
+};
+
+interface PaymentStatusResponse {
+  id: string;
+  wompi_transaction_id: string;
+  created_at: string;
+  amount: string;
+  reference: string;
+  buyer_email: string;
+  customer_email: string;
+  status: string;
+  buyer_phone: string;
+  phone_number: string;
+  legal_id: string;
+  buyer_name: string;
+  customer_name: string;
+  legal_id_type: string;
+  payment_method: {
+    type: string;
+    phone_number: string;
+    payment_description: string;
+  };
+}
+
+// Funciones de API
+export const paymentAPI = {
+  checkStatus: async (reference: string) => {
+    try {
+      const { data } = await axiosInstance.get<PaymentStatusResponse>(
+        `/payments/status/${reference}`
+      );
+
+      if (data.status !== "PENDING") {
+        const formattedData = {
+          payment_id: data.id,
+          wompi_data: {
+            id: data.wompi_transaction_id || data.reference,
+            created_at: data.created_at || new Date().toISOString(),
+            amount_in_cents: parseFloat(data.amount || "0") * 100,
+            reference: data.reference,
+            customer_email: data.buyer_email || data.customer_email,
+            status: data.status,
+            payment_method: {
+              type: "NEQUI",
+              phone_number:
+                data.buyer_phone || data.phone_number || "0000000000",
+              payment_description:
+                data.payment_method?.payment_description || "Pago Nequi",
+            },
+            customer_data: {
+              legal_id: data.legal_id || "No disponible",
+              full_name:
+                data.buyer_name || data.customer_name || "No disponible",
+              phone_number:
+                data.buyer_phone || data.phone_number || "0000000000",
+              legal_id_type: data.legal_id_type || "CC",
+            },
+          },
+        };
+        return { status: data.status, data: formattedData };
+      }
+      return { status: "PENDING", data: null };
+    } catch (error) {
+      console.error("Error checking payment status:", error);
+      return { status: "ERROR", data: null };
+    }
+  },
+};
+
+interface NequiPaymentRequest {
+  invoice_id: string;
+  amount_in_cents: number;
+  customer_email: string;
+  buyer_name: string;
+  buyer_phone: string;
+  legal_id: string;
+  legal_id_type: string;
+  user_type: string;
+  payment_method: {
+    type: string;
+    phone_number: string;
+  };
+  payment_description: string;
+}
+
+export const createNequiPayment = async (
+  paymentRequest: NequiPaymentRequest
+) => {
+  try {
+    const response = await axiosInstance.post("/payments", paymentRequest);
+    return response.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message
+      ? Array.isArray(error.response.data.message)
+        ? error.response.data.message.join(", ")
+        : error.response.data.message
+      : "Error desconocido";
+
+    Swal.fire({
+      title: "Error al crear el pago",
+      text: errorMessage,
+      icon: "error",
+    });
+
+    throw error;
+  }
+};
+
+export const getPaymentsHistory = async (invoice_id: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/payments/invoice/${invoice_id}`
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al obtener el historial de pagos:", error);
+    toast.error(error.response.data.message);
+    throw error;
   }
 };
