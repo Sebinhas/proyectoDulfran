@@ -562,3 +562,18 @@ export const getPaymentsHistory = async (invoice_id: string) => {
     throw error;
   }
 };
+
+
+
+export const getInvoiceFinancial = async (invoice_id: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/payments/invoiceFinancial/${invoice_id}`
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al obtener el historial de pagos:", error);
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};

@@ -8,12 +8,12 @@ import {
 import { toast } from "react-toastify";
 import Modal from "../../../components/Modal/Modal";
 import Swal from "sweetalert2";
-import { uploadInvoiceExcel, getInvoices } from "../../../api/axios.helper";
+import { uploadInvoiceExcel, getInvoices, getInvoiceFinancial } from "../../../api/axios.helper";
 import {
   numberInvoicesCell,
   PaymentPeriodCell,
 } from "./templates/cellTemplates";
-
+import { DTOInvoices } from "./DTOInvoices";
 export interface InvoiceData {
   numberInvoice: number;
   user: string;
@@ -24,13 +24,26 @@ export interface InvoiceData {
 
 const useInvoices = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [invoices, setInvoices] = useState<any[]>([]);  
+  const [selectedPayment, setSelectedPayment] = useState<any>(null);
+  const [invoiceDetail, setInvoiceDetail] = useState<any>(null);
+  const [showDetail, setShowDetail] = useState(false);
+  
+  
   const {
     toggleModal: toggleModalUploadInvoice,
     closeModalAction: closeModalActionUploadInvoice,
     Render: RenderUploadInvoice,
   } = Modal({ title: "Subir Facturas" });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [invoices, setInvoices] = useState<any[]>([]);
+  const {
+    toggleModal: toggleModalDownloadInvoice,
+    closeModalAction: closeModalActionDownloadInvoice,
+    Render: RenderDownloadInvoice,
+  } = Modal({ title: "Descargar Factura" });
+
+
+
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -235,7 +248,76 @@ const useInvoices = () => {
     }
   };
 
+  const handleViewInvoice = async (row: DTOInvoices) => {
+    
+    try {
+      const response = await getInvoiceFinancial(row.no_invoice);
+      const historyData = response;
+      // Si hay datos, los usamos directamente ya que vienen en el formato correcto
+      if (historyData) {
+        setSelectedPayment(historyData);
+        setShowDetail(true);
+        return;
+      }
+
+      // Si no hay datos, creamos una estructura base
+      const defaultData = {
+        invoice_id: row.no_invoice,
+        total_attempts: 0,
+        latest_status: row.status.toUpperCase(),
+        latest_attempt: null,
+        payment_history: {
+          approved: [],
+          pending: [],
+          failed: [],
+        },
+        all_payments: [],
+      };
+
+      setSelectedPayment(defaultData);
+      setShowDetail(true);
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error al obtener los detalles del pago");
+
+      // En caso de error, mostramos una estructura base
+      const errorData = {
+        invoice_id: row.no_invoice,
+        total_attempts: 0,
+        latest_status: row.status.toUpperCase(),
+        latest_attempt: null,
+        payment_history: {
+          approved: [],
+          pending: [],
+          failed: [],
+        },
+        all_payments: [],
+      };
+
+      setSelectedPayment(errorData);
+      setShowDetail(true);
+    }
+  };
+
+
+
+  const handleBack = () => {
+    setShowDetail(false);
+    setSelectedPayment(null);
+  };
+
   const handleView = (row: InvoiceData): void => {
+    toast.success(`Orden vista, estado: ${row.status}`);
+    // navigate(`/dashboard/ordenes/${row.id}`);
+  };
+
+  const handleDownload = (row: InvoiceData): void => {
+    toast.success(`Orden vista, estado: ${row.status}`);
+    toggleModalDownloadInvoice();
+    setInvoiceDetail(row);
+  };
+
+  const handleEdit = (row: InvoiceData): void => {
     toast.success(`Orden vista, estado: ${row.status}`);
     // navigate(`/dashboard/ordenes/${row.id}`);
   };
@@ -252,6 +334,16 @@ const useInvoices = () => {
     handleFileChange,
     handleFileUpload,
     invoices,
+    handleDownload,
+    handleEdit,
+    showDetail,
+    handleViewInvoice,
+    selectedPayment,
+    handleBack,
+    toggleModalDownloadInvoice,
+    closeModalActionDownloadInvoice,
+    RenderDownloadInvoice,
+    invoiceDetail,
   };
 };
 
