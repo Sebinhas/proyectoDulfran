@@ -253,20 +253,18 @@ const useClients = () => {
     toast.success(`Orden vista, estado: ${row.status}`);
     setUser(row);
     toggleModalViewDetailClient();
-    // navigate(`/dashboard/ordenes/${row.id}`);
+
   };
 
   const handleMessage = (row: ClientsDTO): void => {
     toast.success(`No habilitado al momento, estado: ${row.status}`);
-    // navigate(`/dashboard/ordenes/${row.id}`);
+ 
   };
 
   const handleEdit = (row: ClientsDTO): void => {
     toast.success(`Orden vista, estado: ${row.status}`);
     setUser(row);
-    // console.log(row);
     toggleModalEditInfoClient();
-    // navigate(`/dashboard/ordenes/${row.id}`);
   };
 
   return {
