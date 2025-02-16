@@ -12,7 +12,6 @@ const MainLayout = lazy(() => import("../layouts/MainLayout"));
 const AuthLayout = lazy(() => import("../layouts/AuthLayout"));
 const PrivateLayout = lazy(() => import("../layouts/PrivateLayout"));
 // pages dashboard
-// const Patients = lazy(() => import('../pages/Admin/Patients/Patients.tsx'));
 const Profile = lazy(() => import("../pages/Global/Profile/Profile.tsx"));
 const Loading = lazy(() => import("../components/LoadingSpinner/Loading.tsx"));
 const Invoices = lazy(() => import("../pages/Financial/Invoices/Invoices.tsx"));
