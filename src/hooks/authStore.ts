@@ -40,10 +40,8 @@ export const useAuthStore = create<AuthState>()(
       login: async (username: string, password: string) => {
         try {
           const response = await login({ username, password });
-          // console.log(response)
           if (response) {
             const profile = await getCurrentProfile(response.token);
-            // console.log(profile)
             set({
               user: profile,
               token: response.token,

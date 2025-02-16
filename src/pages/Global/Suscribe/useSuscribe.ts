@@ -42,7 +42,6 @@ const useSuscribe = () => {
     };
 
     const onSubmit = (data: DTOSubscribe) => {
-        console.log('Form Data:', data); // Para verificar que la imagen está en base64
     };
 
     return { 

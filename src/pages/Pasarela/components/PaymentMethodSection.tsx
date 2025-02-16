@@ -75,9 +75,6 @@ export function PaymentMethodSection({
     onMethodSelect(method.id);
   };
 
-  // console.log(paymentData)
-
-  // Dividir los métodos en dos columnas
   const leftMethods = paymentMethods.slice(0, 3);
   const rightMethods = paymentMethods.slice(3);
 

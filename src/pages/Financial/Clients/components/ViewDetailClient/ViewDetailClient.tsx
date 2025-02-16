@@ -9,7 +9,6 @@ const ViewDetailUser = ({ user }: { user: ClientsDTO | null }) => {
   useEffect(() => {
     const fetchClients = async () => {
       const clients = await getClients();
-      console.log('clients', clients);
     };
     fetchClients();
   }, []);

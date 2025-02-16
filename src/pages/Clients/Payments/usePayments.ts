@@ -39,7 +39,6 @@ const usePayments = () => {
         const response = await getInvoices();
         if (response) {
           setInvoicesData(response);
-          // console.log("invoicesData", response);
         }
       } catch (error: any) {
         console.error("Error fetching invoices:", error);
@@ -154,12 +153,10 @@ const usePayments = () => {
   const handleDownload = (row: DTOPayment): void => {
     toast.success(`Orden vista, estado: ${row}`);
     toggleModalDownloadInvoice();
-    // console.log("row", row);
     setInvoice(row);
   };
 
   const handlePay = (row: DTOPayment): void => {
-    console.log("row", row);
     setPaymentData({
       invoice_id: row.no_invoice,
       amount_in_cents: parseInt(row.amount),
@@ -171,8 +168,6 @@ const usePayments = () => {
       user_type: "PERSON",
       payment_description: `Pago factura ${row.no_invoice}`,
     });
-    console.log("paymentData1", paymentData);
-
     row.status === "pagada"
       ? toast.success("Factura pagada")
       : navigate(`/dashboard/payments/payment_method`);
