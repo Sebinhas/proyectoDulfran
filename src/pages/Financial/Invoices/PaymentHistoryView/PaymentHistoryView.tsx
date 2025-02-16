@@ -92,7 +92,6 @@ const PaymentHistoryView: React.FC<PaymentHistoryViewProps> = ({
       />
     );
   }
-  
   return (
     <div className="w-full overflow-auto p-6">
       <button

@@ -1,13 +1,11 @@
 import { FaArrowLeft, FaCheckCircle } from 'react-icons/fa'
-import type { PersonalData } from '../../usePasarela'
 
 interface CreditCardConfirmationProps {
   onBack: () => void
   onNext: () => void
-  personalData: PersonalData
 }
 
-export function CreditCardConfirmation({ onBack, onNext, personalData }: CreditCardConfirmationProps) {
+export function CreditCardConfirmation({ onBack, onNext }: CreditCardConfirmationProps) {
   return (
     <div className="w-full px-4 py-6">
       <div className="mx-auto w-full max-w-2xl">

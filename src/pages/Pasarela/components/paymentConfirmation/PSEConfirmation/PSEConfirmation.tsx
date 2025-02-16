@@ -1,6 +1,4 @@
 import { FaArrowLeft, FaCheckCircle, FaUniversity } from 'react-icons/fa'
-import { usePaymentContext } from '../../../../../context/PaymentContext'
-import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -10,12 +8,7 @@ import { useNavigate } from 'react-router-dom'
 const PSEConfirmation = () => {
 
 
-  const { paymentData } = usePaymentContext()
   const navigate = useNavigate()
-
-  useEffect(() => {
-    console.log(paymentData)
-  }, [paymentData])
 
   return (
     <div className="w-full px-4 py-6">
@@ -64,7 +57,7 @@ const PSEConfirmation = () => {
               </button>
               <button
                 onClick={() => {
-                  console.log(paymentData)
+                  
                 }}
                 className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >

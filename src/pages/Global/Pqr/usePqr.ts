@@ -12,10 +12,10 @@ const usePqr = () => {
   useEffect(() => {
     const fetchPqrs = async () => {
       try {
-        const response = await getPqrByClient(String(user?.nit), String(user?.id));
+        const response = await getPqrByClient(String(user?.nit), String(user?.cedula));
         if (response.status === 'success') {
           const userPqrs = response.pqrs.filter((pqr: any) => 
-            pqr.client?.cedula === String(user?.id)
+            pqr.client?.cedula === String(user?.cedula)
           );
           setPqr(userPqrs);
         }
@@ -25,14 +25,13 @@ const usePqr = () => {
       }
     };
 
-    if (user?.id) {
+    if (user?.cedula) {
       fetchPqrs();
     }
-  }, [user?.id]);
+  }, [user?.cedula]);
 
   useEffect(() => {
-    // console.log(pqr);
-    // console.log(user)
+   
   }, [pqr]);
 
   const createNewPqr = async (data: any) => {
@@ -42,7 +41,7 @@ const usePqr = () => {
         'category': 'general',
         'sub_category': String(data.category),
         'description': String(data.description),
-        'client_cedula': String(user?.id)
+        'client_cedula': String(user?.cedula)
       }
 
       const response = await createPqr(payload);

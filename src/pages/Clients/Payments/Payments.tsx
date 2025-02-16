@@ -21,7 +21,6 @@ const Payments = () => {
   } = usePayments();
 
   useEffect(() => {
-    // console.log(user);
   }, [user]);
 
   return (

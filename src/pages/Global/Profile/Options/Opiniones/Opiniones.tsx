@@ -4,7 +4,7 @@ import Modal from "../../../../../components/Modal/Modal";
 
 const Opiniones = () => {
     const { reviews } = useOptions();
-    const { toggleModal, closeModalAction, Render } = Modal({title: 'Opinion'});
+    const { toggleModal, Render } = Modal({title: 'Opinion'});
     return (
         <div className="w-full flex flex-col gap-4">
             

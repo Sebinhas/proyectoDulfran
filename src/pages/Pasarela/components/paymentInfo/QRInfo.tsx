@@ -1,13 +1,11 @@
 import { FaArrowLeft, FaQrcode } from 'react-icons/fa'
-import type { PersonalData } from '../../usePasarela'
 
 interface QRInfoProps {
   onBack: () => void
   onNext: () => void
-  personalData: PersonalData
 }
 
-export function QRInfo({ onBack, onNext, personalData }: QRInfoProps) {
+export function QRInfo({ onBack, onNext }: QRInfoProps) {
   return (
     <div className="w-full px-4 py-6">
       <div className="mx-auto w-full max-w-2xl">
@@ -44,11 +42,11 @@ export function QRInfo({ onBack, onNext, personalData }: QRInfoProps) {
               <dl className="mt-2 space-y-2">
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Nombre:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.nombre}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Nombre</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Email:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.email}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Email</dd>
                 </div>
               </dl>
             </div>

@@ -11,10 +11,10 @@ import {
 } from "react-icons/fa";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { usePaymentPolling } from "../../../../hooks/usePaymentPolling";
-import PaymentInvoice from "../../../Pasarela/components/PaymentInvoice/PaymentInvoice";
-import PaymentLoadingModal from "../../../../components/PaymentLoading/PaymentLoadingModal";
-import { priceFormatter } from "../../../../helpers/priceFormatter.helper";
+import { usePaymentPolling } from "../../../../../hooks/usePaymentPolling";
+import PaymentInvoice from "../../../../Pasarela/components/PaymentInvoice/PaymentInvoice";
+import PaymentLoadingModal from "../../../../../components/PaymentLoading/PaymentLoadingModal";
+import { priceFormatter } from "../../../../../helpers/priceFormatter.helper";
 import { PaymentHistoryViewProps } from "./PaymentHistoryDTO";
 
 const PaymentHistoryView: React.FC<PaymentHistoryViewProps> = ({
@@ -92,7 +92,7 @@ const PaymentHistoryView: React.FC<PaymentHistoryViewProps> = ({
       />
     );
   }
-  
+  console.log("paymentData", paymentData.invoice_details.description);
   return (
     <div className="w-full overflow-auto p-6">
       <button

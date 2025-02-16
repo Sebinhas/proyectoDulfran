@@ -104,8 +104,6 @@ export const useUserProfile = ({ user }: UseUserProfileProps) => {
 
     const handlePasswordSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Aquí iría la lógica para cambiar la contraseña
-        console.log('Cambiando contraseña...');
         setShowPasswordForm(false);
     };
 

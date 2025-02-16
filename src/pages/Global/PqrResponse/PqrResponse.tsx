@@ -1,7 +1,5 @@
 import TableGlobal from "../../../components/TableData/TableGlobal";
 import usePqrResponse from "./usePqrResponse";
-import {useSocketPqr } from "./service/useSocketPqr";
-import { useEffect } from "react";
 
 
 export const mockAdminPqrs = [
@@ -140,10 +138,8 @@ export const mockAdminPqrs = [
 ];
 
 const PqrResponse = () => {
-  const { columns, pqr, handleEdit, RenderResponsePqr, selectedPqr, handleSubmitResponse, register, handleSubmit, closeModalActionResponsePqr } = usePqrResponse();
-  const { response } = useSocketPqr([1,2]);
-
-  // console.log(pqr)
+  const { columns, handleEdit, RenderResponsePqr, selectedPqr, handleSubmitResponse, register, handleSubmit, closeModalActionResponsePqr } = usePqrResponse();
+  // const { response } = useSocketPqr([1,2]);
 
   return (
     <div className="w-full flex flex-col p-4">

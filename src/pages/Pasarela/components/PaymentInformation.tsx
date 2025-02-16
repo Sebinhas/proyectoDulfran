@@ -1,19 +1,16 @@
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
-import type { PaymentInfo } from '../usePasarela'
 
 interface PaymentInformationProps {
   onNext: () => void
   onBack: () => void
   selectedMethod: string
-  onPaymentInfoChange: (info: PaymentInfo) => void
-  initialInfo: PaymentInfo
+  initialInfo: any
 }
 
 export function PaymentInformation({
   onNext,
   onBack,
   selectedMethod,
-  onPaymentInfoChange,
   initialInfo
 }: PaymentInformationProps) {
   return (
