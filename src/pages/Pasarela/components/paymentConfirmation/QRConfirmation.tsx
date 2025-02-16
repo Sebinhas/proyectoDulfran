@@ -2,16 +2,13 @@
 // Se enfoca en mostrar el QR y confirmar el pago 
 
 import { FaArrowLeft, FaCheckCircle, FaQrcode } from 'react-icons/fa'
-import type { PersonalData, PaymentInfo } from '../../usePasarela'
 
 interface QRConfirmationProps {
   onBack: () => void
   onNext: () => void
-  personalData: PersonalData
-  paymentInfo: PaymentInfo
 }
 
-export function QRConfirmation({ onBack, onNext, personalData, paymentInfo }: QRConfirmationProps) {
+export function QRConfirmation({ onBack, onNext }: QRConfirmationProps) {
   return (
     <div className="w-full px-4 py-6">
       <div className="mx-auto w-full max-w-2xl">
@@ -30,19 +27,19 @@ export function QRConfirmation({ onBack, onNext, personalData, paymentInfo }: QR
               <dl className="grid grid-cols-1 gap-3">
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Nombre:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.nombre}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Nombre</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Email:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.email}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Email</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Teléfono:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.telefono}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Telefono</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Documento:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{personalData.documento}</dd>
+                  <dd className="text-sm font-medium text-gray-900">Documento</dd>
                 </div>
               </dl>
             </div>
@@ -54,17 +51,17 @@ export function QRConfirmation({ onBack, onNext, personalData, paymentInfo }: QR
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Monto:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    ${paymentInfo.monto.toLocaleString('es-CO')}
+                    $100.000
                   </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Referencia:</dt>
-                  <dd className="text-sm font-medium text-gray-900">{paymentInfo.referencia}</dd>
+                  <dd className="text-sm font-medium text-gray-900">1234567890</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-sm text-gray-600">Fecha:</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {new Date(paymentInfo.fecha).toLocaleDateString('es-CO')}
+                    12/12/2024
                   </dd>
                 </div>
               </dl>

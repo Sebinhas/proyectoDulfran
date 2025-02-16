@@ -1,4 +1,4 @@
-import { GoPencil, GoCheck, GoX } from "react-icons/go";
+import { GoPencil} from "react-icons/go";
 import { useUserProfile } from './useUserProfile';
 
 interface BaseUser {
@@ -17,18 +17,18 @@ interface BaseUser {
     trust_value?: number;
 }
 
-interface AdminUser extends BaseUser {
-    profile_type: 'soporte' | 'administrativo';
-}
+// interface AdminUser extends BaseUser {
+//     profile_type: 'soporte' | 'administrativo';
+// }
 
-interface ClientUser extends BaseUser {
-    profile_type: 'cliente';
-    no_contract: string;
-    address: string;
-    speed_plan: string;
-    stratum: string;
-    trust_value: number;
-}
+// interface ClientUser extends BaseUser {
+//     profile_type: 'cliente';
+//     no_contract: string;
+//     address: string;
+//     speed_plan: string;
+//     stratum: string;
+//     trust_value: number;
+// }
 
 interface Props {
     user: BaseUser;

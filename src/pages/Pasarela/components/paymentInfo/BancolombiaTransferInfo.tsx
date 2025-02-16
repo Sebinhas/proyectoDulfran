@@ -1,5 +1,4 @@
 import { FaArrowLeft, FaUniversity } from 'react-icons/fa'
-import type { PersonalData } from '../../usePasarela'
 import { useForm } from 'react-hook-form'
 import bancolombia from '../../../../../public/TypeTarget/bancolombia.svg'
 import { DTOBancolombiaInfoForm } from './DTOPaymentMethod'
@@ -7,16 +6,15 @@ import { DTOBancolombiaInfoForm } from './DTOPaymentMethod'
 interface BancolombiaInfoProps {
   onBack: () => void
   onNext: () => void
-  personalData: PersonalData
 }
 
 
 
 
-export function BancolombiaTransferInfo({ onBack, onNext, personalData }: BancolombiaInfoProps) {
+export function BancolombiaTransferInfo({ onBack, onNext }: BancolombiaInfoProps) {
   const { register, handleSubmit, formState: { errors } } = useForm<DTOBancolombiaInfoForm>()
 
-  const onSubmit = (data: DTOBancolombiaInfoForm) => {
+  const onSubmit = () => {
     onNext()
   }
 

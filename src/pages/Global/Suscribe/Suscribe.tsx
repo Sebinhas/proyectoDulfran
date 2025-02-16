@@ -8,8 +8,6 @@ const Suscribe = () => {
         register, 
         handleSubmit, 
         errors, 
-        watch, 
-        setValue, 
         previewUrl, 
         handleImageChange, 
         onSubmit 

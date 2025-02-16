@@ -25,7 +25,7 @@ const usePayments = () => {
   const [invoicesData, setInvoicesData] = useState<any[]>([]);
   const [showDetail, setShowDetail] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<any>(null);
-  const { paymentData, setPaymentData } = usePaymentContext();
+  const { setPaymentData } = usePaymentContext();
 
   const {
     toggleModal: toggleModalDownloadInvoice,
@@ -157,6 +157,8 @@ const usePayments = () => {
   };
 
   const handlePay = (row: DTOPayment): void => {
+
+
     setPaymentData({
       invoice_id: row.no_invoice,
       amount_in_cents: parseInt(row.amount),
@@ -168,6 +170,8 @@ const usePayments = () => {
       user_type: "PERSON",
       payment_description: `Pago factura ${row.no_invoice}`,
     });
+
+
     row.status === "pagada"
       ? toast.success("Factura pagada")
       : navigate(`/dashboard/payments/payment_method`);

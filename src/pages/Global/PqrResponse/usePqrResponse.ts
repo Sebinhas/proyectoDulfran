@@ -48,7 +48,7 @@ const usePqrResponse = () => {
 
    useEffect(() => {
       const response = async () => {
-        const response = await getPqrById(user?.id || '');
+        const response = await getPqrById(String(user));
         if(response.status === 'success'){
           setPqr(response.pqrs);
         }
@@ -116,7 +116,7 @@ const usePqrResponse = () => {
         if (response) {
           toast.success('PQR respondida exitosamente');
           closeModalActionResponsePqr();
-          const updatedPqr = await getPqrById(String(user?.id));
+          const updatedPqr = await getPqrById(String(user));
           setPqr(updatedPqr.pqrs);
           reset();
         } else {

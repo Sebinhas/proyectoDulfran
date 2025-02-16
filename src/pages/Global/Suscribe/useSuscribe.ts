@@ -41,7 +41,8 @@ const useSuscribe = () => {
         }
     };
 
-    const onSubmit = (data: DTOSubscribe) => {
+    const onSubmit = () => {
+
     };
 
     return { 

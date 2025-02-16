@@ -1,5 +1,5 @@
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
-import { MdEmail, MdLocationOn, MdPhone } from 'react-icons/md';
+import { MdEmail } from 'react-icons/md';
 
 const useFooter = () => {
     

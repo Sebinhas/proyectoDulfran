@@ -1,8 +1,6 @@
 import { FaArrowLeft, FaCreditCard } from 'react-icons/fa'
-import type { PersonalData } from '../../usePasarela'
 import { useForm } from 'react-hook-form'
 import type { DTOCreditCardInfoForm } from './DTOPaymentMethod'
-import { FaCcVisa, FaCcMastercard, FaCcAmex } from 'react-icons/fa'
 import americanExpress from '../../../../../public/TypeTarget/americanExpress.svg'
 import mastercard from '../../../../../public/TypeTarget/mastercard.svg'
 import visa from '../../../../../public/TypeTarget/visa.svg'
@@ -12,10 +10,9 @@ import visa from '../../../../../public/TypeTarget/visa.svg'
 interface CreditCardInfoProps {
   onBack: () => void
   onNext: () => void
-  personalData: PersonalData
 }
 
-export function CreditCardInfo({ onBack, onNext, personalData }: CreditCardInfoProps) {
+export function CreditCardInfo({ onBack, onNext }: CreditCardInfoProps) {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<DTOCreditCardInfoForm>()
 
   const formatCardNumber = (value: string) => {
@@ -29,7 +26,7 @@ export function CreditCardInfo({ onBack, onNext, personalData }: CreditCardInfoP
     setValue('card_number', formattedValue);
   }
 
-  const onSubmit = (data: DTOCreditCardInfoForm) => {
+  const onSubmit = () => {
     onNext()
   }
 

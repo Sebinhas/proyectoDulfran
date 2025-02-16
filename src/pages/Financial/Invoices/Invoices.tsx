@@ -11,7 +11,6 @@ import GenerateInvoice from "./components/GenerateInvoice/GenerateInvoice";
 const Invoices = () => {
   const {
     columns,
-    handleView,
     handleDownload,
     handleEdit,
     toggleModalUploadInvoice,
@@ -26,8 +25,6 @@ const Invoices = () => {
     handleViewInvoice,
     selectedPayment,
     handleBack,
-    toggleModalDownloadInvoice,
-    closeModalActionDownloadInvoice,
     RenderDownloadInvoice,
     invoiceDetail,
   } = useOrders();

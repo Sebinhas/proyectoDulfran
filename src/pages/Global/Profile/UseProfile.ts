@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../../../hooks/authStore";
 
-interface Reviews {
-    average: number;
-    totalCount: number;
-    counts: { rating: number; count: number }[];
-  }
-
 
 const useProfile = () => {
     const [trustValue, setTrustValue] = useState(95);
