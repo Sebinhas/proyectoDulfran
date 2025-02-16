@@ -537,3 +537,16 @@ export const createNequiPayment = async (
     throw error;
   }
 };
+
+export const getPaymentsHistory = async (invoice_id: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/payments/invoice/${invoice_id}`
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error("Error al obtener el historial de pagos:", error);
+    toast.error(error.response.data.message);
+    throw error;
+  }
+};
