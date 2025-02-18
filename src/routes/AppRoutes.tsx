@@ -57,6 +57,11 @@ const PSEConfirmation = lazy(
       "../pages/Pasarela/components/paymentConfirmation/PSEConfirmation/PSEConfirmation.tsx"
     )
 );
+const PaymentInvoice = lazy(
+  () => import("../pages/Pasarela/components/PaymentInvoice/PaymentInvoice.tsx")
+);
+
+
 
 // Agregamos un nuevo loader para verificar el rol de admin
 const roleLoader = (allowedRoles: string[]) => {
@@ -192,8 +197,13 @@ const AppRoutes = createBrowserRouter([
         loader: roleLoader(["cliente"]),
       },
       {
-        path: "/dashboard/payments/payment_method/pse/payment_confirmation",
+        path: "/dashboard/payments/payment_method/pse/confirmation",
         element: <PSEConfirmation />,
+        loader: roleLoader(["cliente"]),
+      },
+      {
+        path: "/dashboard/payments/payment_method/pse/confirmation/checkout/:id",
+        element: <PaymentInvoice />,
         loader: roleLoader(["cliente"]),
       },
     ],

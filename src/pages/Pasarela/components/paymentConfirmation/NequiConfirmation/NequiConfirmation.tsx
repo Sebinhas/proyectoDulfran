@@ -122,7 +122,9 @@ const NequiConfirmation = () => {
 
   // Si el pago fue aprobado y terminó el polling, mostrar el comprobante
   if (showInvoice && transactionInfo?.wompi_data) {
-    return <PaymentInvoice paymentData={transactionInfo} />;
+    //aca toca encriptar el id
+    navigate(`/dashboard/payments/payment_method/nq/confirmation/checkout/${transactionInfo.wompi_data.id}`);
+    // return <PaymentInvoice paymentData={transactionInfo} />;
   }
 
   // Si está en proceso de pago, mostrar el modal de carga

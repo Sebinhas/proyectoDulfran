@@ -14,4 +14,5 @@ export interface ClientsDTO {
     createdAt: string;
     updatedAt: string;
     status: 'activo' | 'inactivo' ;
+    stratum: string;
   }

@@ -33,9 +33,33 @@ interface PaymentReceiptProps {
   };
 }
 
-const PaymentReceipt: React.FC<PaymentReceiptProps> = ({ paymentData }) => {
+const PaymentReceipt = () => {
+  // { paymentData }
   const navigate = useNavigate();
 
+  //aca se debe obtener el id de la transaccion
+  const paymentData = {
+    payment_id: "1234567890",
+    wompi_data: {
+      status: "APPROVED",
+      id: "1234567890",
+      created_at: "2021-01-01T00:00:00Z",
+      amount_in_cents: 10000,
+      reference: "1234567890",
+      customer_email: "test@test.com",
+      payment_method: {
+        type: "pse",
+        phone_number: "1234567890",
+        payment_description: "Pago de prueba",
+      },
+      customer_data: {
+        legal_id: "1234567890",
+        full_name: "Juan Perez",
+        phone_number: "1234567890",
+        legal_id_type: "CC",
+      },
+    },
+  };
   const formatAmount = (amountInCents: number) => {
     return new Intl.NumberFormat("es-CO", {
       style: "currency",

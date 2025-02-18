@@ -12,40 +12,16 @@ const EditInfoClient = ({ user, closeModalActionUploadClient }: { user: ClientsD
   return (
     <div className="w-full flex flex-col gap-3 p-4">
         <form className="w-full flex flex-col gap-3 " onSubmit={handleSubmit(onSubmit)}>
-            <div className="w-full flex flex-col md:flex-row gap-4">
-                <div className="w-full">
-                    <div className="text-sm font-medium pb-0.5">Nombre de Usuario</div>
-                    <input {...register('username')} disabled={true} defaultValue={user.username} className="cursor-not-allowed w-full border rounded-md p-2 outline-none border-gray-300 " />
-                </div>
+            <div className="w-full">
+                <div className="text-sm font-medium pb-0.5">Direccion</div>
+                <input {...register('address')} defaultValue={user.address} className=" w-full border rounded-md p-2 outline-none border-gray-300 " />
             </div>
-
             <div className="w-full flex flex-col md:flex-row gap-4">
                 <div className="w-full">
-                    <div className="text-sm font-medium pb-0.5">Primer Nombre</div>
-                    <input {...register('first_name')} disabled={true} defaultValue={user.first_name} className="cursor-not-allowed w-full border rounded-md p-2 outline-none border-gray-300 " />
+                    <div className="text-sm font-medium pb-0.5">Estrato</div>
+                    <input {...register('stratum')} disabled={true} defaultValue={user.stratum} className="cursor-not-allowed w-full border rounded-md p-2 outline-none border-gray-300 " />
                 </div>
-                <div className="w-full">
-                    <div className="text-sm font-medium pb-0.5">Segundo Nombre</div>
-                    <input {...register('second_name')} disabled={true} defaultValue={user.second_name} className="cursor-not-allowed w-full border rounded-md p-2 outline-none border-gray-300 " />
-                </div>
-            </div>
 
-            <div className="w-full flex flex-col md:flex-row gap-4">
-                <div className="w-full">
-                    <div className="text-sm font-medium pb-0.5">Primer Apellido</div>
-                    <input {...register('first_lastname')} disabled={true} defaultValue={user.first_lastname} className="cursor-not-allowed w-full border rounded-md p-2 outline-none border-gray-300 " />
-                </div>
-                <div className="w-full">
-                    <div className="text-sm font-medium pb-0.5">Segundo Apellido</div>
-                    <input {...register('second_lastname')} disabled={true} defaultValue={user.second_lastname} className="cursor-not-allowed w-full border rounded-md p-2 outline-none border-gray-300 " />
-                </div>
-            </div>
-
-            <div className="w-full flex flex-col md:flex-row gap-4">
-                <div className="w-full">
-                    <div className="text-sm font-medium pb-0.5">Cedula</div>
-                    <input {...register('cedula')} disabled={true} defaultValue={user.cedula} className="cursor-not-allowed w-full border rounded-md p-2 outline-none border-gray-300 " />
-                </div>
                 <div className="w-full">
                     <div className="text-sm font-medium pb-0.5">Estado</div>
                     <input {...register('status')} disabled={true} defaultValue={user.status} className="cursor-not-allowed w-full border rounded-md p-2 outline-none border-gray-300 " />

@@ -37,7 +37,7 @@ const PSEInfo = () => {
       payment_description: paymentData?.payment_description ?? "Pago de prueba",
     });
 
-    navigate('/dashboard/payments/payment_method/pse/payment_confirmation')
+    navigate('/dashboard/payments/payment_method/pse/confirmation')
     // onNext()
   }
 
