@@ -281,6 +281,7 @@ const useClients = () => {
     user,
     handleFileChange,
     isLoading,
+    setIsLoading,
     handleFileUpload,
     selectedFile,
     setSelectedFile,

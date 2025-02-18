@@ -23,6 +23,7 @@ const Clients = () => {
     user,
     handleFileChange,
     isLoading,
+    setIsLoading,
     handleFileUpload,
     selectedFile,
     setSelectedFile,
@@ -75,6 +76,8 @@ const Clients = () => {
         <EditInfoClient
           user={user}
           closeModalActionUploadClient={closeModalActionEditInfoClient}
+          setIsLoading={setIsLoading}
+          loading={isLoading}
         />
       </RenderEditInfoClient>
 
