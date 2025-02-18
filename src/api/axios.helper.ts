@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 export const BASE_URL =
-  "https://2215-2800-e2-9c00-398-60d0-897e-4f11-5427.ngrok-free.app/api";
+  "https://b658-2800-e2-9c00-398-816-65ba-4713-367b.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -80,6 +80,7 @@ export const getClients = async () => {
       second_lastname: item.second_lastname || "",
       second_name: item.second_name || "",
       updatedAt: item.updatedAt || "",
+      stratum: item.stratum || "",
     }));
   } catch (error: any) {
     console.error("Error al obtener clientes:", error);
@@ -221,10 +222,16 @@ export const updateUser = async (data: any, cedula: string) => {
 
 export const updateClient = async (data: any) => {
   try {
-    console.log(data);
+    const dataToUpdate = {
+      address: data?.address,
+      stratum: data?.stratum,
+      status: data?.status,
+      email: data?.email,
+      phone: data?.phone,
+    };
     const response = await axiosInstance.patch(
       `/client/update-client/${data.cedula}`,
-      data
+      dataToUpdate
     );
     return response.data;
   } catch (error: any) {
@@ -569,7 +576,6 @@ export const createCompany = async (data: any) => {
     const response = await axiosInstance.post("/admin/create-company", data);
     return response.data;
   } catch (error: any) {
-    console.log(error);
     if (error.response.data.message.length > 0) {
       error.response.data.message.forEach((message: any) => {
         toast.error(message);

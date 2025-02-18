@@ -2,12 +2,14 @@ import { useForm } from "react-hook-form";
 import { updateClient } from "../../../../../api/axios.helper";
 import Swal from "sweetalert2";
 
-const useEditInfoUser = (
+const useEditInfoClient = (
     setIsLoading?: (value: boolean) => void,
     loading?: boolean,
     closeModalActionEditInfoClient?: () => void,
+    user?: any
 ) => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const { register, handleSubmit, formState: { errors },setValue } = useForm();
 
     const onSubmit = async (data: any) => {
         try {
@@ -33,7 +35,16 @@ const useEditInfoUser = (
                 },
             });
 
-            const response = await updateClient(data);
+                   // Crear un objeto solo con los campos modificados
+            const dataToUpdate = Object.keys(data).reduce((acc: any, key) => {
+                // Solo incluir el campo si ha sido modificado
+                if (data[key] !== user[key]) {
+                    acc[key] = data[key];
+                }
+                return acc;
+            }, { cedula: user.cedula }); // Siempre incluimos la cédula como identificador
+
+            const response = await updateClient(dataToUpdate);
             
             Swal.close();
 
@@ -83,10 +94,11 @@ const useEditInfoUser = (
         register,
         handleSubmit,
         errors,
-        onSubmit
+        onSubmit,
+        setValue
     }
 }
 
-export default useEditInfoUser;
+export default useEditInfoClient;
 
 
