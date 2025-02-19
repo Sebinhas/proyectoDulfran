@@ -108,8 +108,9 @@ const NequiConfirmation = () => {
     const paymentResponse = await createPayment();
     if (!paymentResponse) return;
 
+    console.log(paymentResponse);
     // 2. Iniciar el polling
-    startPolling(paymentResponse.wompi_data.reference);
+    startPolling(paymentResponse.wompi_data.transaction_id);
 
     // 3. Iniciar el cambio de mensajes
     const messageInterval = setInterval(() => {
@@ -123,7 +124,7 @@ const NequiConfirmation = () => {
   // Si el pago fue aprobado y terminó el polling, mostrar el comprobante
   if (showInvoice && transactionInfo?.wompi_data) {
     //aca toca encriptar el id
-    navigate(`/dashboard/payments/payment_method/nq/confirmation/checkout/${transactionInfo.wompi_data.id}`);
+    navigate(`/dashboard/payments/payment_method/nq/confirmation/checkout/${transactionInfo.wompi_data.transaction_id}`);
     // return <PaymentInvoice paymentData={transactionInfo} />;
   }
 

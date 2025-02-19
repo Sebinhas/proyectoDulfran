@@ -59,6 +59,8 @@ export const useHome = () => {
         navigate("/dashboard/contracts");
       } else if (user.profile_type === "cliente") {
         navigate("/dashboard/payments");
+      } else if (user.profile_type === "admin") {
+        navigate("/dashboard/profile");
       }
     } else {
       navigate("/");

@@ -72,7 +72,6 @@ const Users = () => {
           itemsPerPage={8}
           actions={{
             view: (row) => handleView(row),
-            download: (row) => handleDownload(row),
             edit: (row) => handleEdit(row),
             // message: (row) => handleMessage(row)
           }}

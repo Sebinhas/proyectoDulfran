@@ -19,7 +19,7 @@ const PaymentLoadingModal: React.FC<PaymentLoadingModalProps> = ({
   currentMessage,
 }) => {
   const [progress, setProgress] = useState(initialTimeLeft);
-  
+
   useEffect(() => {
     setProgress(initialTimeLeft);
     const timer = setInterval(() => {
@@ -85,7 +85,7 @@ const PaymentLoadingModal: React.FC<PaymentLoadingModalProps> = ({
                   className="text-[#210049]"
                   strokeWidth="4"
                   strokeDasharray={283}
-                  strokeDashoffset={283 - (283 * progress) / 20}
+                  strokeDashoffset={283 - (283 * progress) / 30}
                   strokeLinecap="round"
                   stroke="currentColor"
                   fill="transparent"
@@ -101,7 +101,7 @@ const PaymentLoadingModal: React.FC<PaymentLoadingModalProps> = ({
             </div>
 
             <div className="text-sm font-medium text-gray-500">
-              Intento {pollingAttempts + 1} de {maxPollingAttempts}
+              Intento {pollingAttempts} de {maxPollingAttempts}
             </div>
           </div>
 

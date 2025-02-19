@@ -29,7 +29,7 @@ const useClients = () => {
     toggleModal: toggleModalViewDetailClient,
     // closeModalAction: closeModalActionViewDetailClient,
     Render: RenderViewDetailClient,
-  } = Modal({ title: "Datos Personales" });
+  } = Modal();
 
   const {
     toggleModal: toggleModalEditInfoClient,

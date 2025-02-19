@@ -59,7 +59,6 @@ const Clients = () => {
           actions={{
             view: (row) => handleView(row),
             edit: (row) => handleEdit(row),
-            message: (row) => handleMessage(row),
           }}
           filters={{
             username: true,

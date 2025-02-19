@@ -318,7 +318,7 @@ const useInvoices = () => {
   };
 
   const handleEdit = (row: InvoiceData): void => {
-    toast.success(`Orden vista, estado: ${row.status}`);
+    toast.warning(`Opción no disponible`);
     // navigate(`/dashboard/ordenes/${row.id}`);
   };
 

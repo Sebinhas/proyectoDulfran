@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 export const BASE_URL =
-  "https://b658-2800-e2-9c00-398-816-65ba-4713-367b.ngrok-free.app/api";
+  "https://74a9-2800-e2-9c00-398-f982-69d2-3781-e2ee.ngrok-free.app/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -478,10 +478,10 @@ interface PaymentStatusResponse {
 
 // Funciones de API
 export const paymentAPI = {
-  checkStatus: async (reference: string) => {
+  checkStatus: async (id_transaction: string) => {
     try {
       const { data } = await axiosInstance.get<PaymentStatusResponse>(
-        `/payments/status/${reference}`
+        `/payments/status/${id_transaction}`
       );
 
       if (data.status !== "PENDING") {
@@ -599,7 +599,7 @@ export const getCompany = async () => {
 
 export const getInvoiceFinancial = async (invoice_id: string) => {
   try {
-    const response = await axiosInstance.get(`/payments/invoice/${invoice_id}`);
+    const response = await axiosInstance.get(`/payments/invoiceFinancial/${invoice_id}`);
     return response.data;
   } catch (error: any) {
     console.error("Error al obtener el historial de pagos:", error);
