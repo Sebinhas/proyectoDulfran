@@ -13,12 +13,12 @@ export const usePaymentPolling = ({ onSuccess }: UsePaymentPollingProps) => {
   const maxPollingAttempts = 3;
 
   const startPolling = useCallback(
-    async (reference: string) => {
+    async (id_transaction: string) => {
       setIsPolling(true);
       setPollingAttempts(0);
 
       const makeAttempt = async () => {
-        const response = await paymentAPI.checkStatus(reference);
+        const response = await paymentAPI.checkStatus(id_transaction);
 
         if (response.status !== "PENDING" && response.data) {
           setIsPolling(false);
